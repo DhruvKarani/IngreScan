@@ -1,0 +1,258 @@
+{
+  "e621": {
+    "common_name": "Monosodium Glutamate (MSG)",
+    "description": "A flavor enhancer commonly used in savory snacks and instant foods.",
+    "found_in": [
+      "instant noodles",
+      "potato chips",
+      "seasoning powders"
+    ],
+    "risk_level": "moderate",
+    "also_used_in": [
+      "processed meats",
+      "soups"
+    ]
+  },
+  "sodium benzoate": {
+    "common_name": "Sodium Benzoate",
+    "description": "A preservative used to prevent spoilage by microbes.",
+    "found_in": [
+      "soft drinks",
+      "pickles",
+      "salad dressings"
+    ],
+    "risk_level": "low",
+    "also_used_in": [
+      "cosmetics",
+      "medicines"
+    ]
+  },
+  "cmc": {
+    "common_name": "Carboxymethylcellulose (CMC)",
+    "description": "A thickener and stabilizer used in food and pharmaceutical products.",
+    "found_in": [
+      "ice cream",
+      "toothpaste",
+      "baked goods"
+    ],
+    "risk_level": "low",
+    "also_used_in": [
+      "shampoos",
+      "lotions"
+    ]
+  },
+  "azodicarbonamide": {
+    "common_name": "AZODICARBONAMIDE",
+    "description": "Commonly found in products like 'Classic Italian Sandwich'. Example ingredients: ITALIAN SUB ROLL (BLEACHED ENRICHED FLOUR [WHEAT FLOUR, VITAMIN A PALMITATE, CALCIUM, NIACIN, IRON, ...",
+    "found_in": [],
+    "risk_level": "unknown",
+    "also_used_in": []
+  },
+  "carrageenan": {
+    "common_name": "CARRAGEENAN",
+    "description": "Commonly found in products like 'Unsweetened Almondmilk (Fortified)'. Example ingredients: Almondmilk (water, almonds), calcium carbonate, sunflower lecithin, sea salt, potassium citrate, nat...",
+    "found_in": [],
+    "risk_level": "unknown",
+    "also_used_in": []
+  },
+  "e211": {
+    "common_name": "Sodium Benzoate",
+    "description": "Most common benzoate preservative. Effective in acidic foods.",
+    "found_in": [
+      "soft drinks",
+      "salad dressings",
+      "jams"
+    ],
+    "risk_level": "low",
+    "also_used_in": [
+      "medicines",
+      "cosmetics"
+    ],
+    "max_limit": "300 ppm",
+    "e_number": "E211",
+    "ins_number": "211",
+    "preservative_info": {
+      "is_preservative": true,
+      "max_limit": "300 ppm",
+      "category": "preservative",
+      "regulatory_notes": "Most common benzoate preservative"
+    }
+  },
+  "e202": {
+    "common_name": "Potassium Sorbate",
+    "description": "Most widely used sorbate preservative. Effective against molds and yeasts.",
+    "found_in": [
+      "wine",
+      "cheese",
+      "yogurt",
+      "dried meats"
+    ],
+    "risk_level": "low",
+    "also_used_in": [
+      "cosmetics",
+      "skincare products"
+    ],
+    "max_limit": "1000 ppm",
+    "e_number": "E202",
+    "ins_number": "202",
+    "preservative_info": {
+      "is_preservative": true,
+      "max_limit": "1000 ppm",
+      "category": "preservative",
+      "regulatory_notes": "Calculated as sorbic acid"
+    }
+  },
+  "250": {
+    "common_name": "Sodium Nitrite",
+    "description": "Preservative used in cured meats to prevent botulism and maintain color.",
+    "found_in": [
+      "bacon",
+      "ham",
+      "hot dogs",
+      "deli meats"
+    ],
+    "risk_level": "moderate",
+    "also_used_in": [
+      "industrial applications"
+    ],
+    "max_limit": "150 ppm",
+    "e_number": "E250",
+    "ins_number": "250",
+    "preservative_info": {
+      "is_preservative": true,
+      "max_limit": "150 ppm",
+      "category": "preservative",
+      "regulatory_notes": "Common in processed meats"
+    }
+  },
+  "ins 282": {
+    "common_name": "Calcium Propionate",
+    "description": "Preferred preservative in baked goods as it doesn't interfere with yeast.",
+    "found_in": [
+      "bread",
+      "baked goods",
+      "processed cheese"
+    ],
+    "risk_level": "low",
+    "also_used_in": [
+      "animal feed"
+    ],
+    "max_limit": "5000 ppm",
+    "e_number": "E282",
+    "ins_number": "282",
+    "preservative_info": {
+      "is_preservative": true,
+      "max_limit": "5000 ppm",
+      "category": "preservative",
+      "regulatory_notes": "Preferred in baked goods"
+    }
+  },
+  "potassium sorbate": {
+    "common_name": "Potassium Sorbate",
+    "description": "Most widely used sorbate preservative. Effective against molds and yeasts.",
+    "found_in": [
+      "wine",
+      "cheese",
+      "yogurt",
+      "dried meats"
+    ],
+    "risk_level": "low",
+    "also_used_in": [
+      "cosmetics",
+      "skincare products"
+    ],
+    "max_limit": "1000 ppm",
+    "e_number": "E202",
+    "ins_number": "202",
+    "preservative_info": {
+      "is_preservative": true,
+      "max_limit": "1000 ppm",
+      "category": "preservative",
+      "regulatory_notes": "Calculated as sorbic acid"
+    }
+  },
+  "e250": {
+    "common_name": "Sodium Nitrite",
+    "description": "Preservative used in cured meats to prevent botulism and maintain color.",
+    "found_in": [
+      "bacon",
+      "ham",
+      "hot dogs",
+      "deli meats"
+    ],
+    "risk_level": "moderate",
+    "also_used_in": [
+      "industrial applications"
+    ],
+    "max_limit": "150 ppm",
+    "e_number": "E250",
+    "ins_number": "250",
+    "preservative_info": {
+      "is_preservative": true,
+      "max_limit": "150 ppm",
+      "category": "preservative",
+      "regulatory_notes": "Common in processed meats"
+    }
+  },
+  "ins 260": {
+    "common_name": "INS 260",
+    "description": "No data available.",
+    "risk_level": "unknown",
+    "found_in": [],
+    "also_used_in": [],
+    "preservative_info": {
+      "is_preservative": false
+    }
+  },
+  "citric acid": {
+    "common_name": "Citric Acid",
+    "description": "Found in products like: Gravy, Chyawanprash. Context: pasteurized milk, salt, citric acid, cultures of lactic acid bacteria...",
+    "risk_level": "unknown",
+    "found_in": [],
+    "also_used_in": [],
+    "source": "OpenFoodFacts",
+    "preservative_info": {
+      "is_preservative": false
+    }
+  },
+  "ins330": {
+    "common_name": "INS330",
+    "description": "No data available.",
+    "risk_level": "unknown",
+    "found_in": [],
+    "also_used_in": [],
+    "preservative_info": {
+      "is_preservative": false
+    }
+  },
+  "ascorbic acid": {
+    "common_name": "Ascorbic Acid",
+    "description": "Ascorbic acid is an organic compound with formula C6H8O6, originally called hexuronic acid. It is a white solid, but impure samples can appear yellowish.",
+    "risk_level": "unknown",
+    "found_in": [],
+    "also_used_in": [],
+    "source": "Wikipedia",
+    "preservative_info": {
+      "is_preservative": false
+    }
+  },
+  "water": {
+    "common_name": "Water",
+    "description": "Pure water, the most common ingredient in food products. Safe and essential for human consumption.",
+    "found_in": [
+      "beverages",
+      "soups",
+      "sauces",
+      "dairy products"
+    ],
+    "risk_level": "safe",
+    "also_used_in": [
+      "cosmetics",
+      "cleaning products",
+      "pharmaceuticals"
+    ],
+    "preservative_info": {
+      "is_preservative": false
+    }
+  }
+}
