@@ -254,5 +254,309 @@
     "preservative_info": {
       "is_preservative": false
     }
+  },
+  "ins412": {
+    "common_name": "Ins412",
+    "description": "Ins412 is a food ingredient. Detailed information not available offline. Consider checking food safety databases for more details.",
+    "risk_level": "unknown",
+    "found_in": [
+      "various food products"
+    ],
+    "also_used_in": [],
+    "source": "Offline Fallback",
+    "preservative_info": {
+      "is_preservative": false
+    }
+  },
+  "xanthan gum": {
+    "common_name": "Xanthan Gum",
+    "description": "Xanthan gum () is a polysaccharide with many industrial uses, including as a common food additive. It is an effective thickening agent and stabilizer that prevents ingredients from separating.",
+    "risk_level": "unknown",
+    "found_in": [],
+    "also_used_in": [],
+    "source": "Wikipedia",
+    "preservative_info": {
+      "is_preservative": false
+    }
+  },
+  "e999": {
+    "common_name": "E999",
+    "description": "Quillaia is the milled inner bark or small stems and branches of the soapbark (Quillaja saponaria). Other names include Murillo bark extract, Panama bark extract, Quillaia extract, Quillay bark extract, Soapbark extract, and Quillajae cortex.",
+    "risk_level": "unknown",
+    "found_in": [],
+    "also_used_in": [],
+    "source": "Wikipedia",
+    "preservative_info": {
+      "is_preservative": false
+    }
+  },
+  "ins 450": {
+    "common_name": "Ins 450",
+    "description": "This is a list of all Diners, Drive-Ins and Dives episodes.",
+    "risk_level": "unknown",
+    "found_in": [],
+    "also_used_in": [],
+    "source": "Wikipedia",
+    "preservative_info": {
+      "is_preservative": false
+    }
+  },
+  "e333": {
+    "common_name": "E333",
+    "description": "The Nimzo-Indian Defence is a chess opening characterised by the moves: 1. d4 Nf6 2.",
+    "risk_level": "unknown",
+    "found_in": [],
+    "also_used_in": [],
+    "source": "Wikipedia",
+    "preservative_info": {
+      "is_preservative": false
+    }
+  },
+  "415": {
+    "common_name": "415",
+    "description": "Year 495 (CDXCV) was a common year starting on Sunday of the Julian calendar. At the time, it was known in Rome as the Year of the Consulship of Viator without colleague (or, less frequently, year 1248 Ab urbe condita).",
+    "risk_level": "unknown",
+    "found_in": [],
+    "also_used_in": [],
+    "source": "Wikipedia",
+    "preservative_info": {
+      "is_preservative": false
+    }
+  },
+  "ins 412": {
+    "common_name": "INS 412 (Stabilizers, Thickeners & Emulsifiers)",
+    "description": "Guar gum, also called guaran, is a galactomannan polysaccharide extracted from guar beans that has thickening and stabilizing properties useful in food, feed, and industrial applications. The guar seeds are mechanically dehusked, hydrated, milled and screened according to application.",
+    "risk_level": "low",
+    "found_in": [
+      "Processed foods",
+      "Packaged products",
+      "Commercial food items"
+    ],
+    "also_used_in": [],
+    "source": "Wikipedia",
+    "preservative_info": {
+      "is_preservative": false
+    },
+    "additive_info": {
+      "category": "Stabilizers, Thickeners & Emulsifiers",
+      "purpose": "Improve texture and consistency",
+      "regulatory_status": "Approved food additive",
+      "note": "Required for product integrity and quality maintenance"
+    }
+  },
+  "ins 415": {
+    "common_name": "INS 415 (Stabilizers, Thickeners & Emulsifiers)",
+    "description": "This is a list of all Diners, Drive-Ins and Dives episodes.",
+    "risk_level": "low",
+    "found_in": [
+      "Processed foods",
+      "Packaged products",
+      "Commercial food items"
+    ],
+    "also_used_in": [],
+    "source": "Wikipedia",
+    "preservative_info": {
+      "is_preservative": false
+    },
+    "additive_info": {
+      "category": "Stabilizers, Thickeners & Emulsifiers",
+      "purpose": "Improve texture and consistency",
+      "regulatory_status": "Approved food additive",
+      "note": "Required for product integrity and quality maintenance"
+    }
+  },
+  "ins 330": {
+    "common_name": "INS 330 (Antioxidants & Acidity Regulators)",
+    "description": "INS Vikramaditya (lit. 'Valour Comparable to the Sun') is a modified Kiev-class aircraft carrier and the flagship of the Indian Navy. The carrier entered into service in 2013.",
+    "risk_level": "low",
+    "found_in": [
+      "Processed foods",
+      "Packaged products",
+      "Commercial food items"
+    ],
+    "also_used_in": [],
+    "source": "Wikipedia",
+    "preservative_info": {
+      "is_preservative": false
+    },
+    "additive_info": {
+      "category": "Antioxidants & Acidity Regulators",
+      "purpose": "Prevent oxidation and control pH levels",
+      "regulatory_status": "Approved food additive",
+      "note": "Required for product integrity and quality maintenance"
+    }
+  },
+  "vegetable[tomato paste(36%)]": {
+    "common_name": "Vegetable[Tomato Paste(36%)]",
+    "description": "Chili sauce and chili paste are condiments prepared with chili peppers. Chili sauce may be hot, sweet or a combination thereof, and may differ from hot sauce in that many sweet or mild varieties exist, which is typically lacking in hot sauces.",
+    "risk_level": "unknown",
+    "found_in": [],
+    "also_used_in": [],
+    "source": "Wikipedia",
+    "preservative_info": {
+      "is_preservative": false
+    }
+  },
+  "sugar": {
+    "common_name": "Sugar",
+    "description": "Sugar is the generic name for sweet-tasting, soluble carbohydrates, many of which are used in food. Simple sugars, also called monosaccharides, include glucose, fructose, and galactose.",
+    "risk_level": "unknown",
+    "found_in": [],
+    "also_used_in": [],
+    "source": "Wikipedia",
+    "preservative_info": {
+      "is_preservative": false
+    }
+  },
+  "refined soyabean oil": {
+    "common_name": "Refined Soyabean Oil",
+    "description": "Refined Soyabean Oil is a food ingredient. Detailed information not available offline. Consider checking food safety databases for more details.",
+    "risk_level": "unknown",
+    "found_in": [
+      "various food products"
+    ],
+    "also_used_in": [],
+    "source": "Offline Fallback",
+    "preservative_info": {
+      "is_preservative": false
+    }
+  },
+  "iodised salt": {
+    "common_name": "Iodised Salt",
+    "description": "Iodised salt (also spelled iodized salt) is table salt mixed with a minute amount of various iodine salts. The ingestion of iodine prevents iodine deficiency.",
+    "risk_level": "unknown",
+    "found_in": [],
+    "also_used_in": [],
+    "source": "Wikipedia",
+    "preservative_info": {
+      "is_preservative": false
+    }
+  },
+  "stabilizers(ins 412": {
+    "common_name": "STABILIZERS(INS 412 (Stabilizers, Thickeners & Emulsifiers)",
+    "description": "Stabilizers and thickeners required to maintain product texture and prevent separation. This is a regulatory-approved food additive (improve texture and consistency).",
+    "risk_level": "low",
+    "found_in": [
+      "Processed foods",
+      "Packaged products",
+      "Commercial food items"
+    ],
+    "also_used_in": [],
+    "source": "Offline Fallback",
+    "preservative_info": {
+      "is_preservative": false
+    },
+    "additive_info": {
+      "category": "Stabilizers, Thickeners & Emulsifiers",
+      "purpose": "Improve texture and consistency",
+      "regulatory_status": "Approved food additive",
+      "note": "Required for product integrity and quality maintenance"
+    }
+  },
+  "ins 415)": {
+    "common_name": "INS 415) (Stabilizers, Thickeners & Emulsifiers)",
+    "description": "This is a list of all Diners, Drive-Ins and Dives episodes.",
+    "risk_level": "low",
+    "found_in": [
+      "Processed foods",
+      "Packaged products",
+      "Commercial food items"
+    ],
+    "also_used_in": [],
+    "source": "Wikipedia",
+    "preservative_info": {
+      "is_preservative": false
+    },
+    "additive_info": {
+      "category": "Stabilizers, Thickeners & Emulsifiers",
+      "purpose": "Improve texture and consistency",
+      "regulatory_status": "Approved food additive",
+      "note": "Required for product integrity and quality maintenance"
+    }
+  },
+  "spices and condiments": {
+    "common_name": "Spices And Condiments",
+    "description": "A condiment is a preparation that is added to food, typically after cooking, to enhance the flavour, to complement the dish, or to impart a specific flavor. Such specific flavors generally add sweetness or pungency, or sharp or piquant flavors.",
+    "risk_level": "unknown",
+    "found_in": [],
+    "also_used_in": [],
+    "source": "Wikipedia",
+    "preservative_info": {
+      "is_preservative": false
+    }
+  },
+  "acidity regulator(ins 330)": {
+    "common_name": "ACIDITY REGULATOR(INS 330) (Antioxidants & Acidity Regulators)",
+    "description": "The International Numbering System for Food Additives (INS) is an international naming system for food additives, aimed at providing a short designation of what may be a lengthy actual name. It is defined by Codex Alimentarius, the international food standards organisation of the World Health Organization (WHO) and Food and Agriculture Organization (FAO) of the United Nations (UN).",
+    "risk_level": "low",
+    "found_in": [
+      "Processed foods",
+      "Packaged products",
+      "Commercial food items"
+    ],
+    "also_used_in": [],
+    "source": "Wikipedia",
+    "preservative_info": {
+      "is_preservative": false
+    },
+    "additive_info": {
+      "category": "Antioxidants & Acidity Regulators",
+      "purpose": "Prevent oxidation and control pH levels",
+      "regulatory_status": "Approved food additive",
+      "note": "Required for product integrity and quality maintenance"
+    }
+  },
+  "preservative(ins 211)": {
+    "common_name": "PRESERVATIVE(INS 211) (Preservatives)",
+    "description": "Food preservatives used to maintain product integrity and prevent bacterial/fungal growth. This is a regulatory-approved food additive (prevent spoilage and extend shelf life).",
+    "risk_level": "low",
+    "found_in": [
+      "Processed foods",
+      "Packaged products",
+      "Commercial food items"
+    ],
+    "also_used_in": [],
+    "source": "Offline Fallback",
+    "preservative_info": {
+      "is_preservative": false
+    },
+    "additive_info": {
+      "category": "Preservatives",
+      "purpose": "Prevent spoilage and extend shelf life",
+      "regulatory_status": "Approved food additive",
+      "note": "Required for product integrity and quality maintenance"
+    }
+  },
+  "antioxidant(ins 300)": {
+    "common_name": "ANTIOXIDANT(INS 300) (Antioxidants & Acidity Regulators)",
+    "description": "The International Numbering System for Food Additives (INS) is an international naming system for food additives, aimed at providing a short designation of what may be a lengthy actual name. It is defined by Codex Alimentarius, the international food standards organisation of the World Health Organization (WHO) and Food and Agriculture Organization (FAO) of the United Nations (UN).",
+    "risk_level": "low",
+    "found_in": [
+      "Processed foods",
+      "Packaged products",
+      "Commercial food items"
+    ],
+    "also_used_in": [],
+    "source": "Wikipedia",
+    "preservative_info": {
+      "is_preservative": false
+    },
+    "additive_info": {
+      "category": "Antioxidants & Acidity Regulators",
+      "purpose": "Prevent oxidation and control pH levels",
+      "regulatory_status": "Approved food additive",
+      "note": "Required for product integrity and quality maintenance"
+    }
+  },
+  "herbs(0.8%)": {
+    "common_name": "Herbs(0.8%)",
+    "description": "Special Herbs, Vols. 9 & 0 is an instrumental album released by MF Doom under the moniker Metal Fingers.",
+    "risk_level": "unknown",
+    "found_in": [],
+    "also_used_in": [],
+    "source": "Wikipedia",
+    "preservative_info": {
+      "is_preservative": false
+    }
   }
 }
