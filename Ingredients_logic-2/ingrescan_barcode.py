@@ -80,6 +80,21 @@ def nutrition_warnings(nutrients: Dict[str, float]) -> List[str]:
     if nutrients["sodium_mg"] > 600: warnings.append("High sodium")
     return warnings
 
+# ---------- Custom Health Score ----------
+def custom_health_score(nutrients: Dict[str, float]) -> float:
+    """
+    Compute a normalized custom health score (0–10).
+    Penalizes high sugar, saturated fat, sodium; rewards fiber & protein.
+    """
+    sugars_g, sat_fat_g, sodium_mg = nutrients["sugars_g"], nutrients["sat_fat_g"], nutrients["sodium_mg"]
+    fiber_g, protein_g = nutrients["fiber_g"], nutrients["protein_g"]
+
+    penalties = (sugars_g / 50.0) * 3 + (sat_fat_g / 20.0) * 2 + (sodium_mg / 2000.0) * 2
+    rewards   = (fiber_g / 10.0) * 2 + (protein_g / 20.0) * 1.5
+
+    raw_score = 5.0 + rewards - penalties
+    return max(0, min(10, round(raw_score, 1)))
+
 # ---------- Wrapper ----------
 def score_from_barcode(barcode: str) -> Dict[str, Any]:
     prod = fetch_off_product(barcode)
@@ -102,19 +117,9 @@ def score_from_barcode(barcode: str) -> Dict[str, Any]:
     }
 
 # ---------- Example Run ----------
-# ---------- Example Run ----------
 if __name__ == "__main__":
     result = score_from_barcode("5449000000996")  # Coca-Cola
 
-    grade_meaning = {
-        "A": "Excellent (Highest)",
-        "B": "Good",
-        "C": "Average",
-        "D": "Poor",
-        "E": "Very Poor (Lowest)"
-    }
-
-# Mapping Nutri-Score grade to fixed numeric range
     grade_to_score = {
         "A": 10,
         "B": 8,
@@ -127,11 +132,14 @@ if __name__ == "__main__":
     print(f"Barcode: {result['barcode']}")
     print(f"Product Name: {result['product_name']}")
 
-    # Get remapped score
+    # Scores
     grade = result['nutri_score']['grade']
     mapped_score = grade_to_score.get(grade, "?")
+    health_score = custom_health_score(result["nutrition_inputs"])
 
-    print(f"Nutri-Score: {grade} ({mapped_score}/10)")
+    print("\n--- Scores ---")
+    print(f"Numeric Grade Score: {mapped_score}/10")
+    print(f"Custom Health Score: {health_score}/10")
 
     print("\n--- Nutrition Inputs ---")
     for k, v in result['nutrition_inputs'].items():
@@ -140,7 +148,6 @@ if __name__ == "__main__":
     print("\n--- Ingredients ---")
     print(f"List: {result['ingredients']['ingredients_text']}")
     print(f"Additives: {', '.join(result['ingredients']['additives']) if result['ingredients']['additives'] else 'None'}")
-
 
     # 🔔 Health Warnings
     print("\n--- Health Warnings ---")
