@@ -72,3 +72,20 @@
 - Relying purely on OFF is not viable for Indian audience.
 - Designing a fair custom scoring system requires careful domain research (to avoid oversimplification).
 - Need to balance **ease of use** (scan barcode, instant result) with **data completeness** (fallbacks).
+
+## Day 5 - [30/8/2025]
+
+## Defined the plan for v1.0 scoring system 
+  protein vs fiber weights, sugar cutoffs, etc.
+
+## Finalized approach: 
+use Open Food Facts only for nutrition extraction, not scoring.
+
+## Decided on
+custom formula (1–10 scale) to label products → dataset generation.
+
+## Dataset
+schema fixed (barcode, product_name, nutrients…, score).
+
+## Next step:
+ build scraper + CSV builder to collect 5k–10k products.
