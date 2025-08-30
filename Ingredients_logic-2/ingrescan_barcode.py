@@ -82,10 +82,6 @@ def nutrition_warnings(nutrients: Dict[str, float]) -> List[str]:
 
 # ---------- Custom Health Score ----------
 def custom_health_score(nutrients: Dict[str, float]) -> float:
-    """
-    Compute a normalized custom health score (0–10).
-    Penalizes high sugar, saturated fat, sodium; rewards fiber & protein.
-    """
     sugars_g, sat_fat_g, sodium_mg = nutrients["sugars_g"], nutrients["sat_fat_g"], nutrients["sodium_mg"]
     fiber_g, protein_g = nutrients["fiber_g"], nutrients["protein_g"]
 
@@ -95,11 +91,36 @@ def custom_health_score(nutrients: Dict[str, float]) -> float:
     raw_score = 5.0 + rewards - penalties
     return max(0, min(10, round(raw_score, 1)))
 
+# ---------- Manual Input Fallback ----------
+def manual_input() -> Dict[str, float]:
+    print("\n⚠️ Product not found in OFF. Enter nutrition values manually:")
+    energy_kj = float(input("Energy (kJ per 100g): ") or 0)
+    sugars_g  = float(input("Sugars (g per 100g): ") or 0)
+    sat_fat_g = float(input("Saturated Fat (g per 100g): ") or 0)
+    sodium_mg = float(input("Sodium (mg per 100g): ") or 0)
+    fruit_pct = float(input("Fruit/Vegetable/Nut %: ") or 0)
+    fiber_g   = float(input("Fiber (g per 100g): ") or 0)
+    protein_g = float(input("Protein (g per 100g): ") or 0)
+
+    return {
+        "energy_kj": energy_kj, "sugars_g": sugars_g, "sat_fat_g": sat_fat_g,
+        "sodium_mg": sodium_mg, "fruit_pct": fruit_pct, "fiber_g": fiber_g, "protein_g": protein_g
+    }
+
 # ---------- Wrapper ----------
 def score_from_barcode(barcode: str) -> Dict[str, Any]:
     prod = fetch_off_product(barcode)
+
     if not prod:
-        return {"error": "Product not found on OpenFoodFacts"}
+        nutrients = manual_input()
+        ns = nutri_score_full(**nutrients)
+        return {
+            "barcode": barcode,
+            "product_name": "Manual Entry",
+            "nutri_score": ns,
+            "nutrition_inputs": nutrients,
+            "ingredients": {"ingredients_text": "Manual entry", "allergens": [], "additives": []}
+        }
 
     energy_kj, sugars_g, sat_g, sodium_mg, fruit_pct, fiber_g, protein_g = extract_for_nutriscore(prod)
     ns = nutri_score_full(energy_kj, sugars_g, sat_g, sodium_mg, fruit_pct, fiber_g, protein_g)
@@ -116,17 +137,71 @@ def score_from_barcode(barcode: str) -> Dict[str, Any]:
         "ingredients": explain
     }
 
+def nutrition_score(nutrients, liquid=False):
+    """
+    nutrients: dict with keys:
+        energy_kj, sugars_g, sat_fat_g, sodium_mg,
+        fruit_pct, fiber_g, protein_g
+    liquid: bool → stricter sugar penalties for drinks
+    
+    Returns: score (0–10)
+    """
+
+    # --- Bonuses ---
+    protein = nutrients.get("protein_g", 0.0)
+    fiber   = nutrients.get("fiber_g", 0.0)
+    fruit   = nutrients.get("fruit_pct", 0.0)
+
+    bonus = 0
+    bonus += min(protein, 20) / 20 * 2.5      # up to +2.5
+    bonus += min(fiber, 10) / 10 * 3.0        # up to +3
+    bonus += min(fruit, 60) / 60 * 2.0        # up to +2
+
+    # --- Penalties ---
+    sugar   = nutrients.get("sugars_g", 0.0)
+    satfat  = nutrients.get("sat_fat_g", 0.0)
+    sodium  = nutrients.get("sodium_mg", 0.0)
+    energy  = nutrients.get("energy_kj", 0.0) / 4.184  # kcal approx
+
+    penalty = 0
+
+    # Sugar penalties
+    if liquid:  # stricter thresholds
+        if sugar > 5:  penalty += 1
+        if sugar > 10: penalty += 2
+        if sugar > 15: penalty += 3
+    else:
+        if sugar > 5:  penalty += 0.5
+        if sugar > 10: penalty += 1
+        if sugar > 20: penalty += 3
+
+    # Sat fat penalties
+    if satfat > 5:  penalty += 0.5
+    if satfat > 10: penalty += 1.5
+    if satfat > 20: penalty += 3
+
+    # Sodium penalties
+    if sodium > 400:  penalty += 0.5
+    if sodium > 800:  penalty += 1.5
+    if sodium > 1500: penalty += 3
+
+    # Energy density penalty (optional)
+    if energy > 450 and (protein + fiber) < 5:
+        penalty += 1.5
+
+    # --- Final Score ---
+    score = 5 + bonus - penalty
+
+    # Ceiling rule: unhealthy sugar/sat fat caps max score
+    if sugar > 20 or satfat > 10:
+        score = min(score, 8)
+
+    return round(max(0, min(10, score)), 1)
+
+
 # ---------- Example Run ----------
 if __name__ == "__main__":
-    result = score_from_barcode("5449000000996")  # Coca-Cola
-
-    grade_to_score = {
-        "A": 10,
-        "B": 8,
-        "C": 6,
-        "D": 4,
-        "E": 2
-    }
+    result = score_from_barcode("0000000000000")  # Fake barcode for testing manual input
 
     print("\n--- Product Info ---")
     print(f"Barcode: {result['barcode']}")
@@ -134,11 +209,9 @@ if __name__ == "__main__":
 
     # Scores
     grade = result['nutri_score']['grade']
-    mapped_score = grade_to_score.get(grade, "?")
     health_score = custom_health_score(result["nutrition_inputs"])
 
     print("\n--- Scores ---")
-    print(f"Numeric Grade Score: {mapped_score}/10")
     print(f"Custom Health Score: {health_score}/10")
 
     print("\n--- Nutrition Inputs ---")
@@ -157,3 +230,14 @@ if __name__ == "__main__":
             print(f"- {w}")
     else:
         print("No major warnings")
+nutrients = {
+    "energy_kj": 1500,
+    "sugars_g": 10,
+    "sat_fat_g": 12,
+    "sodium_mg": 11,
+    "fruit_pct": 9,
+    "fiber_g": 5,
+    "protein_g": 25
+}
+
+print(nutrition_score(nutrients))  # Example
