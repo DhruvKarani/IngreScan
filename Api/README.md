@@ -47,10 +47,18 @@
 
    - Place your `firebase_credentials.json` file in the project directory.
 
-6. **Run the API:**
-   ```
-   python main.py
-   ```
+6. **Run the API using FastAPI and Uvicorn:**
+   - First, make sure Uvicorn is installed:
+     ```
+     pip install uvicorn
+     ```
+   - Then start the server:
+     ```
+     uvicorn main:app --reload
+     ```
+   - Open your browser and go to:
+     [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs) for the interactive API documentation (Swagger UI).
+     [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc) for alternative API docs.
 
 ## Notes
 
