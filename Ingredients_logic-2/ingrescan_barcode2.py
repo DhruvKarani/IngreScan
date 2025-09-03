@@ -100,3 +100,9 @@ def analyze_barcode(barcode):
 if __name__ == "__main__":
     barcode = input("Enter product barcode: ")
     analyze_barcode(barcode)
+
+
+#	0038527014033 
+#   6001069206581
+#   070847811169
+#   049000000450
