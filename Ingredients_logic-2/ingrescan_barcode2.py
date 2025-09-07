@@ -3,34 +3,44 @@ import json
 
 # ---- USER PROFILE ----
 user_profile = {
-    "allergens": ["milk", "peanuts"],
-    "conditions": ["diabetes"]  # can be empty if none
+    "allergens": ["milk", "peanuts"],  # List of allergens to flag for the user
+    "conditions": ["diabetes"]  # List of health conditions to consider (e.g., diabetes)
 }
 
 # ---- PRESERVATIVE / ADDITIVE LIST ----
-preservatives = ["sodium benzoate", "potassium sorbate", "emulsifier", "stabilizer", "flavoring", "color"]
+preservatives = [
+    "sodium benzoate", "potassium sorbate", "emulsifier", "stabilizer", "flavoring", "color"
+]  # Common additives/preservatives to flag in ingredients
 
 # ---- HEALTH SCORING FUNCTION ----
 def health_score(nutrients):
+    """
+    Calculate a simple health score (1-10) based on nutrient values.
+    Penalizes high sugar and saturated fat, rewards high protein and fiber.
+    """
     score = 10
     sugars = nutrients.get("sugars_100g", 0)
     sat_fat = nutrients.get("saturated-fat_100g", 0)
     protein = nutrients.get("proteins_100g", 0)
     fiber = nutrients.get("fiber_100g", 0)
 
+    # Penalize high sugar
     if sugars > 40:
         score -= 4
     elif sugars > 20:
         score -= 2
 
+    # Penalize high saturated fat
     if sat_fat > 8:
         score -= 2
 
+    # Reward high protein
     if protein >= 20:
         score += 2
     elif protein >= 10:
         score += 1
 
+    # Reward high fiber
     if fiber >= 10:
         score += 2
     elif fiber >= 5:
@@ -40,6 +50,13 @@ def health_score(nutrients):
 
 # ---- TIER BASED ON SCORE ----
 def get_tier(score):
+    """
+    Map health score to a consumption tier for user guidance.
+    Daily: healthiest, can be consumed often
+    Weekly: healthy, but not every day
+    Occasional: less healthy, limit consumption
+    Avoid: unhealthy, best to avoid
+    """
     if score >= 8:
         return "Daily"
     elif score >= 6:
@@ -51,17 +68,24 @@ def get_tier(score):
 
 # ---- FLAGGING INGREDIENTS ----
 def check_flags(product, profile):
+    """
+    Check product ingredients for user allergens, preservatives, and health risks.
+    Returns a list of warnings for the user.
+    """
     warnings = []
     ingredients = [i.get("text", "").lower() for i in product.get("ingredients", [])]
 
+    # Flag preservatives/additives
     flagged_preservatives = [i for i in ingredients if any(p in i for p in preservatives)]
     if flagged_preservatives:
         warnings.append(f"Contains additives/preservatives: {', '.join(flagged_preservatives)}")
 
+    # Flag allergens
     flagged_allergens = [i for i in ingredients if i in profile["allergens"]]
     if flagged_allergens:
         warnings.append(f"⚠ Allergen risk: {', '.join(flagged_allergens)}")
 
+    # Flag for diabetes risk (high sugar)
     if "diabetes" in profile["conditions"]:
         sugars = product.get("nutriments", {}).get("sugars_100g", 0)
         if sugars > 10:
@@ -69,12 +93,17 @@ def check_flags(product, profile):
 
     return warnings
 
-# ---- MAIN ----
+# ---- MAIN ANALYSIS FUNCTION ----
 def analyze_barcode(barcode):
+    """
+    Fetch product data from OpenFoodFacts using barcode, analyze nutrition and ingredients,
+    and print a summary including health score, tier, and warnings.
+    """
     url = f"https://world.openfoodfacts.org/api/v0/product/{barcode}.json"
     response = requests.get(url)
     data = response.json()
 
+    # Check if product exists in database
     if data.get("status") != 1:
         print("❌ Product not found in Open Food Facts")
         return
@@ -82,10 +111,12 @@ def analyze_barcode(barcode):
     product = data["product"]
     nutrients = product.get("nutriments", {})
 
+    # Calculate health score and tier
     score = health_score(nutrients)
     tier = get_tier(score)
     warnings = check_flags(product, user_profile)
 
+    # Prepare output summary
     output = {
         "Product": product.get("product_name", "Unknown"),
         "Score": score,
@@ -95,14 +126,14 @@ def analyze_barcode(barcode):
 
     print(json.dumps(output, indent=2))
 
-
-# ---- RUN ----
+# ---- SCRIPT ENTRY POINT ----
 if __name__ == "__main__":
+    # Prompt user for barcode input
     barcode = input("Enter product barcode: ")
     analyze_barcode(barcode)
 
-
-#	0038527014033 
-#   6001069206581
-#   070847811169
-#   049000000450
+# Example barcodes for testing:
+# 0038527014033  # Milk
+# 6001069206581  # South African product
+# 070847811169   # US product
+# 049000000450   # Coca-Cola
