@@ -1,0 +1,33 @@
+{
+  "diabetes": {
+    "nutrients": {
+      "sugars_100g": { "max": 5, "penalty": 2 }
+    },
+    "warnings": ["⚠ High sugar - not suitable for diabetes"]
+  },
+  "high_bp": {
+    "nutrients": {
+      "salt_100g": { "max": 1.5, "penalty": 2 }
+    },
+    "warnings": ["⚠ High salt - risky for high blood pressure"]
+  },
+  "cholesterol": {
+    "nutrients": {
+      "fat_100g": { "max": 10, "penalty": 2 },
+      "saturated-fat_100g": { "max": 5, "penalty": 2 }
+    },
+    "warnings": ["⚠ High fat - not suitable for cholesterol patients"]
+  },
+  "pregnant": {
+    "ingredients": ["caffeine", "aspartame", "raw milk"],
+    "nutrients": {},
+    "warnings": ["⚠ Contains ingredients to avoid during pregnancy"]
+  },
+  "kidney": {
+    "nutrients": {
+      "salt_100g": { "max": 1.0, "penalty": 3 },
+      "proteins_100g": { "max": 20, "penalty": 1 }
+    },
+    "warnings": ["⚠ High protein/salt - not suitable for kidney patients"]
+  }
+}
