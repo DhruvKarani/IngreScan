@@ -5,6 +5,7 @@ __pycache__/
 *.pyd
 
 # Virtual environments
+.venv/
 venv/
 env/
 
@@ -23,6 +24,12 @@ env/
 # Environment variables and secrets
 .env
 firebase_credentials.json
+Api /firebase_credentials.json
+
+# Others
+*.bak
+*.swp
+
 
 # Others
 *.bak
