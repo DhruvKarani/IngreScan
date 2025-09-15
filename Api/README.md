@@ -36,25 +36,23 @@
      ```
      pip install -r requirements.txt
      ```
-   - This will install:
-     - fastapi
-     - pydantic
+   - This will install (key packages):
+     - fastapi, pydantic, uvicorn
      - requests
+     - wikipedia
+     - Pillow, pytesseract (for OCR in the image endpoint)
+     - python-multipart (for file uploads)
 
-**Note:** `firebase-admin` is not included in `requirements.txt` since Firebase is not currently used in the project. Add it later if Firebase integration is implemented.
+**Note:** `firebase-admin` is not included since Firebase is not currently used.
 
 5. **Add your Firebase credentials:**
 
    - Place your `firebase_credentials.json` file in the project directory.
 
 6. **Run the API using FastAPI and Uvicorn:**
-   - First, make sure Uvicorn is installed:
+   - Start the server (from this folder):
      ```
-     pip install uvicorn
-     ```
-   - Then start the server:
-     ```
-     uvicorn main:app --reload
+     uvicorn main:app --reload --host 127.0.0.1 --port 8000
      ```
    - Open your browser and go to:
      [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs) for the interactive API documentation (Swagger UI).
@@ -65,6 +63,21 @@
 - If you face any issues with missing packages, install them using `pip install <package_name>`.
 - For allergen logic, refer to `allergens.py`.
 - **Firebase and database functionality are not yet implemented.**
+
+### Endpoints
+
+- POST `/scan/ingredients` — Manual ingredient entry. Uses Open Food Facts first for ingredient info, falls back to Wikipedia.
+- GET `/scan/barcode/{barcode}` — Barcode lookup using Open Food Facts v2/v1 with multiple fallbacks. Returns partial data when full info is not available.
+- POST `/scan/image` — OCR demo (requires Tesseract installed if you enable real OCR).
+
+### Windows quickstart
+
+```
+python -m venv .venv
+.\.venv\Scripts\Activate
+pip install -r requirements.txt
+uvicorn main:app --reload --host 127.0.0.1 --port 8000
+```
 
 ## Contact
 
