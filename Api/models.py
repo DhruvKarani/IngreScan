@@ -23,3 +23,4 @@ class ProductResponse(BaseModel):
     status: Optional[str] = None
     alternatives: Optional[List[str]] = None
     allergen_warning: Optional[str] = None
+
