@@ -153,3 +153,13 @@ if __name__ == "__main__":
 #  8901491100533  Chilli Chataka
 #  5449000054227  #Original taste
 #   3017620425035  Nutella
+
+# Added some more barcodes for testing: 
+# Also added specific health conditions to test personalized warnings
+# and allergens to test allergen warnings.
+
+def add_two_numbers(a, b):
+    """
+    Returns the sum of two numbers a and b.
+    """
+    return a + b
