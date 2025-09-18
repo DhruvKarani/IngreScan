@@ -157,9 +157,3 @@ if __name__ == "__main__":
 # Added some more barcodes for testing: 
 # Also added specific health conditions to test personalized warnings
 # and allergens to test allergen warnings.
-
-def add_two_numbers(a, b):
-    """
-    Returns the sum of two numbers a and b.
-    """
-    return a + b
