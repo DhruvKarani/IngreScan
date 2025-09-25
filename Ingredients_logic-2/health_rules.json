@@ -1,48 +1,48 @@
 {
   "diabetes": {
     "nutrients": {
-      "direct": {
-        "sugars_100g": {"max": 5, "penalty": 3}
-      },
-      "indirect": {
-        "carbohydrates_100g": {"max": 30, "penalty": 1}
-      },
-      "protective": {
-        "fiber_100g": {"min": 5, "bonus": 1}
-      }
+      "sugars_100g": { "max": 5, "penalty": 3 },
+      "carbohydrates_100g": { "max": 15, "penalty": 2 }
     },
-    "ingredients": ["glucose syrup", "fructose"],
+    "ingredients": ["glucose", "fructose", "corn syrup"],
     "warnings": ["⚠ High sugar/carbs - not suitable for diabetes"]
   },
   "high_bp": {
     "nutrients": {
-      "direct": {
-        "salt_100g": {"max": 1.5, "penalty": 3}
-      }
+      "salt_100g": { "max": 0.5, "penalty": 3 }
     },
     "ingredients": [],
-    "warnings": ["⚠ High salt - avoid for high blood pressure"]
+    "warnings": ["⚠ High salt - not suitable for high BP"]
   },
   "pregnant": {
     "nutrients": {
-      "indirect": {
-        "caffeine_100g": {"max": 0.2, "penalty": 2}
-      },
-      "protective": {
-        "folate_100g": {"min": 0.2, "bonus": 2}
-      }
+      "caffeine_100g": { "max": 0, "penalty": 2 }
     },
-    "ingredients": ["alcohol"],
-    "warnings": ["⚠ Avoid caffeine & alcohol during pregnancy"]
+    "ingredients": ["raw_fish", "alcohol"],
+    "warnings": ["⚠ Avoid caffeine/alcohol/raw fish during pregnancy"]
   },
   "high_cholesterol": {
     "nutrients": {
-      "direct": {
-        "cholesterol_100g": {"max": 0.3, "penalty": 3},
-        "saturated-fat_100g": {"max": 5, "penalty": 2}
-      }
+      "saturated-fat_100g": { "max": 5, "penalty": 2 },
+      "cholesterol_100g": { "max": 0.3, "penalty": 2 }
     },
     "ingredients": [],
-    "warnings": ["⚠ High cholesterol/saturated fat - avoid for heart health"]
-  }
+    "warnings": ["⚠ High saturated fat/cholesterol - not suitable for high cholesterol"]
+  },
+  "synergy_rules": [
+    {
+      "nutrient1": "sugars_100g",
+      "nutrient2": "fat_100g",
+      "thresholds": [10, 15],
+      "penalty": 2,
+      "warning": "⚠ Sugar+Fat combo may be risky"
+    },
+    {
+      "nutrient1": "saturated-fat_100g",
+      "nutrient2": "cholesterol_100g",
+      "thresholds": [5, 0.3],
+      "penalty": 2,
+      "warning": "⚠ Saturated Fat + Cholesterol combo increases heart risk"
+    }
+  ]
 }
