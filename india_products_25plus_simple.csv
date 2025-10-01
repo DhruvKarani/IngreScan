@@ -1,0 +1,11 @@
+product_name,brand,ingredients,nutrition_score,category
+"Whole Wheat Bread","Baker's Choice","Whole wheat flour, water, yeast, salt, sugar",A,Bakery
+"Organic Milk","Farm Fresh","Organic milk, vitamin D",A+,Dairy
+"Mixed Nuts","Nutty Delight","Almonds, cashews, walnuts, peanuts",B+,Snacks
+"Green Tea","Tea Garden","Green tea leaves, natural flavors",A,Beverages
+"Dark Chocolate","Choco World","Cocoa mass, cocoa butter, sugar, vanilla",B,Confectionery
+"Brown Rice","Grain Masters","Brown rice",A+,Grains
+"Greek Yogurt","Dairy Plus","Milk, live cultures, natural flavors",A,Dairy
+"Quinoa","Healthy Grains","Quinoa seeds",A+,Grains
+"Olive Oil","Mediterranean","Extra virgin olive oil",A,Oils
+"Oatmeal","Morning Fuel","Rolled oats, natural flavors",A,Breakfast

@@ -1,0 +1,20 @@
+{
+  "name": "ingrescan-csv-test",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "CSV import testing for IngreScan",
+  "main": "test_csv.js",
+  "scripts": {
+    "test": "node test_csv.js"
+  },
+  "keywords": [
+    "csv",
+    "import",
+    "testing"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "csv-parse": "^6.1.0"
+  }
+}
