@@ -62,7 +62,7 @@ def check_warnings(ingredients):
     warnings = []
 
     # Allergen check
-    for allergen in ALLERGENS:
+    for allergen in USER_PROFILE["allergies"]:
         if allergen in ingredients:
             warnings.append(f"[HIGH] Contains allergen: {allergen}")
 
@@ -89,9 +89,12 @@ def apply_health_rules(nutrients, ingredients):
                     score_penalty -= limits["penalty"]
                     warnings.extend(rules.get("warnings", []))
 
-            # Ingredient-based warnings
+            # Ingredient-based penalties
             for bad in rules.get("ingredients", []):
                 if bad in ingredients:
+                    # Apply a penalty if ingredient is present
+                    penalty_points = rules.get("penalty_points", 3)  # default 3 if not specified
+                    score_penalty -= penalty_points
                     warnings.extend(rules.get("warnings", []))
 
     return score_penalty, list(set(warnings))  # remove duplicates
@@ -150,23 +153,37 @@ def analyze_product(barcode):
         # Reliability check
         confidence, extra_warnings = check_data_reliability(product)
 
+    ingredients_lower = ingredients.lower()
+
     # Baseline score
     score = score_nutrients(nutrients)
 
     # Apply health penalties
-    penalty, health_warnings = apply_health_rules(nutrients, ingredients.lower())
-    synergy_penalty, synergy_warnings = apply_synergy_rules(nutrients)
-    score = max(score + penalty + synergy_penalty, 1)
+    penalty, health_warnings = apply_health_rules(nutrients, ingredients_lower)
 
-    # General + personalized warnings
-    warnings = check_warnings(ingredients.lower()) + health_warnings + synergy_warnings + extra_warnings
+    # Apply allergy penalties
+    allergy_penalty = 0
+    allergy_warnings = []
+    for allergen in USER_PROFILE["allergies"]:
+        if allergen in ingredients_lower:
+            allergy_penalty -= 5  # fixed penalty for allergen
+            allergy_warnings.append(f"[HIGH] Contains allergen: {allergen}")
+
+    # Apply synergy penalties
+    synergy_penalty, synergy_warnings = apply_synergy_rules(nutrients)
+
+    # Combine all penalties and warnings
+    total_penalty = penalty + allergy_penalty + synergy_penalty
+    score = max(score + total_penalty, 0)  # score can't go below 0
+
+    warnings = list(set(health_warnings + allergy_warnings + synergy_warnings + extra_warnings))
 
     return {
         "Product": name,
         "Score": score,
         "Tier": assign_tier(score),
         "Confidence": confidence,
-        "Warnings": list(set(warnings))  # deduplicate
+        "Warnings": warnings
     }
 
 

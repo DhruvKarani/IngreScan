@@ -5,21 +5,27 @@
       "carbohydrates_100g": { "max": 15, "penalty": 2 }
     },
     "ingredients": ["glucose", "fructose", "corn syrup"],
-    "warnings": ["⚠ High sugar/carbs - not suitable for diabetes"]
+    "warnings": ["⚠ High sugar/carbs - not suitable for diabetes"],
+    "strict": false,
+    "penalty_points": 3
   },
   "high_bp": {
     "nutrients": {
       "salt_100g": { "max": 0.5, "penalty": 3 }
     },
     "ingredients": [],
-    "warnings": ["⚠ High salt - not suitable for high BP"]
+    "warnings": ["⚠ High salt - not suitable for high BP"],
+    "strict": false,
+    "penalty_points": 3
   },
   "pregnant": {
     "nutrients": {
       "caffeine_100g": { "max": 0, "penalty": 2 }
     },
-    "ingredients": ["raw_fish", "alcohol"],
-    "warnings": ["⚠ Avoid caffeine/alcohol/raw fish during pregnancy"]
+    "ingredients": ["raw_fish", "alcohol", "caffeine"],
+    "warnings": ["⚠ Avoid caffeine/alcohol/raw fish during pregnancy"],
+    "strict": false,
+    "penalty_points": 5
   },
   "high_cholesterol": {
     "nutrients": {
@@ -27,7 +33,129 @@
       "cholesterol_100g": { "max": 0.3, "penalty": 2 }
     },
     "ingredients": [],
-    "warnings": ["⚠ High saturated fat/cholesterol - not suitable for high cholesterol"]
+    "warnings": ["⚠ High saturated fat/cholesterol - not suitable for high cholesterol"],
+    "strict": false,
+    "penalty_points": 4
+  },
+  "kidney_disease": {
+    "nutrients": {
+      "sodium_100g": { "max": 0.5, "penalty": 3 },
+      "salt_100g": { "max": 1.25, "penalty": 3 },
+      "proteins_100g": { "max": 15, "penalty": 2 },
+      "potassium_100g": { "max": 200, "penalty": 2 }
+    },
+    "ingredients": ["potassium", "phosphate", "msg"],
+    "warnings": ["⚠ High sodium/salt can worsen kidney function", "⚠ Limit protein intake"],
+    "strict": false,
+    "penalty_points": 4
+  },
+  "celiac_disease": {
+    "nutrients": {},
+    "ingredients": ["wheat", "barley", "rye", "malt", "gluten", "flour"],
+    "warnings": ["⚠ Contains gluten - strictly avoid", "⚠ Risk of intestinal damage"],
+    "strict": true,
+    "penalty_points": 5
+  },
+  "lactose_intolerance": {
+    "nutrients": {},
+    "ingredients": ["milk", "lactose", "whey", "casein", "dairy", "cream", "butter"],
+    "warnings": ["⚠ Contains lactose - may cause digestive issues"],
+    "strict": true,
+    "penalty_points": 5
+  },
+  "gout": {
+    "nutrients": {
+      "sugars_100g": { "max": 8, "penalty": 2 }
+    },
+    "ingredients": ["high fructose", "corn syrup", "yeast extract"],
+    "warnings": ["⚠ High sugar/fructose can trigger gout attacks", "⚠ Avoid purine-rich foods"],
+    "strict": false,
+    "penalty_points": 3
+  },
+  "ibs": {
+    "nutrients": {
+      "fat_100g": { "max": 10, "penalty": 2 },
+      "fiber_100g": { "max": 8, "penalty": 1 }
+    },
+    "ingredients": ["sorbitol", "mannitol", "xylitol", "artificial sweetener", "caffeine"],
+    "warnings": ["⚠ High fat/fiber may trigger IBS symptoms", "⚠ Sugar alcohols can cause digestive upset"],
+    "strict": false,
+    "penalty_points": 3
+  },
+  "heart_disease": {
+    "nutrients": {
+      "saturated-fat_100g": { "max": 5, "penalty": 3 },
+      "trans-fat_100g": { "max": 0.2, "penalty": 4 },
+      "sodium_100g": { "max": 0.6, "penalty": 2 },
+      "cholesterol_100g": { "max": 20, "penalty": 2 }
+    },
+    "ingredients": ["hydrogenated", "partially hydrogenated"],
+    "warnings": ["⚠ High saturated/trans fat increases heart disease risk", "⚠ Limit sodium intake"],
+    "strict": false,
+    "penalty_points": 4
+  },
+  "fatty_liver": {
+    "nutrients": {
+      "sugars_100g": { "max": 6, "penalty": 3 },
+      "saturated-fat_100g": { "max": 4, "penalty": 2 }
+    },
+    "ingredients": ["high fructose corn syrup", "palm oil"],
+    "warnings": ["⚠ High sugar/fructose can worsen fatty liver", "⚠ Limit saturated fats"],
+    "strict": false,
+    "penalty_points": 3
+  },
+  "osteoporosis": {
+    "nutrients": {
+      "sodium_100g": { "max": 0.4, "penalty": 2 }
+    },
+    "ingredients": ["phosphoric acid", "caffeine"],
+    "warnings": ["⚠ High sodium increases calcium loss", "⚠ Phosphoric acid may affect bone health"],
+    "strict": false,
+    "penalty_points": 3
+  },
+  "anemia": {
+    "nutrients": {},
+    "ingredients": ["tannins", "phytates"],
+    "warnings": ["⚠ Tannins/phytates may reduce iron absorption"],
+    "strict": false,
+    "penalty_points": 2
+  },
+  "acid_reflux": {
+    "nutrients": {
+      "fat_100g": { "max": 8, "penalty": 2 }
+    },
+    "ingredients": ["citric acid", "caffeine", "chocolate", "mint", "tomato", "onion"],
+    "warnings": ["⚠ High fat/acidic foods may trigger reflux", "⚠ Avoid trigger ingredients"],
+    "strict": false,
+    "penalty_points": 3
+  },
+  "soy_allergy": {
+    "nutrients": {},
+    "ingredients": ["soy", "soy protein", "soy lecithin", "soy flour", "tofu", "soy sauce", "tempeh", "miso", "edamame", "soybean oil", "soy isolate"],
+    "warnings": ["⚠ Contains soy - strictly avoid", "⚠ Risk of severe allergic reaction"],
+    "strict": true,
+    "penalty_points": 5
+  },
+  "nut_allergy": {
+    "nutrients": {},
+    "ingredients": ["peanut", "almond", "walnut", "cashew", "hazelnut", "pecan", "pistachio", "brazil nut", "macadamia", "pine nut", "tree nut", "groundnut", "nut oil"],
+    "warnings": ["⚠ Contains nuts/peanuts - strictly avoid", "⚠ Risk of severe allergic reaction", "⚠ May contain traces of nuts"],
+    "strict": true,
+    "penalty_points": 5
+  },
+  "shellfish_allergy": {
+    "nutrients": {},
+    "ingredients": ["shrimp", "crab", "lobster", "prawns", "crayfish", "langoustine", "scampi", "shellfish", "crustacean", "mollusc", "oyster", "mussel", "clam", "scallop"],
+    "warnings": ["⚠ Contains shellfish - strictly avoid", "⚠ Risk of severe allergic reaction", "⚠ Cross-contamination risk"],
+    "strict": true,
+    "penalty_points": 5
+  },
+  "egg_allergy": {
+    "nutrients": {},
+    "ingredients": ["egg", "egg white", "egg yolk", "albumin", "ovalbumin", "ovomucin", "lysozyme", "lecithin", "mayonnaise", "meringue", "custard"],
+    "warnings": ["⚠ Contains egg proteins - strictly avoid", "⚠ Risk of severe allergic reaction", "⚠ Check for hidden egg ingredients"],
+    "strict": true,
+    "penalty_points": 5
   },
   "synergy_rules": [
     {
@@ -43,6 +171,27 @@
       "thresholds": [5, 0.3],
       "penalty": 2,
       "warning": "⚠ Saturated Fat + Cholesterol combo increases heart risk"
+    },
+    {
+      "nutrient1": "sugars_100g",
+      "nutrient2": "saturated-fat_100g",
+      "thresholds": [15, 8],
+      "penalty": 2,
+      "warning": "⚠ High sugar + high saturated fat combination increases metabolic risk"
+    },
+    {
+      "nutrient1": "sodium_100g",
+      "nutrient2": "sugars_100g",
+      "thresholds": [1.0, 12],
+      "penalty": 1,
+      "warning": "⚠ High sodium + high sugar may increase blood pressure risk"
+    },
+    {
+      "nutrient1": "trans-fat_100g",
+      "nutrient2": "cholesterol_100g",
+      "thresholds": [0.5, 25],
+      "penalty": 3,
+      "warning": "⚠ Trans fat + cholesterol combination significantly increases cardiovascular risk"
     }
   ]
 }
