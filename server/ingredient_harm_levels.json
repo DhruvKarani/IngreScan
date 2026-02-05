@@ -1,0 +1,95 @@
+{
+  "ingredient_classification_levels": {
+    "VERY_LOW": {
+      "score_impact": 0,
+      "description": "Completely safe, beneficial ingredients",
+      "examples": ["whole grains", "fruits", "vegetables", "lean proteins", "healthy fats"]
+    },
+    "LOW": {
+      "score_impact": 1,
+      "description": "Generally safe, natural ingredients",
+      "examples": ["natural preservatives", "natural colors", "herbs", "spices"]
+    },
+    "MEDIUM": {
+      "score_impact": 5,
+      "description": "Moderately concerning, acceptable in moderation",
+      "examples": ["refined sugars", "processed oils", "some emulsifiers"]
+    },
+    "HIGH": {
+      "score_impact": 10,
+      "description": "Potentially harmful, limit consumption",
+      "examples": ["artificial colors", "MSG", "BHA/BHT", "sulfites"]
+    },
+    "VERY_HIGH": {
+      "score_impact": 15,
+      "description": "Highly concerning, avoid when possible",
+      "examples": ["nitrites", "certain azo dyes", "trans fats", "banned substances"]
+    }
+  },
+  
+  "whole_food_categories": {
+    "fruits": {
+      "keywords": ["apple", "banana", "orange", "berry", "grape", "mango", "pear", "peach", "plum", "cherry", "watermelon", "melon", "kiwi", "pineapple", "papaya", "guava", "lemon", "lime"],
+      "type": "natural",
+      "harm_level": "VERY_LOW",
+      "score_boost": 2
+    },
+    "vegetables": {
+      "keywords": ["tomato", "carrot", "broccoli", "spinach", "kale", "lettuce", "cucumber", "pepper", "onion", "garlic", "potato", "sweet potato", "beet", "celery", "cabbage", "cauliflower", "zucchini"],
+      "type": "natural",
+      "harm_level": "VERY_LOW",
+      "score_boost": 2
+    },
+    "whole_grains": {
+      "keywords": ["quinoa", "oats", "brown rice", "whole wheat", "barley", "millet", "buckwheat", "bulgur", "farro", "spelt"],
+      "type": "natural",
+      "harm_level": "VERY_LOW",
+      "score_boost": 2
+    },
+    "legumes": {
+      "keywords": ["lentils", "chickpeas", "black beans", "kidney beans", "pinto beans", "soybeans", "peas", "peanuts"],
+      "type": "natural",
+      "harm_level": "VERY_LOW",
+      "score_boost": 2
+    },
+    "nuts_seeds": {
+      "keywords": ["almonds", "walnuts", "cashews", "pistachios", "pecans", "hazelnuts", "macadamia", "chia", "flax", "hemp", "pumpkin seeds", "sunflower seeds", "sesame"],
+      "type": "natural",
+      "harm_level": "VERY_LOW",
+      "score_boost": 2
+    },
+    "proteins": {
+      "keywords": ["chicken", "turkey", "beef", "pork", "fish", "salmon", "tuna", "shrimp", "egg", "milk", "cheese", "yogurt", "tofu", "tempeh"],
+      "type": "natural",
+      "harm_level": "VERY_LOW",
+      "score_boost": 1
+    },
+    "herbs_spices": {
+      "keywords": ["basil", "oregano", "thyme", "rosemary", "cinnamon", "turmeric", "ginger", "cumin", "coriander", "paprika", "pepper", "parsley", "cilantro", "dill", "mint"],
+      "type": "natural",
+      "harm_level": "VERY_LOW",
+      "score_boost": 1
+    }
+  },
+  
+  "processed_food_indicators": {
+    "refined_grains": {
+      "keywords": ["white flour", "enriched flour", "refined flour", "white bread", "white rice"],
+      "type": "processed",
+      "harm_level": "MEDIUM",
+      "penalty": 3
+    },
+    "processed_meat": {
+      "keywords": ["bacon", "sausage", "hot dog", "salami", "pepperoni", "ham", "bologna", "deli meat"],
+      "type": "processed",
+      "harm_level": "HIGH",
+      "penalty": 8
+    },
+    "ultra_processed": {
+      "keywords": ["instant", "reconstituted", "textured", "protein isolate", "concentrate", "mechanically separated"],
+      "type": "processed",
+      "harm_level": "MEDIUM",
+      "penalty": 5
+    }
+  }
+}

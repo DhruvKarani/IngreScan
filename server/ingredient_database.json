@@ -1,0 +1,383 @@
+{
+  "natural_sugar_aliases": {
+    "category": "natural_sugar",
+    "description": "Natural sugars from fruits, plants, and whole foods",
+    "type": "natural",
+    "aliases": [
+      "honey", "maple syrup", "date syrup", "molasses", "blackstrap molasses",
+      "coconut sugar", "palm sugar", "fruit juice", "fruit juice concentrate",
+      "concentrated fruit juice", "agave syrup", "agave nectar",
+      "brown rice syrup", "barley malt syrup", "malt syrup",
+      "sorghum syrup", "carob syrup", "yacon syrup"
+    ],
+    "nutrient_keys": ["sugars_100g", "sugars", "sugar_100g", "sugar"],
+    "threshold_free": 0.5,
+    "penalty_moderate": 5,
+    "penalty_false_claim": 15
+  },
+  
+  "refined_sugar_aliases": {
+    "category": "refined_sugar",
+    "description": "Refined and processed sugars",
+    "type": "processed",
+    "aliases": [
+      "sugar", "sucrose", "glucose", "fructose", "dextrose", "maltose",
+      "lactose", "galactose", "trehalose", "ribose",
+      "corn syrup", "high fructose corn syrup", "HFCS", "glucose syrup",
+      "cane sugar", "raw sugar", "turbinado sugar", "muscovado",
+      "demerara", "beet sugar", "white sugar", "brown sugar",
+      "invert sugar", "caramel", "crystalline fructose",
+      "dextran", "ethyl maltol", "maltodextrin",
+      "d-ribose", "free-flowing brown sugar", "golden syrup",
+      "malt", "diastatic malt", "refiner's syrup",
+      "cane juice", "evaporated cane juice", "grape sugar",
+      "confectioners sugar", "powdered sugar", "icing sugar"
+    ],
+    "nutrient_keys": ["sugars_100g", "sugars", "sugar_100g", "sugar"],
+    "threshold_free": 0.5,
+    "penalty_high": 10,
+    "penalty_false_claim": 20
+  },
+  
+  "natural_sweetener_aliases": {
+    "category": "natural_sweetener",
+    "description": "Natural zero/low-calorie sweeteners from plants",
+    "type": "natural",
+    "aliases": [
+      "stevia", "stevia extract", "steviol glycosides", "rebaudioside",
+      "monk fruit", "monk fruit extract", "luo han guo",
+      "erythritol", "xylitol", "allulose",
+      "yacon syrup"
+    ],
+    "penalty_low": 2,
+    "health_impact": "Generally considered safe, natural origin"
+  },
+  
+  "artificial_sweetener_aliases": {
+    "category": "artificial_sweetener",
+    "description": "Synthetic zero/low-calorie sweeteners",
+    "type": "artificial",
+    "aliases": [
+      "aspartame", "sucralose", "saccharin", "acesulfame", "acesulfame-k", "acesulfame potassium",
+      "neotame", "advantame", "cyclamate", "alitame",
+      "E950", "E951", "E952", "E954", "E955", "E957", "E959", "E960",
+      "nutrasweet", "equal", "splenda", "sweet'n low"
+    ],
+    "penalty_high": 8,
+    "health_impact": "Synthetic sweeteners, some people may be sensitive"
+  },
+  
+  "sugar_alcohol_aliases": {
+    "category": "sugar_alcohol",
+    "description": "Sugar alcohols (polyols) - semi-natural sweeteners",
+    "type": "processed",
+    "aliases": [
+      "sorbitol", "mannitol", "maltitol", "isomalt", "lactitol",
+      "glycerol", "glycerin", "hydrogenated starch hydrolysates",
+      "E961", "E962", "E965", "E966", "E967", "E968"
+    ],
+    "penalty_moderate": 5,
+    "health_impact": "May cause digestive issues in high amounts"
+  },
+
+  "fat_aliases": {
+    "category": "fat",
+    "description": "All types of fats and oils",
+    "aliases": [
+      "fat", "oil", "butter", "ghee", "lard", "tallow", "suet", "shortening",
+      "palm oil", "palm kernel oil", "coconut oil", "cocoa butter",
+      "vegetable oil", "canola oil", "soybean oil", "sunflower oil",
+      "olive oil", "corn oil", "peanut oil", "safflower oil",
+      "cottonseed oil", "rapeseed oil", "sesame oil", "flaxseed oil",
+      "margarine", "vegetable shortening", "hydrogenated oil",
+      "partially hydrogenated oil", "trans fat", "trans fatty acids",
+      "saturated fat", "monoglycerides", "diglycerides", "triglycerides",
+      "fatty acids", "omega-3", "omega-6", "omega-9",
+      "cream", "heavy cream", "whipping cream", "sour cream",
+      "MCT oil", "medium chain triglycerides", "interesterified fat"
+    ],
+    "nutrient_keys": ["fat_100g", "fat", "saturated-fat_100g", "saturated_fat", "trans-fat_100g"],
+    "threshold_free": 0.5,
+    "penalty_false_claim": 20
+  },
+
+  "gluten_aliases": {
+    "category": "gluten",
+    "description": "Gluten-containing grains and derivatives",
+    "aliases": [
+      "gluten", "wheat", "wheat flour", "whole wheat", "wheat protein",
+      "barley", "barley malt", "malt", "malt extract", "malt flavoring",
+      "rye", "rye flour", "pumpernickel", "triticale",
+      "spelt", "kamut", "farro", "einkorn", "emmer",
+      "semolina", "durum", "bulgur", "couscous", "farina",
+      "seitan", "wheat gluten", "vital wheat gluten",
+      "wheat starch", "wheat bran", "wheat germ",
+      "bromated flour", "enriched flour", "phosphated flour",
+      "plain flour", "self-rising flour", "bread flour", "cake flour",
+      "graham flour", "matzo", "panko", "orzo", "udon"
+    ],
+    "strict": true,
+    "penalty_false_claim": 25
+  },
+
+  "dairy_aliases": {
+    "category": "dairy",
+    "description": "Milk and dairy products",
+    "aliases": [
+      "milk", "dairy", "lactose", "whey", "casein", "caseinate",
+      "cream", "butter", "buttermilk", "ghee", "cheese",
+      "yogurt", "yoghurt", "kefir", "sour cream", "creme fraiche",
+      "milk protein", "milk solids", "milk powder", "skim milk powder",
+      "whole milk powder", "condensed milk", "evaporated milk",
+      "dulce de leche", "recombined milk", "hydrolyzed milk protein",
+      "lactalbumin", "lactoglobulin", "lactulose", "rennet casein",
+      "curds", "custard", "pudding", "half and half", "quark",
+      "cottage cheese", "cream cheese", "ricotta", "paneer",
+      "milk fat", "anhydrous milk fat", "butter oil"
+    ],
+    "strict": true,
+    "penalty_false_claim": 25
+  },
+
+  "natural_preservative_aliases": {
+    "category": "natural_preservative",
+    "description": "Natural preservatives - generally safe",
+    "type": "natural",
+    "harm_level": "LOW",
+    "aliases": [
+      "vitamin c", "ascorbic acid", "vitamin e", "tocopherol",
+      "citric acid", "lactic acid", "acetic acid", "vinegar",
+      "rosemary extract", "green tea extract", "grapefruit seed extract",
+      "salt", "sugar", "honey", "nisin",
+      "natamycin", "lysozyme", "E300", "E301", "E302", "E306", "E307", "E308", "E309",
+      "E330", "E270", "E260"
+    ],
+    "penalty_low": 1,
+    "health_impact": "Natural origin, generally recognized as safe"
+  },
+  
+  "moderate_preservative_aliases": {
+    "category": "moderate_preservative",
+    "description": "Moderately concerning preservatives",
+    "type": "processed",
+    "harm_level": "MEDIUM",
+    "aliases": [
+      "sorbate", "potassium sorbate", "calcium sorbate",
+      "propionic acid", "calcium propionate", "sodium propionate",
+      "E200", "E201", "E202", "E203", 
+      "E280", "E281", "E282", "E283"
+    ],
+    "penalty_moderate": 5,
+    "health_impact": "Generally safe but may cause sensitivity in some people"
+  },
+  
+  "harmful_preservative_aliases": {
+    "category": "harmful_preservative",
+    "description": "Potentially harmful preservatives",
+    "type": "artificial",
+    "harm_level": "HIGH",
+    "aliases": [
+      "benzoate", "sodium benzoate", "potassium benzoate",
+      "sulfite", "sodium sulfite", "potassium sulfite", "sodium bisulfite",
+      "sodium metabisulfite", "potassium metabisulfite", "sulfur dioxide",
+      "BHA", "BHT", "TBHQ",
+      "butylated hydroxyanisole", "butylated hydroxytoluene",
+      "E210", "E211", "E212", "E213", "E214", "E215", "E216", "E217", "E218", "E219",
+      "E220", "E221", "E222", "E223", "E224", "E225", "E226", "E227", "E228",
+      "E310", "E311", "E312", "E319", "E320", "E321"
+    ],
+    "penalty_high": 10,
+    "health_impact": "May cause allergic reactions, asthma, hyperactivity. Avoid if sensitive"
+  },
+  
+  "very_harmful_preservative_aliases": {
+    "category": "very_harmful_preservative",
+    "description": "Highly concerning preservatives - linked to health risks",
+    "type": "artificial",
+    "harm_level": "VERY_HIGH",
+    "aliases": [
+      "nitrite", "sodium nitrite", "potassium nitrite",
+      "nitrate", "sodium nitrate", "potassium nitrate",
+      "E230", "E231", "E232", "E234", "E235", "E239",
+      "E249", "E250", "E251", "E252"
+    ],
+    "penalty_very_high": 15,
+    "health_impact": "Linked to cancer risk, migraines, cardiovascular issues. Limit consumption"
+  },
+
+  "natural_color_aliases": {
+    "category": "natural_color",
+    "description": "Natural food colorings from plants and minerals",
+    "type": "natural",
+    "harm_level": "LOW",
+    "aliases": [
+      "beet juice", "beetroot", "turmeric", "paprika extract", "annatto",
+      "carotene", "beta-carotene", "chlorophyll", "spirulina", "butterfly pea",
+      "carmine", "cochineal", "anthocyanins", "curcumin",
+      "E100", "E101", "E140", "E141", "E160", "E161", "E162", "E163"
+    ],
+    "penalty_low": 2,
+    "health_impact": "Natural plant-based colors, generally safe"
+  },
+  
+  "moderate_color_aliases": {
+    "category": "moderate_color",
+    "description": "Moderately concerning synthetic colors",
+    "type": "processed",
+    "harm_level": "MEDIUM",
+    "aliases": [
+      "caramel color", "caramel III", "caramel IV",
+      "E150a", "E150b", "E150c", "E150d",
+      "E171", "E172", "E173", "E174", "E175"
+    ],
+    "penalty_moderate": 6,
+    "health_impact": "Some caramel colors may contain 4-MEI (potential carcinogen)"
+  },
+  
+  "harmful_color_aliases": {
+    "category": "harmful_color",
+    "description": "Artificial colors linked to hyperactivity and allergies",
+    "type": "artificial",
+    "harm_level": "HIGH",
+    "aliases": [
+      "tartrazine", "yellow 5", "sunset yellow", "yellow 6",
+      "allura red", "red 40", "ponceau 4R", "erythrosine", "red 3",
+      "indigo carmine", "blue 1", "brilliant blue", "blue 2", "green 3",
+      "E102", "E104", "E110", "E122", "E123", "E124", "E127", "E128", "E129",
+      "E131", "E132", "E133", "E142", "E151", "E153", "E154", "E155"
+    ],
+    "penalty_high": 12,
+    "health_impact": "Linked to hyperactivity in children, allergic reactions. Banned in some countries"
+  },
+  
+  "natural_flavor_aliases": {
+    "category": "natural_flavor",
+    "description": "Natural flavoring from real food sources",
+    "type": "natural",
+    "harm_level": "LOW",
+    "aliases": [
+      "natural flavor", "natural flavoring", "vanilla extract", "lemon extract",
+      "almond extract", "peppermint extract", "orange extract",
+      "fruit extract", "herb extract", "spice extract"
+    ],
+    "penalty_low": 1,
+    "health_impact": "Derived from natural sources, generally safe"
+  },
+  
+  "artificial_flavor_aliases": {
+    "category": "artificial_flavor",
+    "description": "Synthetic flavoring agents",
+    "type": "artificial",
+    "harm_level": "MEDIUM",
+    "aliases": [
+      "artificial flavor", "artificial flavoring", "vanillin",
+      "ethyl vanillin", "diacetyl", "maltol", "ethyl maltol"
+    ],
+    "penalty_moderate": 7,
+    "health_impact": "Synthetic flavors, some linked to respiratory issues (e.g., diacetyl)"
+  },
+  
+  "flavor_enhancer_aliases": {
+    "category": "flavor_enhancer",
+    "description": "Flavor enhancers and taste modifiers",
+    "type": "processed",
+    "harm_level": "MEDIUM_TO_HIGH",
+    "aliases": [
+      "monosodium glutamate", "MSG", "disodium guanylate", "disodium inosinate",
+      "yeast extract", "autolyzed yeast", "hydrolyzed vegetable protein",
+      "hydrolyzed soy protein", "hydrolyzed plant protein",
+      "E620", "E621", "E622", "E623", "E624", "E625",
+      "E626", "E627", "E628", "E629", "E630", "E631", "E632", "E633", "E634", "E635"
+    ],
+    "penalty_high": 10,
+    "health_impact": "May cause headaches, flushing, numbness in sensitive individuals. MSG sensitivity is controversial"
+  },
+  
+  "emulsifier_stabilizer_aliases": {
+    "category": "emulsifier_stabilizer",
+    "description": "Emulsifiers and stabilizers - texture agents",
+    "type": "processed",
+    "harm_level": "LOW_TO_MEDIUM",
+    "aliases": [
+      "lecithin", "soy lecithin", "sunflower lecithin",
+      "mono and diglycerides", "monoglycerides", "diglycerides",
+      "carrageenan", "guar gum", "xanthan gum", "locust bean gum",
+      "pectin", "agar", "gelatin", "modified starch",
+      "polysorbate 80", "polysorbate 60",
+      "E322", "E400", "E401", "E402", "E403", "E404", "E405", "E406", "E407",
+      "E410", "E412", "E413", "E414", "E415", "E416", "E417", "E418",
+      "E432", "E433", "E434", "E435", "E436", "E440", "E441", "E442",
+      "E470", "E471", "E472", "E473", "E474", "E475", "E476", "E477", "E479", "E481", "E482"
+    ],
+    "penalty_low": 3,
+    "health_impact": "Most are safe, but carrageenan and polysorbates may cause gut inflammation in sensitive individuals"
+  },
+
+  "gmo_aliases": {
+    "category": "gmo",
+    "description": "Genetically modified organism indicators",
+    "aliases": [
+      "genetically modified", "GMO", "genetically engineered",
+      "bioengineered", "gene-modified", "transgenic",
+      "corn syrup", "soy lecithin", "canola oil", "cottonseed oil",
+      "soybean oil", "corn oil", "sugar from beets", "beet sugar",
+      "modified corn starch", "modified food starch", "dextrose",
+      "maltodextrin", "high fructose corn syrup", "aspartame",
+      "citric acid", "lactic acid", "xanthan gum", "vegetable protein",
+      "soy protein isolate", "textured vegetable protein"
+    ],
+    "penalty_false_claim": 12
+  },
+
+  "sodium_aliases": {
+    "category": "sodium",
+    "description": "All forms of sodium and salt",
+    "aliases": [
+      "salt", "sodium", "sodium chloride", "sea salt", "table salt",
+      "kosher salt", "himalayan salt", "rock salt", "celtic salt",
+      "monosodium glutamate", "MSG", "sodium benzoate", "sodium nitrite",
+      "sodium nitrate", "sodium phosphate", "disodium phosphate",
+      "trisodium phosphate", "sodium bicarbonate", "baking soda",
+      "sodium citrate", "sodium erythorbate", "sodium ascorbate",
+      "sodium caseinate", "sodium stearoyl lactylate", "soy sauce",
+      "tamari", "fish sauce", "worcestershire sauce", "teriyaki sauce",
+      "disodium inosinate", "disodium guanylate", "sodium alginate",
+      "sodium carboxymethylcellulose", "sodium hexametaphosphate"
+    ],
+    "nutrient_keys": ["salt_100g", "salt", "sodium_100g", "sodium", "sodium_mg"],
+    "threshold_free": 0.005,
+    "penalty_false_claim": 15
+  },
+
+  "cholesterol_aliases": {
+    "category": "cholesterol",
+    "description": "Cholesterol sources - animal products",
+    "aliases": [
+      "cholesterol", "egg", "egg yolk", "whole egg",
+      "lard", "tallow", "suet", "beef fat", "pork fat",
+      "chicken fat", "duck fat", "goose fat", "bacon fat",
+      "butter", "ghee", "cream", "organ meat", "liver",
+      "kidney", "brain", "sweetbreads", "tripe",
+      "shrimp", "prawns", "lobster", "crab", "shellfish",
+      "squid", "octopus", "caviar", "fish roe"
+    ],
+    "nutrient_keys": ["cholesterol_100g", "cholesterol", "cholesterol_mg"],
+    "threshold_free": 0.005,
+    "penalty_false_claim": 15
+  },
+
+  "claim_keywords": {
+    "sugar_free": ["sugar free", "sugar-free", "no sugar", "zero sugar", "sugarfree", "without sugar"],
+    "fat_free": ["fat free", "fat-free", "no fat", "zero fat", "fatfree", "without fat", "0% fat"],
+    "gluten_free": ["gluten free", "gluten-free", "no gluten", "without gluten", "glutenfree"],
+    "dairy_free": ["dairy free", "dairy-free", "no dairy", "lactose free", "lactose-free", "milk free"],
+    "preservative_free": ["preservative free", "no preservatives", "preservative-free", "without preservatives"],
+    "artificial_free": ["no artificial", "natural", "all natural", "100% natural", "artificial-free"],
+    "gmo_free": ["non-GMO", "GMO free", "GMO-free", "no GMO", "without GMO"],
+    "sodium_free": ["sodium free", "salt free", "no salt", "no sodium", "low sodium"],
+    "cholesterol_free": ["cholesterol free", "no cholesterol", "cholesterol-free"],
+    "organic": ["organic", "USDA organic", "certified organic"],
+    "vegan": ["vegan", "plant-based", "100% plant"],
+    "vegetarian": ["vegetarian", "veggie"]
+  }
+}

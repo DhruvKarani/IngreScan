@@ -1,0 +1,14 @@
+# Requirements for the local scoring API (server/score_api.py)
+# Keep versions reasonably recent but not pinned to a single micro-version.
+Flask>=2.0,<3.0
+requests>=2.25.0
+
+# ML/AI Dependencies for intelligent scoring
+transformers>=4.30.0
+torch>=2.0.0
+sentence-transformers>=2.2.0
+scikit-learn>=1.3.0
+numpy>=1.24.0
+
+# Optional (for production deployments)
+# gunicorn>=20.0.4

@@ -1,0 +1,72 @@
+{
+  "label_reading_guide": [
+    {
+      "id": 1,
+      "title": "Ingredient Order",
+      "icon": "📋",
+      "content": "Ingredients are listed by weight, from highest to lowest. The first ingredient makes up the most of the product.",
+      "tip": "If sugar is in the first 3 ingredients, the product is likely high in sugar."
+    },
+    {
+      "id": 2,
+      "title": "Understanding INS/E Numbers",
+      "icon": "🔢",
+      "content": "INS (International Numbering System) and E numbers identify food additives. They're not necessarily harmful - they're just standardized codes.",
+      "tip": "Look up unfamiliar numbers, but don't panic - many are natural substances like Vitamin C (INS 300)."
+    },
+    {
+      "id": 3,
+      "title": "May Contain Statements",
+      "icon": "⚠️",
+      "content": "These warnings indicate potential cross-contamination during manufacturing, not intentional ingredients.",
+      "tip": "Important for allergies, but doesn't mean the ingredient is definitely present."
+    },
+    {
+      "id": 4,
+      "title": "Hidden Sugars",
+      "icon": "🍯",
+      "content": "Sugar appears under many names: dextrose, maltose, fructose, corn syrup, cane juice, and more.",
+      "tip": "If multiple sugar types appear in one product, the total sugar content is higher than it seems."
+    },
+    {
+      "id": 5,
+      "title": "Serving Size Tricks",
+      "icon": "🥄",
+      "content": "Nutritional information is per serving, not per package. Check if one package contains multiple servings.",
+      "tip": "A small candy bar might list '2 servings' to make calories appear lower."
+    },
+    {
+      "id": 6,
+      "title": "Natural vs Artificial",
+      "icon": "🌿",
+      "content": "'Natural' doesn't always mean healthy. Natural flavors can be chemically complex and artificial ones can be simple.",
+      "tip": "Focus on the overall ingredient list quality rather than just 'natural' labels."
+    }
+  ],
+  "myths_vs_facts": [
+    {
+      "id": 1,
+      "myth": "All chemicals in food are harmful",
+      "fact": "Everything is made of chemicals, including water (H2O) and salt (NaCl). The dose makes the poison.",
+      "explanation": "Many safe substances become harmful only in extremely large quantities."
+    },
+    {
+      "id": 2,
+      "myth": "Natural is always better than artificial",
+      "fact": "Many artificial ingredients are identical to or safer than their natural counterparts.",
+      "explanation": "Artificial vanilla is chemically identical to natural vanilla but more consistent and affordable."
+    },
+    {
+      "id": 3,
+      "myth": "Organic means no chemicals",
+      "fact": "Organic foods can contain approved pesticides and additives, just different ones.",
+      "explanation": "Organic has specific standards but doesn't mean chemical-free."
+    },
+    {
+      "id": 4,
+      "myth": "If I can't pronounce it, it's bad",
+      "fact": "Complex names don't indicate danger. Vitamin B12 is cyanocobalamin.",
+      "explanation": "Scientific names sound scary but often describe harmless or beneficial substances."
+    }
+  ]
+}

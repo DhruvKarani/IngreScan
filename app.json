@@ -1,0 +1,64 @@
+{
+  "expo": {
+    "name": "IngreScan",
+    "slug": "ingrescan",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": false,
+    "description": "Your personalized food ingredient scanner for healthier choices",
+    "primaryColor": "#00C853",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#00C853"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ingrescan.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#00C853"
+      },
+      "edgeToEdgeEnabled": true,
+      "package": "com.ingrescan.app",
+      "permissions": [
+        "CAMERA",
+        "VIBRATE",
+        "RECEIVE_BOOT_COMPLETED",
+        "WAKE_LOCK",
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow IngreScan to access your camera to scan product barcodes."
+        }
+      ],
+      "expo-barcode-scanner",
+      [
+        "expo-notifications",
+        {
+          "color": "#ffffff",
+          "defaultChannel": "default",
+          "sounds": []
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "da20e5eb-093d-40e2-a850-1862d31fe416"
+      }
+    }
+  }
+}

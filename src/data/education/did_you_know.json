@@ -1,0 +1,1071 @@
+{
+  "flashcards": [
+    {
+      "id": 1,
+      "front": "What does ingredient order tell you?",
+      "back": "Ingredients are listed by weight - the first ingredient makes up the most of the product.",
+      "icon": "📋",
+      "category": "label_reading"
+    },
+    {
+      "id": 2,
+      "front": "How many names does sugar have?",
+      "back": "Sugar has over 60 different names including fructose, corn syrup, dextrose, and maltose.",
+      "icon": "🍬",
+      "category": "ingredients"
+    },
+    {
+      "id": 3,
+      "front": "What does 'INS 211' mean?",
+      "back": "INS 211 is Sodium Benzoate, a preservative used to increase shelf life and prevent bacteria growth.",
+      "icon": "🧪",
+      "category": "additives"
+    },
+    {
+      "id": 4,
+      "front": "Why are there so many ingredients in processed food?",
+      "back": "Each ingredient serves a purpose: flavor, texture, color, preservation, or cost reduction.",
+      "icon": "⚗️",
+      "category": "processing"
+    },
+    {
+      "id": 5,
+      "front": "What's the 5-ingredient rule?",
+      "back": "Foods with 5 or fewer ingredients are generally less processed and more natural.",
+      "icon": "✋",
+      "category": "healthy_choices"
+    },
+    {
+      "id": 6,
+      "front": "What does 'natural flavor' actually mean?",
+      "back": "Natural flavor can be derived from any plant or animal source, not necessarily the food it flavors.",
+      "icon": "🌿",
+      "category": "ingredients"
+    },
+    {
+      "id": 7,
+      "front": "How to spot hidden sodium?",
+      "back": "Look for words ending in 'sodium' or containing 'salt' - there are over 40 forms of sodium in food.",
+      "icon": "🧂",
+      "category": "nutrients"
+    },
+    {
+      "id": 8,
+      "front": "What's the difference between 'best before' and 'use by'?",
+      "back": "'Best before' is about quality, 'use by' is about safety. Many foods are safe past 'best before' dates.",
+      "icon": "📅",
+      "category": "food_safety"
+    },
+    {
+      "id": 9,
+      "front": "Why do some foods contain vitamin C as an ingredient?",
+      "back": "Vitamin C (ascorbic acid) is often added as a natural preservative to prevent oxidation and browning.",
+      "icon": "🍊",
+      "category": "additives"
+    },
+    {
+      "id": 10,
+      "front": "What does 'enriched' flour mean?",
+      "back": "Nutrients removed during processing are added back, but not all the original nutrients are replaced.",
+      "icon": "🌾",
+      "category": "processing"
+    },
+    {
+      "id": 11,
+      "front": "How much sugar is safe per day?",
+      "back": "WHO recommends less than 25g (6 teaspoons) of added sugar daily for adults.",
+      "icon": "🥄",
+      "category": "nutrients"
+    },
+    {
+      "id": 12,
+      "front": "What's the truth about MSG?",
+      "back": "MSG is safe for most people. It naturally occurs in tomatoes, cheese, and mushrooms.",
+      "icon": "🍄",
+      "category": "myths_facts"
+    },
+    {
+      "id": 13,
+      "front": "Why are trans fats banned in many countries?",
+      "back": "Trans fats raise bad cholesterol, lower good cholesterol, and increase heart disease risk.",
+      "icon": "❌",
+      "category": "nutrients"
+    },
+    {
+      "id": 14,
+      "front": "What does 'organic' really mean?",
+      "back": "Organic foods are grown without synthetic pesticides, fertilizers, or GMOs, but aren't necessarily more nutritious.",
+      "icon": "🌱",
+      "category": "label_reading"
+    },
+    {
+      "id": 15,
+      "front": "How long can you safely store leftovers?",
+      "back": "Most cooked leftovers should be eaten within 3-4 days when stored in the refrigerator.",
+      "icon": "🥘",
+      "category": "food_safety"
+    },
+    {
+      "id": 16,
+      "front": "What's the deal with gluten-free labels?",
+      "back": "Gluten-free products must contain less than 20ppm of gluten, safe for most people with celiac disease.",
+      "icon": "🌾",
+      "category": "label_reading"
+    },
+    {
+      "id": 17,
+      "front": "Why do apples have wax coating?",
+      "back": "Food-grade wax replaces natural wax lost during washing, helping retain moisture and appearance.",
+      "icon": "🍎",
+      "category": "processing"
+    },
+    {
+      "id": 18,
+      "front": "What's the difference between probiotics and prebiotics?",
+      "back": "Probiotics are live beneficial bacteria; prebiotics are fiber that feeds good bacteria in your gut.",
+      "icon": "🦠",
+      "category": "nutrients"
+    },
+    {
+      "id": 19,
+      "front": "How much fiber do you need daily?",
+      "back": "Adults need 25-35g of fiber daily, but most people only get half that amount.",
+      "icon": "🥗",
+      "category": "nutrients"
+    },
+    {
+      "id": 20,
+      "front": "What does 'no added sugar' mean?",
+      "back": "No sugars were added during processing, but the food may naturally contain sugars.",
+      "icon": "🚫",
+      "category": "label_reading"
+    },
+    {
+      "id": 21,
+      "front": "Why is breakfast called the most important meal?",
+      "back": "It kickstarts metabolism, improves concentration, and helps maintain steady blood sugar levels.",
+      "icon": "🍳",
+      "category": "healthy_choices"
+    },
+    {
+      "id": 22,
+      "front": "What's the truth about egg cholesterol?",
+      "back": "Dietary cholesterol has less impact on blood cholesterol than previously thought for most people.",
+      "icon": "🥚",
+      "category": "myths_facts"
+    },
+    {
+      "id": 23,
+      "front": "How does freezing affect nutrition?",
+      "back": "Frozen fruits and vegetables can be more nutritious than fresh ones that have been transported long distances.",
+      "icon": "❄️",
+      "category": "nutrients"
+    },
+    {
+      "id": 24,
+      "front": "What's the danger zone for food temperatures?",
+      "back": "Bacteria multiply rapidly between 40-140°F (4-60°C). Keep hot foods hot and cold foods cold.",
+      "icon": "🌡️",
+      "category": "food_safety"
+    },
+    {
+      "id": 25,
+      "front": "Why do some people get headaches from wine?",
+      "back": "Sulfites, histamines, or tannins in wine can trigger headaches in sensitive individuals.",
+      "icon": "🍷",
+      "category": "additives"
+    },
+    {
+      "id": 26,
+      "front": "What's the difference between saturated and unsaturated fats?",
+      "back": "Saturated fats are solid at room temperature; unsaturated fats are liquid and generally healthier.",
+      "icon": "🧈",
+      "category": "nutrients"
+    },
+    {
+      "id": 27,
+      "front": "How much water should you drink daily?",
+      "back": "About 8 cups (2 liters) for women and 10 cups (2.5 liters) for men, but needs vary by activity and climate.",
+      "icon": "💧",
+      "category": "healthy_choices"
+    },
+    {
+      "id": 28,
+      "front": "What causes food allergies vs. food intolerances?",
+      "back": "Allergies involve immune system reactions; intolerances are digestive issues without immune involvement.",
+      "icon": "🤧",
+      "category": "food_safety"
+    },
+    {
+      "id": 29,
+      "front": "Why is iron absorption important?",
+      "back": "Vitamin C enhances iron absorption, while calcium and tannins can reduce it.",
+      "icon": "🥩",
+      "category": "nutrients"
+    },
+    {
+      "id": 30,
+      "front": "What's the shelf life of spices?",
+      "back": "Whole spices last 2-3 years, ground spices 1-2 years, but they lose potency over time.",
+      "icon": "🌶️",
+      "category": "food_safety"
+    },
+    {
+      "id": 31,
+      "front": "What does 'grass-fed' mean for meat?",
+      "back": "Animals ate grass for most of their lives, potentially resulting in higher omega-3 fatty acids.",
+      "icon": "🐄",
+      "category": "label_reading"
+    },
+    {
+      "id": 32,
+      "front": "How does cooking method affect nutrition?",
+      "back": "Steaming and microwaving preserve most nutrients; boiling can leach water-soluble vitamins.",
+      "icon": "👨‍🍳",
+      "category": "cooking"
+    },
+    {
+      "id": 33,
+      "front": "What's the truth about carbohydrates?",
+      "back": "Complex carbs provide sustained energy; simple carbs cause blood sugar spikes.",
+      "icon": "🍞",
+      "category": "nutrients"
+    },
+    {
+      "id": 34,
+      "front": "Why do bananas turn brown?",
+      "back": "Enzymes break down chlorophyll and create brown pigments as the fruit ripens and converts starch to sugar.",
+      "icon": "🍌",
+      "category": "processing"
+    },
+    {
+      "id": 35,
+      "front": "What's the difference between cage-free and free-range eggs?",
+      "back": "Cage-free means no cages but birds may be indoors; free-range requires outdoor access.",
+      "icon": "🐔",
+      "category": "label_reading"
+    },
+    {
+      "id": 36,
+      "front": "How long can you safely eat food past its expiration date?",
+      "back": "Many dry goods are safe for months or years past expiration if stored properly, but use your senses.",
+      "icon": "📆",
+      "category": "food_safety"
+    },
+    {
+      "id": 37,
+      "front": "What's the truth about microwaving food?",
+      "back": "Microwaving doesn't reduce nutrients more than other cooking methods and can actually preserve some vitamins.",
+      "icon": "📱",
+      "category": "cooking"
+    },
+    {
+      "id": 38,
+      "front": "Why is palm oil controversial?",
+      "back": "Palm oil production often contributes to deforestation, but it's efficient and versatile.",
+      "icon": "🌴",
+      "category": "sustainability"
+    },
+    {
+      "id": 39,
+      "front": "What makes honey different from sugar?",
+      "back": "Honey contains trace amounts of vitamins and antioxidants, but nutritionally it's similar to sugar.",
+      "icon": "🍯",
+      "category": "ingredients"
+    },
+    {
+      "id": 40,
+      "front": "How does altitude affect cooking?",
+      "back": "Higher altitude means lower air pressure, affecting boiling point, rising agents, and cooking times.",
+      "icon": "🏔️",
+      "category": "cooking"
+    },
+    {
+      "id": 41,
+      "front": "What's the truth about detox diets?",
+      "back": "Your liver and kidneys naturally detoxify your body; extreme detox diets aren't necessary or beneficial.",
+      "icon": "🫘",
+      "category": "myths_facts"
+    },
+    {
+      "id": 42,
+      "front": "Why do onions make you cry?",
+      "back": "Cutting onions releases sulfur compounds that react with water in your eyes to form irritating acids.",
+      "icon": "🧅",
+      "category": "cooking"
+    },
+    {
+      "id": 43,
+      "front": "What's the difference between white and brown rice?",
+      "back": "Brown rice retains the bran layer, providing more fiber, vitamins, and minerals than white rice.",
+      "icon": "🍚",
+      "category": "nutrients"
+    },
+    {
+      "id": 44,
+      "front": "How much caffeine is safe daily?",
+      "back": "Up to 400mg daily for healthy adults (about 4 cups of coffee), but pregnancy and heart conditions require less.",
+      "icon": "☕",
+      "category": "healthy_choices"
+    },
+    {
+      "id": 45,
+      "front": "What causes food cravings?",
+      "back": "Cravings can result from blood sugar drops, dehydration, stress, or nutrient deficiencies.",
+      "icon": "🤤",
+      "category": "healthy_choices"
+    },
+    {
+      "id": 46,
+      "front": "Why is fish recommended twice a week?",
+      "back": "Fish provides omega-3 fatty acids essential for heart and brain health that our bodies can't make.",
+      "icon": "🐟",
+      "category": "nutrients"
+    },
+    {
+      "id": 47,
+      "front": "What's the truth about coconut oil?",
+      "back": "Coconut oil is high in saturated fat but may have different health effects than other saturated fats.",
+      "icon": "🥥",
+      "category": "myths_facts"
+    },
+    {
+      "id": 48,
+      "front": "How does food packaging affect freshness?",
+      "back": "Modified atmosphere packaging replaces oxygen with other gases to extend shelf life and maintain quality.",
+      "icon": "📦",
+      "category": "processing"
+    },
+    {
+      "id": 49,
+      "front": "What's the glycemic index?",
+      "back": "A scale measuring how quickly foods raise blood sugar; low GI foods provide steadier energy.",
+      "icon": "📊",
+      "category": "nutrients"
+    },
+    {
+      "id": 50,
+      "front": "Why do some vegetables lose color when cooked?",
+      "back": "Heat breaks down chlorophyll in green vegetables and can intensify or fade other natural pigments.",
+      "icon": "🥬",
+      "category": "cooking"
+    },
+    {
+      "id": 51,
+      "front": "What's the truth about eating late at night?",
+      "back": "Timing matters less than total calories, but late eating can disrupt sleep and digestion.",
+      "icon": "🌙",
+      "category": "healthy_choices"
+    },
+    {
+      "id": 52,
+      "front": "How does alcohol affect nutrition?",
+      "back": "Alcohol provides empty calories and can interfere with nutrient absorption and metabolism.",
+      "icon": "🍺",
+      "category": "nutrients"
+    },
+    {
+      "id": 53,
+      "front": "What's the difference between pasteurized and ultra-pasteurized milk?",
+      "back": "Ultra-pasteurization uses higher heat for longer shelf life but may slightly affect taste and nutrition.",
+      "icon": "🥛",
+      "category": "processing"
+    },
+    {
+      "id": 54,
+      "front": "Why is vitamin D added to milk?",
+      "back": "Milk is fortified with vitamin D because it aids calcium absorption and many people are deficient.",
+      "icon": "☀️",
+      "category": "additives"
+    },
+    {
+      "id": 55,
+      "front": "What causes brain freeze from cold foods?",
+      "back": "Cold foods trigger blood vessel dilation in your mouth, causing referred pain in your forehead.",
+      "icon": "🍦",
+      "category": "food_safety"
+    },
+    {
+      "id": 56,
+      "front": "How long should you wash your hands before food prep?",
+      "back": "Wash hands with soap for at least 20 seconds before handling food to remove harmful bacteria.",
+      "icon": "🧼",
+      "category": "food_safety"
+    },
+    {
+      "id": 57,
+      "front": "What's the truth about sea salt vs. table salt?",
+      "back": "Both contain similar amounts of sodium; sea salt may have trace minerals but isn't significantly healthier.",
+      "icon": "🧂",
+      "category": "myths_facts"
+    },
+    {
+      "id": 58,
+      "front": "Why do some foods contain citric acid?",
+      "back": "Citric acid acts as a preservative, flavor enhancer, and helps maintain color in processed foods.",
+      "icon": "🍋",
+      "category": "additives"
+    },
+    {
+      "id": 59,
+      "front": "What's the recommended daily protein intake?",
+      "back": "About 0.8g per kg of body weight for sedentary adults, more for active individuals and athletes.",
+      "icon": "🥩",
+      "category": "nutrients"
+    },
+    {
+      "id": 60,
+      "front": "How does fermentation preserve food?",
+      "back": "Beneficial bacteria create an acidic environment that prevents harmful bacteria from growing.",
+      "icon": "🥒",
+      "category": "processing"
+    },
+    {
+      "id": 61,
+      "front": "What's the truth about eating fat to lose weight?",
+      "back": "Healthy fats can help with satiety and weight management when eaten in moderation as part of balanced diet.",
+      "icon": "🥑",
+      "category": "healthy_choices"
+    },
+    {
+      "id": 62,
+      "front": "Why do some people react to sulfites?",
+      "back": "Sulfite sensitivity affects about 1% of people, causing asthma-like symptoms or allergic reactions.",
+      "icon": "🍇",
+      "category": "additives"
+    },
+    {
+      "id": 63,
+      "front": "What's the difference between juice and juice concentrate?",
+      "back": "Concentrate has water removed then added back; both have similar nutrition but concentrate may have less flavor.",
+      "icon": "🧃",
+      "category": "processing"
+    },
+    {
+      "id": 64,
+      "front": "How much calcium do adults need daily?",
+      "back": "Adults need 1000-1200mg daily, equivalent to 3-4 servings of dairy or calcium-rich alternatives.",
+      "icon": "🦴",
+      "category": "nutrients"
+    },
+    {
+      "id": 65,
+      "front": "What causes stomach rumbling when hungry?",
+      "back": "Stomach muscles contract to move digestive fluids, creating sound when the stomach is empty.",
+      "icon": "🤰",
+      "category": "healthy_choices"
+    },
+    {
+      "id": 66,
+      "front": "Why is folate important during pregnancy?",
+      "back": "Folate prevents neural tube defects in developing babies and supports DNA synthesis.",
+      "icon": "🤱",
+      "category": "nutrients"
+    },
+    {
+      "id": 67,
+      "front": "What's the shelf life of olive oil?",
+      "back": "Extra virgin olive oil lasts 18-24 months when stored in a cool, dark place away from heat and light.",
+      "icon": "🫒",
+      "category": "food_safety"
+    },
+    {
+      "id": 68,
+      "front": "How does stress affect eating habits?",
+      "back": "Stress can increase cravings for high-calorie comfort foods and disrupt normal hunger/satiety cues.",
+      "icon": "😰",
+      "category": "healthy_choices"
+    },
+    {
+      "id": 69,
+      "front": "What's the truth about eating raw cookie dough?",
+      "back": "Raw flour can contain E. coli and raw eggs may have salmonella; heat-treated versions are safer.",
+      "icon": "🍪",
+      "category": "food_safety"
+    },
+    {
+      "id": 70,
+      "front": "Why do some foods contain multiple types of sugar?",
+      "back": "Different sugars provide different sweetness levels, textures, and functional properties in food products.",
+      "icon": "🧁",
+      "category": "ingredients"
+    },
+    {
+      "id": 71,
+      "front": "What's the difference between cane sugar and beet sugar?",
+      "back": "Chemically identical once refined, but may have slight taste differences and different processing methods.",
+      "icon": "🌱",
+      "category": "ingredients"
+    },
+    {
+      "id": 72,
+      "front": "How does altitude affect blood pressure cooking?",
+      "back": "Lower air pressure at altitude means water boils at lower temperatures, requiring longer cooking times.",
+      "icon": "🔥",
+      "category": "cooking"
+    },
+    {
+      "id": 73,
+      "front": "What's the truth about eating fish during pregnancy?",
+      "back": "Low-mercury fish is beneficial for brain development; avoid high-mercury fish like shark, swordfish.",
+      "icon": "🤰",
+      "category": "healthy_choices"
+    },
+    {
+      "id": 74,
+      "front": "Why do some people get energy crashes after meals?",
+      "back": "High-carb meals can cause blood sugar spikes followed by crashes, leading to fatigue.",
+      "icon": "😴",
+      "category": "nutrients"
+    },
+    {
+      "id": 75,
+      "front": "What's the truth about eating carrots for vision?",
+      "back": "Beta-carotene in carrots supports eye health, but won't improve vision beyond correcting deficiency.",
+      "icon": "🥕",
+      "category": "myths_facts"
+    },
+    {
+      "id": 76,
+      "front": "How does food coloring affect behavior?",
+      "back": "Some studies suggest certain artificial colors may affect hyperactivity in sensitive children.",
+      "icon": "🌈",
+      "category": "additives"
+    },
+    {
+      "id": 77,
+      "front": "What's the recommended intake of omega-3 fatty acids?",
+      "back": "Adults need about 250-500mg daily of EPA and DHA combined, found mainly in fatty fish.",
+      "icon": "🐟",
+      "category": "nutrients"
+    },
+    {
+      "id": 78,
+      "front": "Why do some vegetables need to be cooked to release nutrients?",
+      "back": "Cooking breaks down cell walls in tomatoes, carrots, and spinach, making nutrients more bioavailable.",
+      "icon": "🍅",
+      "category": "cooking"
+    },
+    {
+      "id": 79,
+      "front": "What's the truth about eating chocolate?",
+      "back": "Dark chocolate contains antioxidants and may have heart benefits, but it's still high in calories.",
+      "icon": "🍫",
+      "category": "healthy_choices"
+    },
+    {
+      "id": 80,
+      "front": "How does food processing affect fiber content?",
+      "back": "Processing often removes fiber; whole grains have more fiber than refined grains.",
+      "icon": "🌾",
+      "category": "processing"
+    },
+    {
+      "id": 81,
+      "front": "What causes lactose intolerance?",
+      "back": "Reduced production of lactase enzyme, which breaks down milk sugar, affects about 65% of adults worldwide.",
+      "icon": "🥛",
+      "category": "food_safety"
+    },
+    {
+      "id": 82,
+      "front": "Why is breakfast cereal fortified with vitamins?",
+      "back": "Fortification replaces nutrients lost in processing and helps address common nutritional deficiencies.",
+      "icon": "🥣",
+      "category": "additives"
+    },
+    {
+      "id": 83,
+      "front": "What's the truth about eating before exercise?",
+      "back": "Light meals 3-4 hours before, small snacks 1-2 hours before exercise can provide energy without discomfort.",
+      "icon": "🏃‍♂️",
+      "category": "healthy_choices"
+    },
+    {
+      "id": 84,
+      "front": "How long can cooked rice be safely stored?",
+      "back": "Cooked rice should be refrigerated within 1 hour and consumed within 1 day to prevent bacterial growth.",
+      "icon": "🍚",
+      "category": "food_safety"
+    },
+    {
+      "id": 85,
+      "front": "What's the difference between artisanal and mass-produced foods?",
+      "back": "Artisanal foods are typically made in smaller batches with traditional methods and higher-quality ingredients.",
+      "icon": "👨‍🍳",
+      "category": "processing"
+    },
+    {
+      "id": 86,
+      "front": "Why do some foods contain silicon dioxide?",
+      "back": "Silicon dioxide (silica) prevents clumping in powdered foods and is generally recognized as safe.",
+      "icon": "🧂",
+      "category": "additives"
+    },
+    {
+      "id": 87,
+      "front": "What's the truth about eating late at night affecting weight?",
+      "back": "Late eating may affect circadian rhythms and metabolism, but total calorie intake matters most for weight.",
+      "icon": "🌃",
+      "category": "healthy_choices"
+    },
+    {
+      "id": 88,
+      "front": "How does freezing affect food safety?",
+      "back": "Freezing stops bacterial growth but doesn't kill all bacteria; proper thawing and cooking are still important.",
+      "icon": "❄️",
+      "category": "food_safety"
+    },
+    {
+      "id": 89,
+      "front": "What causes the fizz in carbonated drinks?",
+      "back": "Carbon dioxide gas is dissolved under pressure; when opened, pressure drops and gas forms bubbles.",
+      "icon": "🥤",
+      "category": "processing"
+    },
+    {
+      "id": 90,
+      "front": "Why do some people crave ice or starch?",
+      "back": "Pica cravings for non-food items can indicate iron deficiency or other nutritional imbalances.",
+      "icon": "🧊",
+      "category": "healthy_choices"
+    },
+    {
+      "id": 91,
+      "front": "What's the truth about eating fruit at night?",
+      "back": "Fruit is healthy any time of day; the sugar in whole fruit is paired with fiber and nutrients.",
+      "icon": "🍓",
+      "category": "myths_facts"
+    },
+    {
+      "id": 92,
+      "front": "How does cooking method affect acrylamide formation?",
+      "back": "High-heat cooking like frying and baking can form acrylamide in starchy foods; steaming and boiling don't.",
+      "icon": "🍟",
+      "category": "cooking"
+    },
+    {
+      "id": 93,
+      "front": "What's the recommended daily intake of vegetables?",
+      "back": "Adults should eat 2-3 cups of vegetables daily, varying colors and types for diverse nutrients.",
+      "icon": "🥗",
+      "category": "healthy_choices"
+    },
+    {
+      "id": 94,
+      "front": "Why do some foods contain xanthan gum?",
+      "back": "Xanthan gum provides thickening and stabilizing properties, especially important in gluten-free products.",
+      "icon": "🌽",
+      "category": "additives"
+    },
+    {
+      "id": 95,
+      "front": "What causes food poisoning from rice?",
+      "back": "Bacillus cereus can multiply in cooked rice left at room temperature and produces heat-resistant toxins.",
+      "icon": "🍚",
+      "category": "food_safety"
+    },
+    {
+      "id": 96,
+      "front": "How does sprouting affect grain nutrition?",
+      "back": "Sprouting can increase vitamin content, improve protein quality, and make nutrients more bioavailable.",
+      "icon": "🌱",
+      "category": "nutrients"
+    },
+    {
+      "id": 97,
+      "front": "What's the truth about eating raw vegetables vs. cooked?",
+      "back": "Both have benefits: raw preserves vitamin C, cooked increases availability of lycopene and beta-carotene.",
+      "icon": "🥕",
+      "category": "cooking"
+    },
+    {
+      "id": 98,
+      "front": "Why do some foods contain lecithin?",
+      "back": "Lecithin acts as an emulsifier, helping oil and water mix in foods like chocolate and salad dressings.",
+      "icon": "🥜",
+      "category": "additives"
+    },
+    {
+      "id": 99,
+      "front": "What causes the bitter taste in some vegetables?",
+      "back": "Compounds like glucosinolates in broccoli and caffeine-like substances provide natural pest protection.",
+      "icon": "🥦",
+      "category": "ingredients"
+    },
+    {
+      "id": 100,
+      "front": "How does portion size affect satiety?",
+      "back": "Eating slowly and using smaller plates can help recognize fullness cues and prevent overeating.",
+      "icon": "🍽️",
+      "category": "healthy_choices"
+    },
+    {
+      "id": 101,
+      "front": "What's the truth about eating protein after workouts?",
+      "back": "Protein within 2 hours post-workout can enhance muscle recovery and growth, but timing isn't critical.",
+      "icon": "💪",
+      "category": "healthy_choices"
+    },
+    {
+      "id": 102,
+      "front": "Why do some foods contain BHT or BHA?",
+      "back": "These antioxidants prevent rancidity in fats and oils, extending shelf life and maintaining flavor.",
+      "icon": "🛡️",
+      "category": "additives"
+    },
+    {
+      "id": 103,
+      "front": "What causes heartburn from certain foods?",
+      "back": "Acidic, spicy, or fatty foods can relax the lower esophageal sphincter, allowing stomach acid to rise.",
+      "icon": "🔥",
+      "category": "food_safety"
+    },
+    {
+      "id": 104,
+      "front": "How does altitude affect baking?",
+      "back": "Lower air pressure causes faster rising and moisture evaporation, requiring recipe adjustments.",
+      "icon": "🧁",
+      "category": "cooking"
+    },
+    {
+      "id": 105,
+      "front": "What's the truth about eating raw spinach vs. cooked?",
+      "back": "Cooking increases iron and calcium absorption but reduces folate and vitamin C content.",
+      "icon": "🥬",
+      "category": "nutrients"
+    },
+    {
+      "id": 106,
+      "front": "Why do some people get hiccups from carbonated drinks?",
+      "back": "Rapid consumption of carbonated beverages can cause stomach distension and diaphragm irritation.",
+      "icon": "🥤",
+      "category": "food_safety"
+    },
+    {
+      "id": 107,
+      "front": "What's the difference between naturally and artificially flavored foods?",
+      "back": "Natural flavors come from plant/animal sources; artificial flavors are chemically synthesized but may be identical.",
+      "icon": "🍓",
+      "category": "ingredients"
+    },
+    {
+      "id": 108,
+      "front": "How does food combining affect digestion?",
+      "back": "Most food combining theories lack scientific evidence; the digestive system efficiently handles mixed meals.",
+      "icon": "🍽️",
+      "category": "myths_facts"
+    },
+    {
+      "id": 109,
+      "front": "What causes green potatoes to be toxic?",
+      "back": "Exposure to light produces solanine, a toxic compound that can cause nausea and digestive issues.",
+      "icon": "🥔",
+      "category": "food_safety"
+    },
+    {
+      "id": 110,
+      "front": "Why is vitamin B12 often added to plant-based foods?",
+      "back": "B12 is primarily found in animal products, so fortification helps prevent deficiency in plant-based diets.",
+      "icon": "🌱",
+      "category": "additives"
+    },
+    {
+      "id": 111,
+      "front": "What's the truth about eating before bed affecting sleep?",
+      "back": "Large meals can disrupt sleep, but light snacks with tryptophan or complex carbs may promote better sleep.",
+      "icon": "🛏️",
+      "category": "healthy_choices"
+    },
+    {
+      "id": 112,
+      "front": "How does marinating affect food safety?",
+      "back": "Acidic marinades can reduce some bacteria but don't eliminate pathogens; proper cooking is still essential.",
+      "icon": "🥩",
+      "category": "food_safety"
+    },
+    {
+      "id": 113,
+      "front": "What causes brain fog from certain foods?",
+      "back": "Blood sugar spikes, food sensitivities, or inflammatory responses can affect cognitive function temporarily.",
+      "icon": "🧠",
+      "category": "healthy_choices"
+    },
+    {
+      "id": 114,
+      "front": "Why do some foods contain cellulose?",
+      "back": "Cellulose adds fiber, reduces calories, and prevents caking in processed foods; it's indigestible plant fiber.",
+      "icon": "🌿",
+      "category": "additives"
+    },
+    {
+      "id": 115,
+      "front": "What's the truth about drinking water with meals?",
+      "back": "Water doesn't significantly dilute digestive juices and can actually aid digestion and nutrient absorption.",
+      "icon": "💧",
+      "category": "myths_facts"
+    },
+    {
+      "id": 116,
+      "front": "How does food texture affect satiety?",
+      "back": "Foods that require more chewing tend to be more satisfying and may help control portion sizes.",
+      "icon": "🦷",
+      "category": "healthy_choices"
+    },
+    {
+      "id": 117,
+      "front": "What causes some people to dislike cilantro?",
+      "back": "Genetic variations affect how people perceive aldehydes in cilantro, making it taste soapy to some.",
+      "icon": "🌿",
+      "category": "ingredients"
+    },
+    {
+      "id": 118,
+      "front": "Why do energy drinks contain taurine?",
+      "back": "Taurine may help with muscle function and energy metabolism, though benefits in healthy people are unclear.",
+      "icon": "⚡",
+      "category": "additives"
+    },
+    {
+      "id": 119,
+      "front": "What's the truth about eating soy products?",
+      "back": "Moderate soy consumption is safe and may have health benefits; whole soy foods are better than isolated proteins.",
+      "icon": "🫘",
+      "category": "healthy_choices"
+    },
+    {
+      "id": 120,
+      "front": "How does cooking affect antioxidant levels?",
+      "back": "Some cooking methods increase antioxidants (tomatoes), while others decrease them (berries); effects vary by food.",
+      "icon": "🍅",
+      "category": "cooking"
+    },
+    {
+      "id": 121,
+      "front": "What causes food allergies to develop in adults?",
+      "back": "Adult-onset allergies can develop due to changing immune system, environmental factors, or cross-reactivity.",
+      "icon": "🤧",
+      "category": "food_safety"
+    },
+    {
+      "id": 122,
+      "front": "Why do some foods contain guar gum?",
+      "back": "Guar gum provides thickening, binding, and emulsifying properties in gluten-free and low-fat products.",
+      "icon": "🌱",
+      "category": "additives"
+    },
+    {
+      "id": 123,
+      "front": "What's the truth about alkaline water and diet?",
+      "back": "The body tightly regulates pH; alkaline foods/water have minimal effect on blood pH in healthy people.",
+      "icon": "💧",
+      "category": "myths_facts"
+    },
+    {
+      "id": 124,
+      "front": "How does food preparation affect nutrient loss?",
+      "back": "Cutting, storing, and exposing foods to air, light, and heat can reduce water-soluble vitamins.",
+      "icon": "🔪",
+      "category": "cooking"
+    },
+    {
+      "id": 125,
+      "front": "What causes some people to crave salt?",
+      "back": "Dehydration, mineral deficiencies, stress, or medical conditions can increase salt cravings.",
+      "icon": "🧂",
+      "category": "healthy_choices"
+    },
+    {
+      "id": 126,
+      "front": "Why do fermented foods benefit gut health?",
+      "back": "Beneficial bacteria in fermented foods can improve gut microbiome diversity and digestive health.",
+      "icon": "🥒",
+      "category": "nutrients"
+    },
+    {
+      "id": 127,
+      "front": "What's the truth about eating local vs. imported foods?",
+      "back": "Local foods may be fresher and more sustainable, but nutritional differences are usually minimal.",
+      "icon": "🚛",
+      "category": "sustainability"
+    },
+    {
+      "id": 128,
+      "front": "How does stress affect nutrient absorption?",
+      "back": "Chronic stress can impair digestion and reduce absorption of nutrients, especially B vitamins and magnesium.",
+      "icon": "😰",
+      "category": "healthy_choices"
+    },
+    {
+      "id": 129,
+      "front": "What causes umami flavor in foods?",
+      "back": "Glutamates and nucleotides in foods like tomatoes, cheese, and mushrooms create the savory umami taste.",
+      "icon": "🍄",
+      "category": "ingredients"
+    },
+    {
+      "id": 130,
+      "front": "Why do some foods need refrigeration after opening?",
+      "back": "Exposure to air introduces bacteria and oxidation that can spoil foods not designed for long shelf life.",
+      "icon": "❄️",
+      "category": "food_safety"
+    },
+    {
+      "id": 131,
+      "front": "What's the truth about eating frequency and metabolism?",
+      "back": "Meal frequency has minimal effect on metabolism; total calorie intake matters more than timing.",
+      "icon": "🕐",
+      "category": "healthy_choices"
+    },
+    {
+      "id": 132,
+      "front": "How does food advertising affect eating habits?",
+      "back": "Marketing can influence food choices, especially in children, by creating positive associations with unhealthy foods.",
+      "icon": "📺",
+      "category": "healthy_choices"
+    },
+    {
+      "id": 133,
+      "front": "What causes some vegetables to be more bitter when stressed?",
+      "back": "Environmental stress increases defensive compounds in plants, making them more bitter or astringent.",
+      "icon": "🥬",
+      "category": "ingredients"
+    },
+    {
+      "id": 134,
+      "front": "Why do some foods contain potassium sorbate?",
+      "back": "Potassium sorbate prevents mold and yeast growth, extending shelf life of baked goods and beverages.",
+      "icon": "🍞",
+      "category": "additives"
+    },
+    {
+      "id": 135,
+      "front": "What's the truth about eating raw eggs for protein?",
+      "back": "Raw eggs have lower protein absorption than cooked and risk salmonella contamination.",
+      "icon": "🥚",
+      "category": "food_safety"
+    },
+    {
+      "id": 136,
+      "front": "How does food color affect taste perception?",
+      "back": "Visual appearance strongly influences taste expectations; red foods are perceived as sweeter.",
+      "icon": "👁️",
+      "category": "processing"
+    },
+    {
+      "id": 137,
+      "front": "What causes some people to feel energized by spicy foods?",
+      "back": "Capsaicin triggers endorphin release, which can create feelings of euphoria and energy.",
+      "icon": "🌶️",
+      "category": "ingredients"
+    },
+    {
+      "id": 138,
+      "front": "Why do some foods contain modified corn starch?",
+      "back": "Modified starches improve texture, stability, and shelf life in processed foods.",
+      "icon": "🌽",
+      "category": "additives"
+    },
+    {
+      "id": 139,
+      "front": "What's the truth about eating nuts for heart health?",
+      "back": "Regular nut consumption is associated with reduced heart disease risk due to healthy fats and nutrients.",
+      "icon": "🥜",
+      "category": "healthy_choices"
+    },
+    {
+      "id": 140,
+      "front": "How does food temperature affect taste?",
+      "back": "Temperature affects taste bud sensitivity; cold reduces sweetness perception, heat enhances aroma compounds.",
+      "icon": "🌡️",
+      "category": "cooking"
+    },
+    {
+      "id": 141,
+      "front": "What causes hiccups from eating too quickly?",
+      "back": "Rapid eating can cause stomach distension and air swallowing, irritating the diaphragm.",
+      "icon": "🍽️",
+      "category": "healthy_choices"
+    },
+    {
+      "id": 142,
+      "front": "Why do some foods contain calcium propionate?",
+      "back": "Calcium propionate prevents mold growth in bread and baked goods, extending freshness.",
+      "icon": "🍞",
+      "category": "additives"
+    },
+    {
+      "id": 143,
+      "front": "What's the truth about eating breakfast for weight loss?",
+      "back": "Breakfast can help with appetite control for some people, but overall calorie balance matters most.",
+      "icon": "🥞",
+      "category": "healthy_choices"
+    },
+    {
+      "id": 144,
+      "front": "How does meal timing affect athletic performance?",
+      "back": "Pre-exercise carbs provide energy; post-exercise protein aids recovery; timing can optimize performance.",
+      "icon": "🏃‍♂️",
+      "category": "healthy_choices"
+    },
+    {
+      "id": 145,
+      "front": "What causes some foods to foam when shaken?",
+      "back": "Proteins and surfactants in foods can trap air bubbles when agitated, creating foam.",
+      "icon": "🥛",
+      "category": "processing"
+    },
+    {
+      "id": 146,
+      "front": "Why do some people get stomach aches from beans?",
+      "back": "Oligosaccharides in beans aren't fully digested, causing gas production by intestinal bacteria.",
+      "icon": "🫘",
+      "category": "food_safety"
+    },
+    {
+      "id": 147,
+      "front": "What's the truth about eating organic foods?",
+      "back": "Organic foods have lower pesticide residues but aren't necessarily more nutritious than conventional foods.",
+      "icon": "🌱",
+      "category": "sustainability"
+    },
+    {
+      "id": 148,
+      "front": "How does food packaging affect environmental impact?",
+      "back": "Packaging prevents food waste but creates environmental burden; balance depends on specific product and material.",
+      "icon": "🌍",
+      "category": "sustainability"
+    },
+    {
+      "id": 149,
+      "front": "What causes some cheeses to have blue veins?",
+      "back": "Penicillium roqueforti mold creates blue veins and distinctive flavor in blue cheeses like Roquefort.",
+      "icon": "🧀",
+      "category": "processing"
+    },
+    {
+      "id": 150,
+      "front": "Why do some foods contain sodium benzoate?",
+      "back": "Sodium benzoate prevents bacterial, yeast, and fungal growth in acidic foods and beverages.",
+      "icon": "🥤",
+      "category": "additives"
+    }
+  ],
+  "daily_tips": [
+    {
+      "id": 1,
+      "tip": "Check the first 3 ingredients - they make up most of the product",
+      "icon": "💡"
+    },
+    {
+      "id": 2,
+      "tip": "Foods with shorter ingredient lists are usually healthier",
+      "icon": "📝"
+    },
+    {
+      "id": 3,
+      "tip": "Compare similar products - choose the one with fewer additives",
+      "icon": "⚖️"
+    }
+  ]
+}
