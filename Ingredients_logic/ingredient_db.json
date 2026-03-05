@@ -1,0 +1,150 @@
+{
+  "water": {
+    "common_name": "Water",
+    "description": "Pure water, the most common ingredient in food products. Safe and essential for human consumption.",
+    "found_in": ["beverages", "soups", "sauces", "dairy products"],
+    "risk_level": "safe",
+    "also_used_in": ["cosmetics", "cleaning products", "pharmaceuticals"]
+  },
+  "e621": {
+    "common_name": "Monosodium Glutamate (MSG)",
+    "description": "A flavor enhancer commonly used in savory snacks and instant foods.",
+    "found_in": ["instant noodles", "potato chips", "seasoning powders"],
+    "risk_level": "moderate",
+    "also_used_in": ["processed meats", "soups"]
+  },
+  "sodium benzoate": {
+    "common_name": "Sodium Benzoate",
+    "description": "A preservative used to prevent spoilage by microbes.",
+    "found_in": ["soft drinks", "pickles", "salad dressings"],
+    "risk_level": "low",
+    "also_used_in": ["cosmetics", "medicines"]
+  },
+  "carboxymethylcellulose": {
+    "common_name": "Carboxymethylcellulose (CMC)",
+    "description": "A thickener and stabilizer used in food and pharmaceutical products.",
+    "found_in": ["ice cream", "toothpaste", "baked goods"],
+    "risk_level": "low",
+    "also_used_in": ["shampoos", "lotions"]
+  },
+  "e200": {
+    "common_name": "Sorbic Acid",
+    "description": "A natural preservative that prevents mold and yeast growth. Generally recognized as safe.",
+    "found_in": ["cheese", "wine", "baked goods", "dried fruits"],
+    "risk_level": "low",
+    "also_used_in": ["cosmetics", "pharmaceuticals"],
+    "max_limit": "1000 ppm",
+    "e_number": "E200",
+    "ins_number": "200"
+  },
+  "e201": {
+    "common_name": "Sodium Sorbate",
+    "description": "Sodium salt of sorbic acid, used as a preservative against mold and yeast.",
+    "found_in": ["processed foods", "beverages", "dairy products"],
+    "risk_level": "low",
+    "also_used_in": ["personal care products"],
+    "max_limit": "1000 ppm",
+    "e_number": "E201",
+    "ins_number": "201"
+  },
+  "e202": {
+    "common_name": "Potassium Sorbate",
+    "description": "Most widely used sorbate preservative. Effective against molds and yeasts.",
+    "found_in": ["wine", "cheese", "yogurt", "dried meats"],
+    "risk_level": "low",
+    "also_used_in": ["cosmetics", "skincare products"],
+    "max_limit": "1000 ppm",
+    "e_number": "E202",
+    "ins_number": "202"
+  },
+  "e203": {
+    "common_name": "Calcium Sorbate",
+    "description": "Calcium salt of sorbic acid, less common than other sorbates.",
+    "found_in": ["specialty foods", "dietary supplements"],
+    "risk_level": "low",
+    "also_used_in": ["animal feed"],
+    "max_limit": "1000 ppm",
+    "e_number": "E203",
+    "ins_number": "203"
+  },
+  "e210": {
+    "common_name": "Benzoic Acid",
+    "description": "Natural preservative found in cranberries and prunes. Effective against bacteria and fungi.",
+    "found_in": ["soft drinks", "fruit juices", "pickles"],
+    "risk_level": "low",
+    "also_used_in": ["cosmetics", "pharmaceuticals"],
+    "max_limit": "300 ppm",
+    "e_number": "E210",
+    "ins_number": "210"
+  },
+  "e211": {
+    "common_name": "Sodium Benzoate",
+    "description": "Most common benzoate preservative. Effective in acidic foods.",
+    "found_in": ["soft drinks", "salad dressings", "jams"],
+    "risk_level": "low",
+    "also_used_in": ["medicines", "cosmetics"],
+    "max_limit": "300 ppm",
+    "e_number": "E211",
+    "ins_number": "211"
+  },
+  "e212": {
+    "common_name": "Potassium Benzoate",
+    "description": "Alternative to sodium benzoate, used in low-sodium products.",
+    "found_in": ["diet beverages", "low-sodium foods"],
+    "risk_level": "low",
+    "also_used_in": ["pharmaceuticals"],
+    "max_limit": "300 ppm",
+    "e_number": "E212",
+    "ins_number": "212"
+  },
+  "e220": {
+    "common_name": "Sulfur Dioxide",
+    "description": "Gas used as preservative and antioxidant. Can cause allergic reactions in sensitive individuals.",
+    "found_in": ["wine", "dried fruits", "fruit juices"],
+    "risk_level": "moderate",
+    "also_used_in": ["industrial processes"],
+    "max_limit": "200 ppm",
+    "e_number": "E220",
+    "ins_number": "220"
+  },
+  "e221": {
+    "common_name": "Sodium Sulfite",
+    "description": "Salt form of sulfur dioxide, used as preservative and antioxidant.",
+    "found_in": ["dried vegetables", "fruit products", "wine"],
+    "risk_level": "moderate",
+    "also_used_in": ["photography", "water treatment"],
+    "max_limit": "200 ppm",
+    "e_number": "E221",
+    "ins_number": "221"
+  },
+  "e250": {
+    "common_name": "Sodium Nitrite",
+    "description": "Preservative used in cured meats to prevent botulism and maintain color.",
+    "found_in": ["bacon", "ham", "hot dogs", "deli meats"],
+    "risk_level": "moderate",
+    "also_used_in": ["industrial applications"],
+    "max_limit": "150 ppm",
+    "e_number": "E250",
+    "ins_number": "250"
+  },
+  "e281": {
+    "common_name": "Sodium Propionate",
+    "description": "Mold inhibitor commonly used in baked goods.",
+    "found_in": ["bread", "rolls", "cakes", "pastries"],
+    "risk_level": "low",
+    "also_used_in": ["animal feed"],
+    "max_limit": "5000 ppm",
+    "e_number": "E281",
+    "ins_number": "281"
+  },
+  "e282": {
+    "common_name": "Calcium Propionate",
+    "description": "Preferred preservative in baked goods as it doesn't interfere with yeast.",
+    "found_in": ["bread", "baked goods", "processed cheese"],
+    "risk_level": "low",
+    "also_used_in": ["animal feed"],
+    "max_limit": "5000 ppm",
+    "e_number": "E282",
+    "ins_number": "282"
+  }
+}

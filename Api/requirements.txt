@@ -1,0 +1,9 @@
+fastapi
+pydantic
+requests
+
+uvicorn
+wikipedia
+Pillow
+pytesseract
+python-multipart
