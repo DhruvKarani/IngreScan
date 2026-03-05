@@ -18,7 +18,10 @@ import { computeProductAnalysis } from '../utils/scoreProduct';
 import { scoreFromRules } from '../utils/scoreFromRules';
 import { SCORE_API_URL } from '../constants/config';
 import { fetchProductFromOFF } from '../utils/openFoodFacts';
+import { fetchProductData } from '../utils/productDataFetcher';
 import RewardPopup from '../components/RewardPopup';
+import DataVerificationModal from '../components/DataVerificationModal';
+import { detectProductCorruption } from '../utils/dataCorruptionDetector';
 
 const ScanScreen = ({ navigation }) => {
   const [hasPermission, setHasPermission] = useState(null);
@@ -30,6 +33,11 @@ const ScanScreen = ({ navigation }) => {
   const [rewardPoints, setRewardPoints] = useState(0);
   const [rewardDetails, setRewardDetails] = useState({});
   const [manualBarcode, setManualBarcode] = useState('');
+  
+  // Step 7: Data Verification Modal State
+  const [showVerificationModal, setShowVerificationModal] = useState(false);
+  const [productToVerify, setProductToVerify] = useState(null);
+  const [pendingScanResult, setPendingScanResult] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -98,8 +106,11 @@ const ScanScreen = ({ navigation }) => {
         if (productSnap.exists()) {
           // Use the authoritative Firestore product doc if it exists.
           product = productSnap.data();
-          safeLog('debug', '[Scan] Product found in Firestore for', barcodeKey);
+          console.log('[Scan] ✓ Product found in Firestore for', barcodeKey);
+          console.log('[Scan] Firebase product data keys:', Object.keys(product));
           product._source = 'firestore';
+        } else {
+          console.log('[Scan] ✗ Product NOT found in Firestore, will fetch from API');
         }
       } catch (firebaseError) {
         console.warn('Firebase error, checking local storage:', firebaseError.message);
@@ -122,54 +133,158 @@ const ScanScreen = ({ navigation }) => {
       }
 
       if (product && product._source === 'firestore') {
+        console.log('[Scan] Firebase product loaded, checking trust & corruption...');
+        console.log('[Scan] Product object:', JSON.stringify(product, null, 2));
+        
+        // NEW APPROACH: Use verification count + corruption detection
+        const verifiedCount = product.verifiedCount || 0;
+        const TRUST_THRESHOLD = 3; // Need 3+ user verifications to trust
+        
+        console.log('[Scan] Product verifiedCount:', verifiedCount, '(threshold:', TRUST_THRESHOLD + ')');
+        
+        // Run corruption detection
+        const corruptionResult = detectProductCorruption(product);
+        console.log('[Scan] Corruption check:', corruptionResult);
+        
+        // Decision: Show verification modal ONLY if not enough user verifications
+        // If product has 3+ verifications, trust it even if corruption detected
+        // (users have already verified this data multiple times)
+        const needsVerification = verifiedCount < TRUST_THRESHOLD;
+        
+        if (needsVerification) {
+          console.log('[Scan] Product needs verification - verifiedCount:', verifiedCount, ', corrupted:', corruptionResult.isCorrupted);
+          
+          // When verification is needed, mark ALL key fields for review  
+          // (Modal will show them pre-filled with existing data for user to verify/edit)
+          const missingFieldsList = [
+            'ingredients_text',
+            'energy-kcal',
+            'sugars',
+            'fat',
+            'proteins',
+            'carbohydrates',
+            'salt',
+            'brands',
+            'quantity'
+          ];
+          
+          // Prepare verification modal
+          let verificationReason = 'Please verify product data';
+          if (corruptionResult.isCorrupted) {
+            verificationReason = 'Data corruption detected: ' + corruptionResult.issues.join('; ');
+          } else if (verifiedCount === 0) {
+            verificationReason = 'This product has not been verified by users yet';
+          } else {
+            verificationReason = `This product has only ${verifiedCount} verification(s), need ${TRUST_THRESHOLD} for trust`;
+          }
+          
+          setProductToVerify({
+            ...product,
+            metadata: {
+              needs_verification: true,
+              verification_reason: verificationReason,
+              verified_count: verifiedCount,
+              is_corrupted: corruptionResult.isCorrupted,
+              corruption_details: corruptionResult.issues,
+              missing_fields: missingFieldsList,
+              primary_source: 'Firebase',
+              confidence: corruptionResult.isCorrupted ? 'CORRUPTED' : verifiedCount === 0 ? 'UNVERIFIED' : 'LOW'
+            }
+          });
+          setShowVerificationModal(true);
+          setLoading(false);
+          return;
+        }
+        
+        // Product is trusted (verifiedCount >= 3), use directly
+        console.log('[Scan] ✓ Product is trusted (verified:', verifiedCount, 'times), using directly');
+        
+        // But warn if corruption detected in trusted product
+        if (corruptionResult.isCorrupted) {
+          console.warn('[Scan] ⚠️ Corruption detected in trusted product:', corruptionResult.issues);
+          Alert.alert(
+            '⚠️ Data Quality Notice',
+            `This product has ${verifiedCount} verifications, but we detected unusual data:\n\n${corruptionResult.issues.join('\n')}\n\nThe product will load normally. If you notice errors, please report them.`,
+            [{ text: 'OK', style: 'default' }]
+          );
+        }
       } else if (product && (product._source === 'local_storage' || product._source === 'manual_entry_local')) {
         // Product found locally, use it directly
         safeLog('debug', '[Scan] Using locally stored product for', barcodeKey);
       } else {
-        // Product not in Firestore: try OpenFoodFacts and persist if found.
+        // Product not in Firestore: try new multi-source fetcher (Step 7)
         try {
-          const off = await fetchProductFromOFF(barcodeKey);
-          if (off) {
-            // Normalize OFF data into UI-friendly fields
-            try {
-              const raw = off.nutriments && off.nutriments.__raw ? off.nutriments.__raw : (off.nutriments || {});
-              const nutrition = {
-                calories: raw.energy_kcal_100g ?? raw.energy_100g ?? undefined,
-                protein: raw.proteins_100g ?? raw.proteins ?? undefined,
-                carbs: raw.carbohydrates_100g ?? raw.carbohydrates ?? undefined,
-                sugar: raw.sugars_100g ?? raw.sugars ?? undefined,
-                fat: raw.fat_100g ?? raw.fat ?? undefined,
-                sodium: (raw.salt_100g ?? raw.salt ?? raw['sodium_100g']) ? Math.round(Number(raw.salt_100g ?? raw.salt ?? raw['sodium_100g']) * 1000) : undefined,
-                magnesium: raw.magnesium_100g ?? raw.magnesium ?? undefined,
-                potassium: raw.potassium_100g ?? raw.potassium ?? undefined,
-              };
+          console.log('[Scan] Fetching from multi-source API for', barcodeKey);
+          const fetchedProduct = await fetchProductData(barcodeKey);
+          
+          // Check if product was found
+          if (!fetchedProduct) {
+            // Product not found in any source
+            setLoading(false);
+            setScanned(false);
 
-              const txt = off.ingredients_text || off.raw?.ingredients_text || '';
-              const ingredients = txt ? txt.split(/,|;|\n/).map(s => ({ name: s.trim(), riskLevel: 'LOW', description: '' })).filter(i => i.name) : [];
-
-              product = { ...off, nutriments: off.nutriments, nutrition, ingredients, ingredients_text: txt, barcode: barcodeKey };
-              await setDoc(productRef, product, { merge: true });
-              safeLog('debug', '[Scan] Product fetched from OpenFoodFacts and persisted for', barcodeKey);
-            } catch (w) {
-              safeLog('warn', 'Failed to persist OFF product', w && w.message ? w.message : w);
-              // Check if OFF data is actually useful (has nutrition or ingredients)
-              const hasNutrition = off.nutriments && Object.keys(off.nutriments).some(key =>
-                key.includes('100g') && off.nutriments[key] > 0
-              );
-              const hasIngredients = off.ingredients_text && off.ingredients_text.trim().length > 0;
-
-              if (hasNutrition || hasIngredients) {
-                // OFF has useful data, use it even if persistence failed
-                product = { name: off.product_name || off.name || 'Unknown Product', barcode: barcodeKey, nutriments: off.nutriments || {}, ingredients_text: off.ingredients_text || '' };
-              } else {
-                // OFF data is incomplete, treat as no product found
-                safeLog('debug', 'OFF product found but has no useful nutrition/ingredients data');
-                product = null;
-              }
-            }
+            Alert.alert(
+              'Product Not Found',
+              `We couldn't find information for this product (barcode: ${barcodeKey}) in our database or Open Food Facts. Would you like to help us by adding the product information manually?`,
+              [
+                {
+                  text: 'Cancel',
+                  style: 'cancel',
+                  onPress: () => {
+                    setScanningCooldown(false);
+                  }
+                },
+                {
+                  text: 'Add Manually',
+                  onPress: () => {
+                    navigation.navigate('ManualProductEntry', { barcode: barcodeKey });
+                    setScanningCooldown(false);
+                  }
+                }
+              ]
+            );
+            return;
           }
+          
+          // NEW APPROACH: ALWAYS verify API-fetched products (verifiedCount will be 0)
+          console.log('[Scan] Product fetched from API - requires user verification');
+          
+          // Run corruption detection on API data too
+          const corruptionResult = detectProductCorruption(fetchedProduct);
+          console.log('[Scan] API product corruption check:', corruptionResult);
+          
+          // Show ALL key fields for verification (will be pre-filled if data exists)
+          const missingFieldsList = [
+            'ingredients_text',
+            'energy-kcal',
+            'sugars',
+            'fat',
+            'proteins',
+            'carbohydrates',
+            'salt',
+            'brands',
+            'quantity'
+          ];
+          
+          setProductToVerify({
+            ...fetchedProduct,
+            verifiedCount: 0, // Initialize verification count
+            metadata: {
+              needs_verification: true,
+              verification_reason: 'New product from API - needs user verification',
+              verified_count: 0,
+              is_corrupted: corruptionResult.isCorrupted,
+              corruption_details: corruptionResult.issues,
+              missing_fields: missingFieldsList,
+              primary_source: fetchedProduct.metadata?.primary_source || 'API',
+              confidence: 'UNVERIFIED'
+            }
+          });
+          setShowVerificationModal(true);
+          setLoading(false);
+          return; // Exit early, modal will handle next steps
         } catch (offErr) {
-          safeLog('warn', 'OFF lookup failed', offErr && offErr.message ? offErr.message : offErr);
+          safeLog('warn', 'API fetch failed', offErr && offErr.message ? offErr.message : offErr);
         }
 
         // If still no product, prompt user for manual entry
@@ -376,7 +491,7 @@ const ScanScreen = ({ navigation }) => {
         if (!analysis) {
           // local fallback with defensive try/catch
           try {
-            analysis = scoreFromRules(nutriments, ingredientsText, userPrefs);
+            analysis = await scoreFromRules(nutriments, ingredientsText, userPrefs);
             analysis._source = 'local';
             safeLog('debug', '[Scan] Using local scorer for', barcodeKey);
           } catch (localErr) {
@@ -579,6 +694,333 @@ const ScanScreen = ({ navigation }) => {
     }
   };
 
+  /**
+   * Step 7: Handle verified or skipped products from DataVerificationModal
+   * This processes the product through scoring, saves to Firebase, and navigates to ProductDetails
+   */
+  const handleVerifiedProduct = async (product, wasVerified) => {
+    try {
+      setLoading(true);
+      
+      const barcodeKey = product.barcode || scannedData;
+      console.log(`[Scan] Processing ${wasVerified ? 'verified' : 'skipped'} product:`, barcodeKey);
+      console.log('[Scan] Product nutriments:', JSON.stringify(product.nutriments || {}, null, 2));
+      console.log('[Scan] Product metadata:', JSON.stringify(product.metadata || {}, null, 2));
+      
+      // helper for safe logging
+      const safeStringify = (v) => {
+        if (typeof v === 'string') return v;
+        try {
+          return JSON.stringify(v);
+        } catch (e) {
+          try { return String(v); } catch (__) { return '[unserializable]'; }
+        }
+      };
+      
+      const safeLog = (level, ...parts) => {
+        try {
+          const out = parts.map(p => (typeof p === 'string' ? p : safeStringify(p))).join(' ');
+          switch (level) {
+            case 'warn': console.warn(out); break;
+            case 'error': console.error(out); break;
+            case 'debug': console.debug ? console.debug(out) : console.log(out); break;
+            default: console.log(out); break;
+          }
+        } catch (e) {
+          console.log(parts[0]);
+        }
+      };
+      
+      // Save product to Firebase with updated verification count
+      try {
+        const productRef = doc(db, 'products', barcodeKey);
+        
+        // Increment verifiedCount if user verified (not skipped)
+        if (wasVerified) {
+          const currentCount = product.verifiedCount || 0;
+          product.verifiedCount = currentCount + 1;
+          console.log('[Scan] Incrementing verifiedCount:', currentCount, '→', product.verifiedCount);
+          
+          if (product.metadata) {
+            product.metadata.completeness_score = 100;
+            product.metadata.verified_count = product.verifiedCount;
+          }
+        }
+        
+        // Ensure _source is set so verification check runs on rescan
+        product._source = 'firestore';
+        product._savedAt = new Date().toISOString();
+        
+        console.log('[Scan] Saving to Firebase:', {
+          barcode: barcodeKey,
+          hasNutriments: !!product.nutriments,
+          nutrimentKeys: Object.keys(product.nutriments || {}),
+          verified: wasVerified,
+          verifiedCount: product.verifiedCount || 0
+        });
+        
+        await setDoc(productRef, product, { merge: true });
+        safeLog('debug', `[Scan] Product saved to Firebase (verified: ${wasVerified}, count: ${product.verifiedCount || 0})`);
+      } catch (saveErr) {
+        safeLog('warn', 'Failed to save product to Firebase:', saveErr.message);
+      }
+      
+      // Sanitize ingredients for scoring
+      const sanitizeIngredients = (rawProduct) => {
+        try {
+          const arr = [];
+          if (!rawProduct) return arr;
+          
+          if (Array.isArray(rawProduct.ingredients) && rawProduct.ingredients.length) {
+            rawProduct.ingredients.forEach((it) => {
+              if (!it) return;
+              if (typeof it === 'string') {
+                const name = it.trim();
+                if (name) arr.push({ name, category: '', riskLevel: 'LOW', description: '' });
+                return;
+              }
+              const name = String(it.name || it.ingredient || it.text || '').trim();
+              if (!name) return;
+              const category = String(it.category || it.type || '') || '';
+              const riskLevel = String(it.riskLevel || it.risk || 'LOW') || 'LOW';
+              const description = String(it.description || '') || '';
+              const alternatives = Array.isArray(it.alternatives) ? it.alternatives : [];
+              const healthImpact = it.healthImpact || it.impact || '';
+              arr.push({ name, category, riskLevel, description, alternatives, healthImpact });
+            });
+            return arr;
+          }
+          
+          const txt = String(rawProduct.ingredients_text || rawProduct.ingredientList || '').trim();
+          if (txt) {
+            txt.split(/,|;|\n/).map(s => s.trim()).filter(Boolean).forEach(name => 
+              arr.push({ name, category: '', riskLevel: 'LOW', description: '' })
+            );
+            return arr;
+          }
+          
+          return arr;
+        } catch (e) {
+          console.warn('[Scan] ingredient sanitization failed', e.message);
+          return [];
+        }
+      };
+      
+      // Normalize and score product
+      const normalizedIngredients = sanitizeIngredients(product);
+      
+      // Get user preferences for personalized scoring
+      const userRef = auth.currentUser ? doc(db, 'users', auth.currentUser.uid) : null;
+      let userPrefs = { conditions: [], allergies: [] };
+      if (userRef) {
+        const uSnap = await getDoc(userRef);
+        if (uSnap.exists()) {
+          const d = uSnap.data();
+          userPrefs.conditions = d.conditions || d.healthConditions || [];
+          userPrefs.allergies = d.allergies || d.allergens || [];
+        }
+      }
+      
+      // Normalize nutriments for scoring
+      let rawNutr = product.nutriments || product.nutrition || {};
+      if (rawNutr && rawNutr.__raw) rawNutr = rawNutr.__raw;
+      
+      const nutriments = {
+        ...rawNutr,
+        sugars_100g: Number(rawNutr.sugars_100g ?? rawNutr.sugars ?? 0),
+        fat_100g: Number(rawNutr.fat_100g ?? rawNutr.fat ?? 0),
+        salt_100g: Number(rawNutr.salt_100g ?? rawNutr.salt ?? rawNutr['sodium_100g'] ?? 0),
+        product_name: product.product_name || product.name || '',
+      };
+      
+      // Get ingredients text for scoring
+      let ingredientsText = '';
+      if (typeof product.ingredients === 'string' && product.ingredients.trim()) {
+        ingredientsText = product.ingredients;
+      } else if (typeof product.ingredients_text === 'string' && product.ingredients_text.trim()) {
+        ingredientsText = product.ingredients_text;
+      } else if (Array.isArray(product.ingredients) && product.ingredients.length) {
+        ingredientsText = product.ingredients.map(i => (typeof i === 'string' ? i : i.name || '')).filter(Boolean).join(', ');
+      } else if (product.ingredientList && typeof product.ingredientList === 'string') {
+        ingredientsText = product.ingredientList;
+      }
+      
+      // Score using local scoreFromRules
+      let analysis = null;
+      try {
+        analysis = await scoreFromRules(nutriments, ingredientsText, userPrefs);
+        analysis._source = 'local';
+        safeLog('debug', '[Scan] Analysis complete for verified product');
+        
+        // Validate analysis quality - warn if still insufficient after user verification
+        if (analysis.score <= 1 || analysis.Tier === 'Incomplete Data') {
+          safeLog('warn', '[Scan] Product still has insufficient data after verification');
+          Alert.alert(
+            'More Details Needed',
+            'This product still needs more nutritional information for accurate scoring. You can add more details later by editing the product.',
+            [{ text: 'Continue Anyway', onPress: () => {} }]
+          );
+          // Continue anyway - don't block the user, just warn them
+        }
+      } catch (scoreErr) {
+        safeLog('error', '[Scan] Scoring failed:', scoreErr.message);
+        analysis = {
+          score: 0,
+          tier: 'Unknown',
+          confidence: 'LOW',
+          explanation: 'Scoring failed',
+          _source: 'local-failed',
+        };
+      }
+      
+      // Save analysis to Firebase
+      try {
+        const productRef = doc(db, 'products', barcodeKey);
+        const audit = { rulesVersion: '1', analyzedAt: new Date().toISOString(), source: analysis._source };
+        await setDoc(productRef, { 
+          analysis, 
+          healthScore: analysis.score,
+          analysisAudit: audit,
+          ingredients: normalizedIngredients,
+        }, { merge: true });
+        product = { ...product, analysis, healthScore: analysis.score, ingredients: normalizedIngredients };
+      } catch (writeErr) {
+        safeLog('warn', 'Failed to persist analysis:', writeErr.message);
+      }
+      
+      // Award points if user is logged in
+      const user = auth.currentUser;
+      if (user) {
+        const userRef = doc(db, 'users', user.uid);
+        const scanRef = doc(db, 'users', user.uid, 'scans', barcodeKey);
+        
+        try {
+          const result = await runTransaction(db, async (transaction) => {
+            const [uSnap, sSnap] = await Promise.all([
+              transaction.get(userRef),
+              transaction.get(scanRef),
+            ]);
+            
+            const userData = uSnap.exists() ? uSnap.data() : {};
+            const alreadyScanned = sSnap.exists();
+            
+            let rawScore = analysis?.score ?? 0;
+            let productPoints = Math.max(0, Math.min(10, Math.round(rawScore > 10 ? rawScore / 10 : rawScore)));
+            
+            const today = new Date().toISOString().slice(0, 10);
+            const lastDaily = userData.lastDailyBonusDate || null;
+            let award = 0;
+            let awardedComponents = { dailyBonus: 0, productPoints: 0, uniqueBonus: 0 };
+            
+            if (!alreadyScanned) {
+              awardedComponents.productPoints = productPoints;
+              awardedComponents.uniqueBonus = 2;
+              award += productPoints + 2;
+              
+              // Add bonus points if user verified the product
+              if (wasVerified) {
+                awardedComponents.verificationBonus = 5;
+                award += 5;
+              }
+              
+              transaction.set(scanRef, {
+                barcode: barcodeKey,
+                productName: product.product_name || product.name || barcodeKey,
+                scannedAt: serverTimestamp(),
+                lastScannedAt: serverTimestamp(),
+                productPoints,
+                uniqueBonus: 2,
+                verificationBonus: wasVerified ? 5 : 0,
+                userVerified: wasVerified,
+                analysis: analysis || {},
+                productSnapshot: product, // Use latest verified product data
+                analysisAudit: { source: analysis?._source || 'local' },
+                scanCount: 1,
+              });
+            } else {
+              const prevCount = sSnap.data()?.scanCount || 1;
+              
+              // Update with fresh data, especially if user just verified it
+              const updateData = {
+                lastScannedAt: serverTimestamp(),
+                scanCount: prevCount + 1,
+                productSnapshot: product, // Update with latest verified data
+                analysis: analysis || {},
+                analysisAudit: { source: analysis?._source || 'local' },
+              };
+              
+              // If user just verified, add verification bonus and update flags
+              if (wasVerified) {
+                const prevVerificationBonus = sSnap.data()?.verificationBonus || 0;
+                if (prevVerificationBonus === 0) {
+                  // Award verification bonus if not already given
+                  awardedComponents.verificationBonus = 5;
+                  award += 5;
+                  updateData.verificationBonus = 5;
+                  updateData.userVerified = true;
+                }
+              }
+              
+              transaction.update(scanRef, updateData);
+            }
+            
+            if (lastDaily !== today) {
+              awardedComponents.dailyBonus = 5;
+              award += 5;
+            }
+            
+            const previousPoints = userData.points || 0;
+            const newPoints = previousPoints + award;
+            
+            const userUpdate = {
+              points: newPoints,
+              updatedAt: new Date().toISOString(),
+            };
+            if (lastDaily !== today) userUpdate.lastDailyBonusDate = today;
+            
+            transaction.set(userRef, userUpdate, { merge: true });
+            
+            return { award, newPoints, awardedComponents };
+          });
+          
+          // Show reward popup if points were awarded
+          if (result && result.award > 0) {
+            setRewardPoints(result.award);
+            setRewardDetails(result.awardedComponents);
+            setRewardVisible(true);
+            
+            // Auto-dismiss and navigate
+            setTimeout(() => {
+              setRewardVisible(false);
+              console.log('[Scan] Navigating to ProductDetails with nutriments:', JSON.stringify(product.nutriments || {}, null, 2));
+              navigation.navigate('ProductDetails', { product: { ...product, analysis } });
+            }, 2200);
+          } else {
+            // No points awarded, navigate immediately
+            console.log('[Scan] Navigating to ProductDetails with nutriments:', JSON.stringify(product.nutriments || {}, null, 2));
+            navigation.navigate('ProductDetails', { product: { ...product, analysis } });
+          }
+          
+        } catch (txErr) {
+          safeLog('warn', '[Scan] Transaction failed:', txErr.message);
+          // Navigate anyway
+          navigation.navigate('ProductDetails', { product: { ...product, analysis } });
+        }
+      } else {
+        // Not logged in, just navigate
+        navigation.navigate('ProductDetails', { product: { ...product, analysis } });
+      }
+      
+    } catch (err) {
+      console.error('[Scan] handleVerifiedProduct error:', err);
+      Alert.alert('Error', 'Failed to process product. Please try again.');
+    } finally {
+      setLoading(false);
+      setScanned(false);
+      setScanningCooldown(false);
+    }
+  };
+
   if (hasPermission === null) {
     return (
       <SafeAreaView style={styles.centerContent}>
@@ -661,6 +1103,39 @@ const ScanScreen = ({ navigation }) => {
         )}
       </View>
       <RewardPopup visible={rewardVisible} onClose={() => setRewardVisible(false)} points={rewardPoints} details={rewardDetails} />
+      
+      {/* Step 7: Data Verification Modal */}
+      <DataVerificationModal
+        visible={showVerificationModal}
+        product={productToVerify}
+        metadata={productToVerify?.metadata}
+        onSkip={(product) => {
+          console.log('[Scan] User skipped verification');
+          setShowVerificationModal(false);
+          
+          // Continue with analysis and navigation using incomplete data
+          // We need to process the product through scoring and save to Firebase
+          handleVerifiedProduct(product, false);
+        }}
+        onComplete={async (updatedProduct, editedFields) => {
+          console.log('[Scan] User completed verification with edits:', editedFields);
+          console.log('[Scan] Updated product nutriments:', JSON.stringify(updatedProduct.nutriments || {}, null, 2));
+          setShowVerificationModal(false);
+          
+          // Save verified product to Firebase and navigate
+          handleVerifiedProduct(updatedProduct, true);
+        }}
+        onCancel={() => {
+          console.log('[Scan] User cancelled verification');
+          setShowVerificationModal(false);
+          
+          // Reset scan state to allow scanning again
+          setScanned(false);
+          setProductToVerify(null);
+          setScanningCooldown(false);
+          setLoading(false);
+        }}
+      />
     </SafeAreaView>
   );
 };

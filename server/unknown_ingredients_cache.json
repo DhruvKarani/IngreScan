@@ -1,5 +1,87 @@
 {
-  "learned_ingredients": {},
-  "last_updated": null,
+  "learned_ingredients": {
+    "aspartame": {
+      "name": "aspartame",
+      "category": "artificial_sweetener",
+      "confidence": 0.8608666062355042,
+      "type": "artificial",
+      "harm_level": "MEDIUM",
+      "score_impact": -8,
+      "detected_by": "ml_distilbert_custom"
+    },
+    "e621": {
+      "name": "e621",
+      "category": "flavor_enhancer",
+      "confidence": 0.904360830783844,
+      "type": "processed",
+      "harm_level": "MEDIUM",
+      "score_impact": -4,
+      "detected_by": "ml_distilbert_custom"
+    },
+    "citric acid": {
+      "name": "citric acid",
+      "category": "natural_preservative",
+      "confidence": 0.88788241147995,
+      "type": "natural",
+      "harm_level": "LOW",
+      "score_impact": 1,
+      "detected_by": "ml_distilbert_custom"
+    },
+    "sunflower oil": {
+      "name": "sunflower oil",
+      "category": "fat",
+      "confidence": 0.9363904595375061,
+      "type": "natural",
+      "harm_level": "LOW",
+      "score_impact": 0,
+      "detected_by": "ml_distilbert_custom"
+    },
+    "sodium benzoate": {
+      "name": "sodium benzoate",
+      "category": "harmful_preservative",
+      "confidence": 0.9065800905227661,
+      "type": "artificial",
+      "harm_level": "HIGH",
+      "score_impact": -10,
+      "detected_by": "ml_distilbert_custom"
+    },
+    "turmeric": {
+      "name": "turmeric",
+      "category": "natural_color",
+      "confidence": 0.8345491290092468,
+      "type": "natural",
+      "harm_level": "LOW",
+      "score_impact": 0,
+      "detected_by": "ml_distilbert_custom"
+    },
+    "high fructose corn syrup": {
+      "name": "high fructose corn syrup",
+      "category": "refined_sugar",
+      "confidence": 0.9259623885154724,
+      "type": "processed",
+      "harm_level": "MEDIUM",
+      "score_impact": -6,
+      "detected_by": "ml_distilbert_custom"
+    },
+    "erythritol": {
+      "name": "erythritol",
+      "category": "natural_sweetener",
+      "confidence": 0.8708268404006958,
+      "type": "natural",
+      "harm_level": "VERY_LOW",
+      "score_impact": 2,
+      "detected_by": "ml_distilbert_custom"
+    },
+    "caramel color": {
+      "name": "caramel color",
+      "category": "moderate_color",
+      "confidence": 0.8962159156799316,
+      "type": "processed",
+      "harm_level": "MEDIUM",
+      "score_impact": -5,
+      "detected_by": "ml_distilbert_custom"
+    }
+  },
+  "last_updated": "2026-03-03T10:15:01.677469",
   "version": "1.0"
 }

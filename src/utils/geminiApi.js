@@ -1,6 +1,7 @@
 import { GEMINI_API_KEY, GEMINI_API_URL } from '../constants/config';
 import { db } from '../firebase';
 import { doc, setDoc, getDoc, collection } from 'firebase/firestore';
+import additiveDatabase from '../data/additiveDescriptions.json';
 
 /**
  * Call Gemini API to analyze ingredients and get descriptions
@@ -334,12 +335,31 @@ const getFallbackIngredientAnalysis = (ingredients) => {
     }
     
     if (isAdditive) {
+      // Try to find detailed description in database
+      const nameLower = name.toLowerCase().replace(/[^a-z0-9]/g, '');
+      let detailedInfo = null;
+      
+      // Search for additive in database (normalize both keys and search term)
+      for (const [key, value] of Object.entries(additiveDatabase)) {
+        const normalizedKey = key.toLowerCase().replace(/[^a-z0-9]/g, '');
+        if (nameLower.includes(normalizedKey) || normalizedKey.includes(nameLower)) {
+          detailedInfo = value;
+          break;
+        }
+      }
+      
+      const description = detailedInfo?.description || 
+        `${name} is a food additive used to preserve, stabilize, or enhance food products. It helps maintain quality, appearance, or flavor in processed foods and is regulated for safe consumption.`;
+      
+      const finalRiskLevel = detailedInfo?.riskLevel || riskLevel;
+      const finalPurpose = detailedInfo?.purpose || purpose;
+      
       additives.push({
         name: name,
-        description: `${name} is a food additive used to preserve, stabilize, or enhance food products. It helps maintain quality, appearance, or flavor in processed foods and is regulated for safe consumption.`,
+        description: description,
         type: 'additive',
-        riskLevel: riskLevel,
-        purpose: purpose
+        riskLevel: finalRiskLevel,
+        purpose: finalPurpose
       });
     } else {
       naturalIngredients.push({

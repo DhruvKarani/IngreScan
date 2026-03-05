@@ -80,17 +80,59 @@
     "health_impact": "May cause digestive issues in high amounts"
   },
 
+  "refined_palm_oil_aliases": {
+    "category": "refined_palm_oil",
+    "description": "Palm oil and derivatives - high in saturated fat",
+    "type": "processed",
+    "harm_level": "MEDIUM_HIGH",
+    "aliases": [
+      "palm oil", "palm kernel oil", "palmolein", "palm olein", "refined palm oil",
+      "refined palmolein", "refined palm kernel oil", "palm stearin",
+      "RBD palm oil", "RBD palmolein", "vegetable fat (palm)",
+      "fractionated palm oil", "palm fruit oil", "elaeis guineensis"
+    ],
+    "penalty_moderate": 8,
+    "health_impact": "High saturated fat (~50%), may increase LDL cholesterol when consumed in excess."
+  },
+
+  "hydrogenated_oil_aliases": {
+    "category": "hydrogenated_oil",
+    "description": "Hydrogenated and partially hydrogenated oils - contain trans fats",
+    "type": "processed",
+    "harm_level": "VERY_HIGH",
+    "aliases": [
+      "hydrogenated oil", "hydrogenated fat", "partially hydrogenated oil",
+      "partially hydrogenated fat", "trans fat", "trans fatty acids",
+      "hardened oil", "hardened fat", "hydrogenated vegetable oil"
+    ],
+    "penalty_critical": 20,
+    "health_impact": "Contains trans fats - strongly linked to heart disease, diabetes, inflammation. WHO recommends elimination."
+  },
+
+  "refined_flour_aliases": {
+    "category": "refined_flour",
+    "description": "Refined wheat flour (maida) - lower in fiber and nutrients",
+    "type": "processed",
+    "harm_level": "MEDIUM",
+    "aliases": [
+      "maida", "refined wheat flour", "white flour", "all-purpose flour",
+      "refined flour", "wheat flour (refined)", "bleached flour",
+      "enriched wheat flour", "enriched flour", "wheat flour (maida)"
+    ],
+    "penalty_moderate": 6,
+    "health_impact": "Refined grains lack fiber and some nutrients. Higher glycemic index than whole grains."
+  },
+
   "fat_aliases": {
     "category": "fat",
     "description": "All types of fats and oils",
     "aliases": [
       "fat", "oil", "butter", "ghee", "lard", "tallow", "suet", "shortening",
-      "palm oil", "palm kernel oil", "coconut oil", "cocoa butter",
+      "coconut oil", "cocoa butter",
       "vegetable oil", "canola oil", "soybean oil", "sunflower oil",
       "olive oil", "corn oil", "peanut oil", "safflower oil",
       "cottonseed oil", "rapeseed oil", "sesame oil", "flaxseed oil",
-      "margarine", "vegetable shortening", "hydrogenated oil",
-      "partially hydrogenated oil", "trans fat", "trans fatty acids",
+      "margarine", "vegetable shortening",
       "saturated fat", "monoglycerides", "diglycerides", "triglycerides",
       "fatty acids", "omega-3", "omega-6", "omega-9",
       "cream", "heavy cream", "whipping cream", "sour cream",
@@ -164,11 +206,12 @@
     "aliases": [
       "sorbate", "potassium sorbate", "calcium sorbate",
       "propionic acid", "calcium propionate", "sodium propionate",
+      "phosphoric acid", "E338",
       "E200", "E201", "E202", "E203", 
       "E280", "E281", "E282", "E283"
     ],
     "penalty_moderate": 5,
-    "health_impact": "Generally safe but may cause sensitivity in some people"
+    "health_impact": "Generally safe but may cause sensitivity in some people. Phosphoric acid linked to dental erosion and bone health concerns in soft drinks"
   },
   
   "harmful_preservative_aliases": {
@@ -243,6 +286,7 @@
       "tartrazine", "yellow 5", "sunset yellow", "yellow 6",
       "allura red", "red 40", "ponceau 4R", "erythrosine", "red 3",
       "indigo carmine", "blue 1", "brilliant blue", "blue 2", "green 3",
+      "azorubine", "carmoisine",
       "E102", "E104", "E110", "E122", "E123", "E124", "E127", "E128", "E129",
       "E131", "E132", "E133", "E142", "E151", "E153", "E154", "E155"
     ],
@@ -270,8 +314,8 @@
     "type": "artificial",
     "harm_level": "MEDIUM",
     "aliases": [
-      "artificial flavor", "artificial flavoring", "vanillin",
-      "ethyl vanillin", "diacetyl", "maltol", "ethyl maltol"
+      "artificial flavor", "artificial flavoring", "artificial flavour", "artificial flavouring",
+      "vanillin", "ethyl vanillin", "diacetyl", "maltol", "ethyl maltol"
     ],
     "penalty_moderate": 7,
     "health_impact": "Synthetic flavors, some linked to respiratory issues (e.g., diacetyl)"

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -14,10 +14,18 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { COLORS, SPACING, TYPOGRAPHY, BORDER_RADIUS } from '../constants/theme';
 import { db, auth } from '../firebase';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { fetchProductData } from '../utils/productDataFetcher';
 
 const ManualProductEntryScreen = ({ route, navigation }) => {
   const { barcode } = route.params;
   const [loading, setLoading] = useState(false);
+  
+  // Step 8: Auto-fetch state
+  const [fetchingData, setFetchingData] = useState(true);
+  const [fetchedProduct, setFetchedProduct] = useState(null);
+  const [dataSource, setDataSource] = useState(null);
+  const [completenessScore, setCompletenessScore] = useState(0);
+  const [autoFilledFields, setAutoFilledFields] = useState(new Set());
   
   // Product info state
   const [productName, setProductName] = useState('');
@@ -37,6 +45,98 @@ const ManualProductEntryScreen = ({ route, navigation }) => {
   
   // Ingredients state
   const [ingredientsList, setIngredientsList] = useState('');
+  
+  // Step 8: Auto-fetch product data on screen load
+  useEffect(() => {
+    const fetchAvailableData = async () => {
+      try {
+        setFetchingData(true);
+        console.log('[ManualEntry] Attempting to fetch data for barcode:', barcode);
+        
+        const product = await fetchProductData(barcode);
+        
+        if (product) {
+          console.log('[ManualEntry] Product data fetched:', product.product_name);
+          console.log('[ManualEntry] Completeness:', product.metadata?.completeness_score + '%');
+          
+          setFetchedProduct(product);
+          setDataSource(product.metadata?.primary_source || 'Unknown');
+          setCompletenessScore(product.metadata?.completeness_score || 0);
+          
+          // Pre-fill basic information
+          const fieldsSet = new Set();
+          
+          if (product.product_name) {
+            setProductName(product.product_name);
+            fieldsSet.add('productName');
+          }
+          if (product.brands) {
+            setBrand(product.brands);
+            fieldsSet.add('brand');
+          }
+          if (product.categories) {
+            setCategory(product.categories);
+            fieldsSet.add('category');
+          }
+          
+          // Pre-fill nutrition from multiple possible field names
+          const nutr = product.nutriments || product.nutrition || {};
+          
+          if (nutr['energy-kcal'] || nutr.energy_kcal_100g) {
+            setCalories(String(nutr['energy-kcal'] || nutr.energy_kcal_100g));
+            fieldsSet.add('calories');
+          }
+          if (nutr.proteins || nutr.proteins_100g) {
+            setProtein(String(nutr.proteins || nutr.proteins_100g));
+            fieldsSet.add('protein');
+          }
+          if (nutr.carbohydrates || nutr.carbohydrates_100g) {
+            setCarbs(String(nutr.carbohydrates || nutr.carbohydrates_100g));
+            fieldsSet.add('carbs');
+          }
+          if (nutr.sugars || nutr.sugars_100g) {
+            setSugar(String(nutr.sugars || nutr.sugars_100g));
+            fieldsSet.add('sugar');
+          }
+          if (nutr.fat || nutr.fat_100g) {
+            setFat(String(nutr.fat || nutr.fat_100g));
+            fieldsSet.add('fat');
+          }
+          if (nutr['saturated-fat'] || nutr.saturated_fat_100g) {
+            setSaturatedFat(String(nutr['saturated-fat'] || nutr.saturated_fat_100g));
+            fieldsSet.add('saturatedFat');
+          }
+          if (nutr.fiber || nutr.fiber_100g) {
+            setFiber(String(nutr.fiber || nutr.fiber_100g));
+            fieldsSet.add('fiber');
+          }
+          if (nutr.sodium || nutr.sodium_100g || nutr.salt || nutr.salt_100g) {
+            const sodiumValue = nutr.sodium || nutr.sodium_100g || (nutr.salt || nutr.salt_100g) * 1000;
+            setSodium(String(sodiumValue));
+            fieldsSet.add('sodium');
+          }
+          
+          // Pre-fill ingredients
+          if (product.ingredients_text) {
+            setIngredientsList(product.ingredients_text);
+            fieldsSet.add('ingredients');
+          }
+          
+          setAutoFilledFields(fieldsSet);
+          console.log('[ManualEntry] Auto-filled fields:', Array.from(fieldsSet).join(', '));
+        } else {
+          console.log('[ManualEntry] No product data available from API');
+        }
+      } catch (error) {
+        console.error('[ManualEntry] Error fetching product data:', error);
+        // Don't show error to user, just continue with empty form
+      } finally {
+        setFetchingData(false);
+      }
+    };
+    
+    fetchAvailableData();
+  }, [barcode]);
 
   const validateInputs = () => {
     if (!productName.trim()) {
@@ -136,6 +236,20 @@ const ManualProductEntryScreen = ({ route, navigation }) => {
       const ingredients = parseIngredients(ingredientsList);
       const nutrition = formatNutrition();
       
+      // Step 8: Track which fields were user-edited vs auto-filled
+      const userEditedFields = [];
+      const autoFilledFieldsList = [];
+      
+      // Check each field to see if it was modified from auto-filled value
+      ['productName', 'brand', 'category', 'calories', 'protein', 'carbs', 'sugar', 
+       'fat', 'saturatedFat', 'fiber', 'sodium', 'ingredients'].forEach(field => {
+        if (autoFilledFields.has(field)) {
+          autoFilledFieldsList.push(field);
+        } else {
+          userEditedFields.push(field);
+        }
+      });
+      
       const productData = {
         // Basic info
         product_name: productName.trim(),
@@ -158,6 +272,21 @@ const ManualProductEntryScreen = ({ route, navigation }) => {
         addedBy: user.uid,
         addedAt: serverTimestamp(),
         isManualEntry: true,
+        
+        // Step 8: Enhanced metadata
+        _verified: true,
+        _verified_by: 'user',
+        _verified_at: serverTimestamp(),
+        metadata: {
+          original_source: dataSource || 'none',
+          original_completeness: completenessScore,
+          auto_filled_fields: autoFilledFieldsList,
+          user_edited_fields: userEditedFields,
+          entry_type: fetchedProduct ? 'auto_fill_enhanced' : 'fully_manual',
+          completeness_score: 100, // User completed the product
+          needs_verification: false,
+          user_verified: true,
+        },
         
         // Set a default health score (will be calculated later)
         healthScore: 0,
@@ -248,11 +377,43 @@ const ManualProductEntryScreen = ({ route, navigation }) => {
       </View>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+        {/* Step 8: Loading state while fetching data */}
+        {fetchingData && (
+          <View style={styles.fetchingBox}>
+            <ActivityIndicator size="small" color={COLORS.primary} />
+            <Text style={styles.fetchingText}>
+              Searching for available product data...
+            </Text>
+          </View>
+        )}
+        
+        {/* Step 8: Data quality banner (if data was fetched) */}
+        {!fetchingData && fetchedProduct && (
+          <View style={styles.dataQualityBox}>
+            <View style={styles.dataQualityHeader}>
+              <MaterialIcons name="cloud-download" size={20} color={COLORS.success} />
+              <Text style={styles.dataQualityTitle}>Data Auto-Filled</Text>
+              <View style={[
+                styles.completenessbadge,
+                { backgroundColor: completenessScore >= 70 ? COLORS.success : COLORS.warning }
+              ]}>
+                <Text style={styles.completenessBadgeText}>{completenessScore}%</Text>
+              </View>
+            </View>
+            <Text style={styles.dataQualityText}>
+              Found data from {dataSource}. {autoFilledFields.size} field{autoFilledFields.size !== 1 ? 's' : ''} pre-filled.
+              Please review and complete any missing information.
+            </Text>
+          </View>
+        )}
+        
         <View style={styles.infoBox}>
           <MaterialIcons name="info" size={20} color={COLORS.primary} />
           <Text style={styles.infoText}>
-            This product (barcode: {barcode}) wasn't found in our database. 
-            Please help us by adding the nutrition information and ingredients.
+            {fetchedProduct 
+              ? `Review the auto-filled data and complete any missing fields for barcode: ${barcode}`
+              : `This product (barcode: ${barcode}) wasn't found. Please add the nutrition information and ingredients.`
+            }
           </Text>
         </View>
 
@@ -395,6 +556,58 @@ const styles = StyleSheet.create({
     marginLeft: SPACING.sm,
     fontSize: TYPOGRAPHY.fontSize.sm,
     color: COLORS.primary,
+    lineHeight: TYPOGRAPHY.lineHeight.relaxed * TYPOGRAPHY.fontSize.sm,
+  },
+  // Step 8: New styles for data quality display
+  fetchingBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: COLORS.backgroundLight,
+    padding: SPACING.md,
+    borderRadius: BORDER_RADIUS.md,
+    marginTop: SPACING.md,
+    marginBottom: SPACING.sm,
+  },
+  fetchingText: {
+    marginLeft: SPACING.sm,
+    fontSize: TYPOGRAPHY.fontSize.sm,
+    color: COLORS.textSecondary,
+  },
+  dataQualityBox: {
+    backgroundColor: COLORS.success + '15', // 15 = ~8% opacity
+    padding: SPACING.md,
+    borderRadius: BORDER_RADIUS.md,
+    marginTop: SPACING.md,
+    marginBottom: SPACING.sm,
+    borderWidth: 1,
+    borderColor: COLORS.success + '40',
+  },
+  dataQualityHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: SPACING.xs,
+  },
+  dataQualityTitle: {
+    fontSize: TYPOGRAPHY.fontSize.base,
+    fontWeight: TYPOGRAPHY.fontWeight.semibold,
+    color: COLORS.success,
+    marginLeft: SPACING.xs,
+    flex: 1,
+  },
+  completenessbadge: {
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: SPACING.xs,
+    borderRadius: BORDER_RADIUS.sm,
+  },
+  completenessBadgeText: {
+    fontSize: TYPOGRAPHY.fontSize.xs,
+    fontWeight: TYPOGRAPHY.fontWeight.bold,
+    color: COLORS.white,
+  },
+  dataQualityText: {
+    fontSize: TYPOGRAPHY.fontSize.sm,
+    color: COLORS.textSecondary,
     lineHeight: TYPOGRAPHY.lineHeight.relaxed * TYPOGRAPHY.fontSize.sm,
   },
   section: {

@@ -8,9 +8,11 @@ const getScoreApiUrl = () => {
   // Try to get from environment or config
   try {
     const { SCORE_API_URL } = require('../constants/config');
-    return SCORE_API_URL || 'http://192.168.0.106:5000';
+    const baseUrl = SCORE_API_URL || 'http://192.168.0.103:5000';
+    // Remove /analyze suffix if present (we'll add specific endpoints)
+    return baseUrl.replace(/\/analyze$/, '');
   } catch (e) {
-    return 'http://192.168.0.106:5000';
+    return 'http://192.168.0.103:5000';
   }
 };
 
@@ -24,6 +26,10 @@ const ML_API_BASE = getScoreApiUrl();
  */
 export const analyzeProductWithML = async (product, userProfile = {}) => {
   try {
+    // Implement proper timeout using AbortController (45 seconds for ML processing - DistilBERT can be slow)
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 45000);
+
     const response = await fetch(`${ML_API_BASE}/ml-score`, {
       method: 'POST',
       headers: {
@@ -33,8 +39,10 @@ export const analyzeProductWithML = async (product, userProfile = {}) => {
         product: product,
         userProfile: userProfile
       }),
-      timeout: 15000 // 15 second timeout
+      signal: controller.signal
     });
+
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       throw new Error(`ML API returned ${response.status}`);
@@ -51,12 +59,127 @@ export const analyzeProductWithML = async (product, userProfile = {}) => {
     return result;
 
   } catch (error) {
-    console.error('[ML-API] Analysis failed:', error.message);
+    const isTimeout = error.name === 'AbortError';
+    console.error('[ML-API] Analysis failed:', {
+      error: error.message,
+      type: error.name,
+      isTimeout,
+      apiUrl: `${ML_API_BASE}/ml-score`
+    });
     
     // Fallback to basic analysis
     return getFallbackAnalysis(product, userProfile);
   }
 };
+
+/**
+ * Get personalized health score (0-100 scale) with evidence-based penalties
+ * @param {Object} product - Product data with nutrients and ingredients
+ * @param {Object} userProfile - User's health conditions and allergies
+ * @returns {Promise<Object>} - Personalized score with breakdown and recommendations
+ */
+export const getPersonalizedScore = async (product, userProfile = {}) => {
+  try {
+    // Extract user conditions and allergies
+    const conditions = userProfile.healthConditions || userProfile.conditions || [];
+    const allergies = userProfile.allergens || userProfile.allergies || [];
+
+    console.log('[ML-API] Personalized scoring with:', {
+      conditions: conditions,
+      allergies: allergies,
+      productName: product.product_name || product.name
+    });
+
+    // Implement proper timeout using AbortController (45 seconds for personalized scoring - DistilBERT can be slow)
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 45000);
+
+    const response = await fetch(`${ML_API_BASE}/personalized-score`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        product: product,
+        user_profile: {
+          conditions: conditions,
+          allergies: allergies
+        }
+      }),
+      signal: controller.signal
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      throw new Error(`Personalized scoring API returned ${response.status}`);
+    }
+
+    const result = await response.json();
+    
+    console.log('[ML-API] Personalized score:', {
+      score: result.final_score,
+      label: result.label,
+      critical_warning: result.critical_warning,
+      conditions: conditions
+    });
+
+    return result;
+
+  } catch (error) {
+    const isTimeout = error.name === 'AbortError';
+    console.error('[ML-API] Personalized scoring failed:', {
+      error: error.message,
+      type: error.name,
+      isTimeout,
+      apiUrl: `${ML_API_BASE}/personalized-score`
+    });
+    
+    // Fallback to ML score if personalized scoring unavailable
+    console.log('[ML-API] Falling back to ML score');
+    const mlResult = await analyzeProductWithML(product, userProfile);
+    
+    // Transform to personalized score format
+    return {
+      final_score: mlResult.score10 * 10, // Convert 0-10 to 0-100
+      label: mlResult.Tier || 'Moderate',
+      color: getColorFromScore(mlResult.score10 * 10),
+      emoji: getEmojiFromScore(mlResult.score10 * 10),
+      recommendation: mlResult.tier_description || mlResult.explanation,
+      guideline: 'Using ML score (personalized scoring unavailable)',
+      critical_warning: false,
+      breakdown: mlResult.breakdown || {},
+      user_profile: {
+        conditions: userProfile.healthConditions || userProfile.conditions || [],
+        allergies: userProfile.allergens || userProfile.allergies || []
+      },
+      metadata: {
+        scoring_version: 'fallback',
+        timestamp: new Date().toISOString()
+      },
+      _fallback: true
+    };
+  }
+};
+
+// Helper functions for fallback transformation
+function getColorFromScore(score) {
+  if (score >= 90) return '#2ecc71';
+  if (score >= 75) return '#3498db';
+  if (score >= 60) return '#f39c12';
+  if (score >= 45) return '#e67e22';
+  if (score >= 30) return '#e74c3c';
+  return '#c0392b';
+}
+
+function getEmojiFromScore(score) {
+  if (score >= 90) return '✅';
+  if (score >= 75) return '👍';
+  if (score >= 60) return '⚠️';
+  if (score >= 45) return '⚠️';
+  if (score >= 30) return '⚠️';
+  return '🚫';
+}
 
 /**
  * Analyze ingredients with ML (replaces Gemini functionality)
@@ -294,6 +417,7 @@ function getFallbackIngredientAnalysis(ingredients) {
 // Export all functions
 export default {
   analyzeProductWithML,
+  getPersonalizedScore,
   analyzeIngredientsWithML,
   checkMLApiHealth
 };

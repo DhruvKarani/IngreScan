@@ -1,7 +1,11 @@
 # Requirements for the local scoring API (server/score_api.py)
 # Keep versions reasonably recent but not pinned to a single micro-version.
 Flask>=2.0,<3.0
+flask-cors>=3.0.0  # For React Native CORS support
+fastapi>=0.100.0  # Modern async API framework
+uvicorn>=0.20.0  # ASGI server for FastAPI
 requests>=2.25.0
+firebase-admin>=6.0.0  # For Firebase migration and product data fetching
 
 # ML/AI Dependencies for intelligent scoring
 transformers>=4.30.0

@@ -7,7 +7,7 @@
 const getScoreApiUrl = () => {
   // For Expo Go on mobile device, use LAN IP
   if (__DEV__ && typeof navigator !== 'undefined') {
-    return 'http://192.168.1.36:5000/analyze';
+    return 'http://192.168.0.100:5000/analyze';
   }
   // For web production build (bundled)
   if (typeof window !== 'undefined') {

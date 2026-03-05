@@ -1,0 +1,370 @@
+{
+  "description": "Evidence-based nutritional thresholds per 100g (WHO, ADA, AHA guidelines)",
+  "version": "1.0",
+  "references": {
+    "WHO": "World Health Organization - Sugar intake guideline 2015",
+    "ADA": "American Diabetes Association - Standards of Care 2024",
+    "AHA": "American Heart Association - Dietary Guidelines 2023",
+    "FDA": "FDA Daily Value Reference"
+  },
+  
+  "daily_limits": {
+    "sugars": {
+      "value": 25,
+      "unit": "g",
+      "source": "WHO recommendation (10% of 2000 kcal)",
+      "note": "Free sugars only, not natural sugars in whole fruits/milk"
+    },
+    "sodium": {
+      "value": 2.0,
+      "unit": "g",
+      "source": "WHO/AHA recommendation",
+      "note": "Equivalent to 5g salt"
+    },
+    "saturated_fat": {
+      "value": 13,
+      "unit": "g",
+      "source": "AHA recommendation (<7% of 2000 kcal)",
+      "note": "For heart health"
+    },
+    "trans_fat": {
+      "value": 0,
+      "unit": "g",
+      "source": "WHO/AHA - eliminate industrially-produced trans fats",
+      "note": "No safe level"
+    },
+    "cholesterol": {
+      "value": 300,
+      "unit": "mg",
+      "source": "AHA recommendation",
+      "note": "Less if heart disease risk"
+    },
+    "fiber": {
+      "value": 25,
+      "unit": "g",
+      "source": "FDA recommended daily intake",
+      "note": "Beneficial - higher is better"
+    }
+  },
+
+  "per_100g_thresholds": {
+    "comment": "Based on daily limits assuming 200-400g daily food intake",
+    
+    "sugars": {
+      "excellent": 5,
+      "good": 10,
+      "moderate": 15,
+      "poor": 22.5,
+      "avoid": 30,
+      "unit": "g",
+      "rationale": "10g/100g = ~25g daily (WHO limit) if consuming 250g"
+    },
+    
+    "sodium": {
+      "excellent": 0.3,
+      "good": 0.6,
+      "moderate": 1.0,
+      "poor": 1.5,
+      "avoid": 2.0,
+      "unit": "g",
+      "rationale": "0.6g/100g = ~2g daily (WHO limit) if consuming 300g"
+    },
+    
+    "saturated_fat": {
+      "excellent": 1.5,
+      "good": 3,
+      "moderate": 5,
+      "poor": 8,
+      "avoid": 10,
+      "unit": "g",
+      "rationale": "3g/100g = ~13g daily (AHA limit) if consuming 400g"
+    },
+    
+    "trans_fat": {
+      "excellent": 0,
+      "good": 0,
+      "moderate": 0.2,
+      "poor": 0.5,
+      "avoid": 1.0,
+      "unit": "g",
+      "rationale": "Any amount is harmful (WHO/AHA)"
+    },
+    
+    "fat_total": {
+      "excellent": 5,
+      "good": 10,
+      "moderate": 20,
+      "poor": 30,
+      "avoid": 40,
+      "unit": "g",
+      "rationale": "Total fat 20-35% of calories per USDA"
+    },
+    
+    "cholesterol": {
+      "excellent": 20,
+      "good": 75,
+      "moderate": 150,
+      "poor": 225,
+      "avoid": 300,
+      "unit": "mg",
+      "rationale": "75mg/100g = ~300mg daily (AHA limit) if consuming 400g"
+    },
+    
+    "fiber": {
+      "excellent": 6,
+      "good": 3,
+      "moderate": 1.5,
+      "poor": 0.5,
+      "avoid": 0,
+      "unit": "g",
+      "rationale": "Higher is better - 3g/100g = ~25g daily if consuming 800g",
+      "bonus": true
+    },
+    
+    "protein": {
+      "excellent": 15,
+      "good": 8,
+      "moderate": 5,
+      "poor": 2,
+      "avoid": 0,
+      "unit": "g",
+      "rationale": "Higher generally better - 50g daily RDA",
+      "bonus": true
+    }
+  },
+
+  "health_condition_multipliers": {
+    "diabetes": {
+      "description": "Type 1 or Type 2 Diabetes Mellitus",
+      "nutrient_multipliers": {
+        "sugars": 1.6,
+        "saturated_fat": 1.2,
+        "trans_fat": 1.4,
+        "fiber": 0.5
+      },
+      "category_multipliers": {
+        "refined_sugar": 1.8,
+        "artificial_sweetener": 1.1,
+        "natural_sugar": 1.2,
+        "sugar_alcohol": 1.05,
+        "harmful_preservative": 1.15
+      },
+      "rationale": "ADA recommends limiting refined carbs, maximizing fiber, avoiding rapid glucose spikes"
+    },
+    
+    "heart_disease": {
+      "description": "Cardiovascular disease, coronary artery disease",
+      "nutrient_multipliers": {
+        "saturated_fat": 1.8,
+        "trans_fat": 2.0,
+        "sodium": 1.6,
+        "cholesterol": 1.5,
+        "fiber": 0.5
+      },
+      "category_multipliers": {
+        "harmful_preservative": 1.3,
+        "very_harmful_preservative": 1.5,
+        "fat": 1.2
+      },
+      "rationale": "AHA emphasizes low saturated fat, zero trans fat, reduced sodium"
+    },
+    
+    "hypertension": {
+      "description": "High blood pressure",
+      "nutrient_multipliers": {
+        "sodium": 1.8,
+        "saturated_fat": 1.3,
+        "sugars": 1.15
+      },
+      "category_multipliers": {
+        "harmful_preservative": 1.4,
+        "very_harmful_preservative": 1.5
+      },
+      "rationale": "WHO/AHA DASH diet - max 1.5g sodium/day"
+    },
+    
+    "obesity": {
+      "description": "BMI ≥30 or weight management goals",
+      "nutrient_multipliers": {
+        "sugars": 1.5,
+        "saturated_fat": 1.3,
+        "fat_total": 1.2
+      },
+      "category_multipliers": {
+        "refined_sugar": 1.6,
+        "artificial_sweetener": 0.9,
+        "fat": 1.3
+      },
+      "rationale": "Calorie density reduction, avoid refined carbs/fats"
+    },
+    
+    "kidney_disease": {
+      "description": "Chronic kidney disease (CKD)",
+      "nutrient_multipliers": {
+        "sodium": 1.8,
+        "protein": 1.4,
+        "saturated_fat": 1.2
+      },
+      "category_multipliers": {
+        "harmful_preservative": 1.6,
+        "very_harmful_preservative": 1.8
+      },
+      "rationale": "NKF recommends sodium restriction, phosphorus control"
+    }
+  },
+
+  "penalty_scales": {
+    "comment": "How nutrient levels translate to penalty points (0-100 scale)",
+    
+    "sugars": {
+      "0-2": 0,
+      "2-5": 2,
+      "5-8": 5,
+      "8-12": 12,
+      "12-18": 22,
+      "18-25": 35,
+      "25+": 50
+    },
+    
+    "sodium": {
+      "0-0.1": 0,
+      "0.1-0.3": 3,
+      "0.3-0.6": 8,
+      "0.6-1.0": 15,
+      "1.0-1.5": 25,
+      "1.5-2.0": 35,
+      "2.0+": 45
+    },
+    
+    "saturated_fat": {
+      "0-1.5": 0,
+      "1.5-3": 2,
+      "3-5": 5,
+      "5-8": 10,
+      "8-10": 18,
+      "10+": 25
+    },
+    
+    "trans_fat": {
+      "0": 0,
+      "0-0.2": 5,
+      "0.2-0.5": 15,
+      "0.5-1.0": 30,
+      "1.0+": 50
+    },
+    
+    "cholesterol": {
+      "0-20": 0,
+      "20-75": 1,
+      "75-150": 3,
+      "150-225": 7,
+      "225-300": 12,
+      "300+": 20
+    },
+    
+    "fat_total": {
+      "0-5": 0,
+      "5-10": 1,
+      "10-20": 3,
+      "20-30": 6,
+      "30-40": 10,
+      "40+": 15
+    }
+  },
+
+  "ml_category_base_penalties": {
+    "comment": "Base penalties from ML classification (before quantity multipliers)",
+    
+    "trans_fat": 20,
+    "very_harmful_preservative": 15,
+    "hydrogenated_oil": 15,
+    "harmful_preservative": 10,
+    "harmful_color": 8,
+    "refined_palm_oil": 8,
+    "artificial_sweetener": 7,
+    "refined_flour": 6,
+    "flavor_enhancer": 6,
+    "refined_sugar": 5,
+    "moderate_preservative": 4,
+    "moderate_color": 3,
+    "sugar_alcohol": 2,
+    "emulsifier_stabilizer": 2,
+    "thickener": 1,
+    "fat": 1,
+    "natural_sugar": 1,
+    "acid": 0,
+    "leavening_agent": 0,
+    "natural_preservative": -1,
+    "natural_color": -1,
+    "natural_sweetener": -2,
+    "other": 0
+  },
+
+  "bonus_points": {
+    "fiber": {
+      "0-1.5": 0,
+      "1.5-3": 2,
+      "3-6": 5,
+      "6+": 8
+    },
+    "protein": {
+      "0-2": 0,
+      "2-5": 1,
+      "5-8": 3,
+      "8-15": 5,
+      "15+": 7
+    }
+  },
+
+  "score_ranges": {
+    "90-100": {
+      "label": "Excellent",
+      "color": "#22C55E",
+      "emoji": "✅",
+      "recommendation": "Great choice! Consume daily",
+      "guideline": "Meets all health standards"
+    },
+    "75-89": {
+      "label": "Good",
+      "color": "#84CC16",
+      "emoji": "👍",
+      "recommendation": "Good option for regular consumption",
+      "guideline": "Minor concerns, safe for daily use"
+    },
+    "60-74": {
+      "label": "Fair",
+      "color": "#EAB308",
+      "emoji": "⚠️",
+      "recommendation": "Consume occasionally, 2-3 times per week max",
+      "guideline": "Some health concerns - moderate consumption advised"
+    },
+    "45-59": {
+      "label": "Moderate",
+      "color": "#F59E0B",
+      "emoji": "⚠️",
+      "recommendation": "Limit to once per week or less",
+      "guideline": "Moderate health concerns - occasional treat only"
+    },
+    "30-44": {
+      "label": "Poor",
+      "color": "#F97316",
+      "emoji": "⚠️",
+      "recommendation": "Avoid regular consumption, seek healthier alternatives",
+      "guideline": "Significant health concerns - rare indulgence only"
+    },
+    "10-29": {
+      "label": "Very Poor",
+      "color": "#DC2626",
+      "emoji": "🚫",
+      "recommendation": "Strongly avoid, high health risk",
+      "guideline": "⚠️ CRITICAL: Contains harmful levels of ingredients for your health condition. Consult doctor if consumed regularly."
+    },
+    "0-9": {
+      "label": "Dangerous",
+      "color": "#991B1B",
+      "emoji": "🚨",
+      "recommendation": "DO NOT CONSUME - Severe health risk",
+      "guideline": "🚨 MEDICAL WARNING: This product could seriously harm your health condition. Avoid completely."
+    }
+  }
+}

@@ -20,6 +20,8 @@ import { collection, addDoc, serverTimestamp, doc, getDoc } from 'firebase/fires
 import { COLORS, SPACING, BORDER_RADIUS, TYPOGRAPHY, SHADOWS } from '../constants/theme';
 import { SAMPLE_PRODUCTS } from '../constants/data';
 import { dailyIntakeManager } from '../utils/dailyIntakeManager';
+import { detectCorruptedIngredients } from '../utils/dataCorruptionDetector';
+import { getPersonalizedScore } from '../utils/mlApi';
 
 // Import ingredient data with fallback
 let ingredientData;
@@ -34,6 +36,15 @@ const { width: screenWidth } = Dimensions.get('window');
 
 const ProductDetailsScreen = ({ route, navigation }) => {
   const initialProduct = route.params && route.params.product ? route.params.product : {};
+  
+  console.log('[ProductDetails] Screen opened with product:', {
+    productName: initialProduct.product_name,
+    hasNutriments: !!initialProduct.nutriments,
+    nutrimentKeys: Object.keys(initialProduct.nutriments || {}),
+    hasAnalysis: !!initialProduct.analysis
+  });
+  console.log('[ProductDetails] Full nutriments:', JSON.stringify(initialProduct.nutriments || {}, null, 2));
+  
   const [productState, setProductState] = useState(initialProduct);
   const product = productState;
   const analysis = product.analysis || null;
@@ -47,6 +58,13 @@ const ProductDetailsScreen = ({ route, navigation }) => {
   const [submittingReview, setSubmittingReview] = useState(false);
   const [selectedIngredient, setSelectedIngredient] = useState(null);
   const [ingredientModalVisible, setIngredientModalVisible] = useState(false);
+
+  // User profile state for personalized scoring
+  const [userProfile, setUserProfile] = useState({
+    healthConditions: [],
+    allergens: []
+  });
+  const [personalizedScoreLoading, setPersonalizedScoreLoading] = useState(false);
 
   // Daily intake tracking state
   const [dailyIntake, setDailyIntake] = useState({});
@@ -67,6 +85,8 @@ const ProductDetailsScreen = ({ route, navigation }) => {
             // Merge remote fields into current product, but preserve any existing analysis on the product
             const merged = { ...remote, ...product, analysis: product.analysis || remote.analysis };
             setProductState(merged);
+            // Trigger personalized scoring for fetched product
+            loadUserProfileAndScore();
           }
         }
       } catch (e) {
@@ -80,8 +100,65 @@ const ProductDetailsScreen = ({ route, navigation }) => {
   useFocusEffect(
     React.useCallback(() => {
       loadDailyIntake();
+      loadUserProfileAndScore();
     }, [])
   );
+
+  // Load user profile and get personalized score
+  const loadUserProfileAndScore = async () => {
+    try {
+      const user = auth.currentUser;
+      if (!user) {
+        console.log('[PersonalizedScore] No authenticated user');
+        return;
+      }
+
+      // Load user profile from Firebase
+      const userRef = doc(db, 'users', user.uid);
+      const userSnap = await getDoc(userRef);
+      
+      if (userSnap.exists()) {
+        const userData = userSnap.data();
+        const profile = {
+          healthConditions: userData.healthConditions || userData.conditions || [],
+          allergens: userData.allergens || []
+        };
+        
+        setUserProfile(profile);
+        console.log('[PersonalizedScore] User profile loaded:', profile);
+
+        // Get personalized score if we have product data
+        if (product && (product.nutriments || product.ingredients_text)) {
+          setPersonalizedScoreLoading(true);
+          
+          try {
+            const scoreResult = await getPersonalizedScore(product, profile);
+            console.log('[PersonalizedScore] Score received:', scoreResult);
+            
+            // Update product with personalized score in analysis
+            setProductState(prev => ({
+              ...prev,
+              analysis: {
+                ...(prev.analysis || {}),
+                ...scoreResult,
+                // Keep backward compatibility
+                score: scoreResult.final_score,
+                Score: scoreResult.final_score
+              }
+            }));
+          } catch (error) {
+            console.error('[PersonalizedScore] Failed to get score:', error);
+          } finally {
+            setPersonalizedScoreLoading(false);
+          }
+        }
+      } else {
+        console.log('[PersonalizedScore] User document not found');
+      }
+    } catch (error) {
+      console.error('[PersonalizedScore] Error loading profile:', error);
+    }
+  };
 
   const loadDailyIntake = async () => {
     try {
@@ -277,14 +354,18 @@ const ProductDetailsScreen = ({ route, navigation }) => {
     );
   };
 
-  // Normalize score for display: engine now returns 0-10 or 0-100.
-  const rawScore = analysis?.Score ?? analysis?.score10 ?? analysis?.score ?? product.healthScore ?? 0;
-  const scoreValue = (rawScore > 10 ? Math.round(rawScore / 10) : Math.round(rawScore));
+  // Score for display: Use 0-100 scale for personalized scoring
+  // Check if we have personalized score (final_score) or fall back to old scores
+  const rawScore = analysis?.final_score ?? analysis?.Score ?? analysis?.score10 ?? analysis?.score ?? product.healthScore ?? 0;
+  // Keep 0-100 scale, only convert old 0-10 scores
+  const scoreValue = (rawScore <= 10 && rawScore > 0) ? Math.round(rawScore * 10) : Math.round(rawScore);
   // Normalize image, nutrition and ingredients for products coming from OFF or Firestore
   const imageUri = product.image || product.image_url || (product.raw && (product.raw.image_small_url || product.raw.image_url)) || null;
 
   // Build nutrition object expected by NutritionalTable
   const buildNutrition = () => {
+    console.log('[ProductDetails] buildNutrition called');
+    
     // Merge all potential nutrition sources (productSnapshot, product.nutriments/nutrition, product.raw, analysis)
     const collect = (obj) => {
       if (!obj || typeof obj !== 'object') return {};
@@ -300,6 +381,15 @@ const ProductDetailsScreen = ({ route, navigation }) => {
       collect(analysis && analysis.nutrients),
       collect(analysis && analysis.raw_nutrients),
     ];
+    
+    console.log('[ProductDetails] Nutrition sources:', {
+      source1_snapshot: Object.keys(sources[0] || {}),
+      source2_nutriments: Object.keys(sources[1] || {}),
+      source3_nutrition: Object.keys(sources[2] || {}),
+      source4_raw: Object.keys(sources[3] || {}),
+      source5_analysis: Object.keys(sources[4] || {}),
+      source6_rawAnalysis: Object.keys(sources[5] || {})
+    });
 
     // Merge with later sources overriding earlier ones
     const merged = Object.assign({}, ...sources.filter(s => s && typeof s === 'object'));
@@ -339,17 +429,31 @@ const ProductDetailsScreen = ({ route, navigation }) => {
         }
       }
     });
-    // Add any remaining keys not covered by canonicalMap
+    
+    // ONLY add remaining keys that look like actual nutrition data (prevent garbage fields)
+    const VALID_NUTRITION_PATTERNS = [
+      /^energy/i, /^calories/i, /^protein/i, /^fat/i, /^carb/i, /^sugar/i, 
+      /^fiber/i, /^salt/i, /^sodium/i, /^cholesterol/i, /^vitamin/i, /^mineral/i,
+      /^calcium/i, /^iron/i, /^potassium/i, /^magnesium/i
+    ];
+    
     Object.keys(merged).forEach((k) => {
-      if (!Object.values(canonicalMap).flat().includes(k)) {
+      // Skip if already in canonical map
+      if (Object.values(canonicalMap).flat().includes(k)) return;
+      
+      // Only include if it matches valid nutrition patterns
+      const isValidNutrition = VALID_NUTRITION_PATTERNS.some(pattern => pattern.test(k));
+      if (isValidNutrition) {
         deduped[k] = merged[k];
       }
     });
 
+    console.log('[ProductDetails] Final deduped nutrition:', JSON.stringify(deduped, null, 2));
     return deduped;
   };
 
   const displayNutrition = buildNutrition();
+  console.log('[ProductDetails] displayNutrition keys:', Object.keys(displayNutrition));
 
   // Build ingredients array expected by IngredientCollapsible (array of objects)
   // Get raw ingredients text for Gemini API analysis
@@ -382,34 +486,73 @@ const ProductDetailsScreen = ({ route, navigation }) => {
   const buildIngredients = () => {
     // Prefer analysis ingredients from server (strings or objects)
     if (analysis) {
-      if (Array.isArray(analysis.ingredients) && analysis.ingredients.length) return analysis.ingredients.map(i => (typeof i === 'string' ? { name: i } : i));
+      if (Array.isArray(analysis.ingredients) && analysis.ingredients.length) {
+        const ingredients = analysis.ingredients.map(i => (typeof i === 'string' ? { name: i } : i));
+        // Filter corrupted ingredients
+        const cleanIngredients = ingredients.filter(ing => {
+          const name = ing.name || ing;
+          return !detectCorruptedIngredients([name]).isCorrupted;
+        });
+        if (cleanIngredients.length > 0) return cleanIngredients;
+      }
       if (typeof analysis.ingredients === 'string' && analysis.ingredients.trim()) {
-        return String(analysis.ingredients).split(/,|;|\n/).map(s => ({ name: s.trim(), riskLevel: 'LOW', description: '' })).filter(i => i.name);
+        const ingredients = String(analysis.ingredients).split(/,|;|\n/).map(s => ({ name: s.trim(), riskLevel: 'LOW', description: '' })).filter(i => i.name);
+        // Filter corrupted ingredients
+        const cleanIngredients = ingredients.filter(ing => {
+          return !detectCorruptedIngredients([ing.name]).isCorrupted;
+        });
+        if (cleanIngredients.length > 0) return cleanIngredients;
       }
     }
 
     // product.ingredients array
-    if (Array.isArray(product.ingredients) && product.ingredients.length) return product.ingredients.map(i => (typeof i === 'string' ? { name: i } : i));
+    if (Array.isArray(product.ingredients) && product.ingredients.length) {
+      const ingredients = product.ingredients.map(i => (typeof i === 'string' ? { name: i } : i));
+      // Filter corrupted ingredients
+      const cleanIngredients = ingredients.filter(ing => {
+        const name = ing.name || ing;
+        return !detectCorruptedIngredients([name]).isCorrupted;
+      });
+      if (cleanIngredients.length > 0) return cleanIngredients;
+    }
 
     // check nested raw fields
     const txt = getRawIngredientsText();
     if (!txt) return [];
     // split by comma/semicolon/newline and create simple ingredient items
-    return String(txt).split(/,|;|\n/).map(s => ({ name: s.trim(), riskLevel: 'LOW', description: '' })).filter(i => i.name);
+    const ingredients = String(txt).split(/,|;|\n/).map(s => ({ name: s.trim(), riskLevel: 'LOW', description: '' })).filter(i => i.name);
+    // Filter corrupted ingredients
+    const cleanIngredients = ingredients.filter(ing => {
+      return !detectCorruptedIngredients([ing.name]).isCorrupted;
+    });
+    return cleanIngredients;
   };
 
   const ingredientList = buildIngredients();
   const rawIngredientsArray = getRawIngredientsArray();
   const getHealthScoreColor = (score) => {
-    if (score >= 8) return COLORS.lowRisk;
-    if (score >= 5) return COLORS.mediumRisk;
-    return COLORS.highRisk;
+    // Handle both 0-10 and 0-100 scales
+    const normalizedScore = score <= 10 ? score * 10 : score;
+    
+    if (normalizedScore >= 90) return '#2ecc71'; // Excellent - dark green
+    if (normalizedScore >= 75) return '#3498db'; // Good - blue
+    if (normalizedScore >= 60) return '#f39c12'; // Fair - yellow
+    if (normalizedScore >= 45) return '#e67e22'; // Moderate - orange
+    if (normalizedScore >= 30) return '#e74c3c'; // Poor - red
+    return '#c0392b'; // Very Poor/Dangerous - dark red
   };
 
   const getHealthScoreText = (score) => {
-    if (score >= 8) return 'Daily (Safe)';
-    if (score >= 5) return 'Moderate (Occasional)';
-    return 'Consider Alternatives';
+    // Handle both 0-10 and 0-100 scales
+    const normalizedScore = score <= 10 ? score * 10 : score;
+    
+    if (normalizedScore >= 90) return '✅ Excellent';
+    if (normalizedScore >= 75) return '👍 Good';
+    if (normalizedScore >= 60) return '⚠️ Fair';
+    if (normalizedScore >= 45) return '⚠️ Moderate';
+    if (normalizedScore >= 30) return '⚠️ Poor';
+    if (normalizedScore >= 10) return '🚫 Very Poor';
+    return '🚫 Dangerous';
   };
 
   const handleFavoritePress = () => {
@@ -440,6 +583,8 @@ const ProductDetailsScreen = ({ route, navigation }) => {
 
     const explanations = [];
     const score = analysis.score;
+    // Normalize to 0-100 if needed
+    const normalizedScore = (score <= 10 && score > 0) ? score * 10 : score;
 
     // Add explanations based on analysis data
     if (analysis.high_sodium) {
@@ -458,10 +603,10 @@ const ProductDetailsScreen = ({ route, navigation }) => {
       explanations.push("⚗️ Highly processed food product");
     }
 
-    // Generic explanations based on score range
-    if (score >= 8) {
+    // Generic explanations based on score range (0-100 scale)
+    if (normalizedScore >= 75) {
       explanations.push("✅ Generally healthy ingredient profile");
-    } else if (score >= 6) {
+    } else if (normalizedScore >= 45) {
       explanations.push("⚠️ Moderate health concerns identified");
     } else {
       explanations.push("❌ Multiple health concerns detected");
@@ -532,22 +677,171 @@ const ProductDetailsScreen = ({ route, navigation }) => {
               <View
                 style={[
                   styles.scoreCircle,
-                  { backgroundColor: getHealthScoreColor(product.healthScore) }
+                  { backgroundColor: getHealthScoreColor(scoreValue) }
                 ]}
               >
                 <Text style={styles.scoreNumber}>{scoreValue}</Text>
-                <Text style={{ fontSize: 10, color: COLORS.textOnPrimary, opacity: 0.8 }}>/10</Text>
+                <Text style={{ fontSize: 10, color: COLORS.textOnPrimary, opacity: 0.8 }}>/100</Text>
               </View>
               <View style={styles.scoreInfo}>
                 <Text style={styles.scoreTitle}>Health Score</Text>
-                <Text style={[
-                  styles.scoreStatus,
-                  { color: getHealthScoreColor(scoreValue) }
-                ]}>
-                  {getHealthScoreText(scoreValue)}
-                </Text>
+                {personalizedScoreLoading ? (
+                  <Text style={[styles.scoreStatus, { color: COLORS.textSecondary, fontSize: 12 }]}>
+                    Calculating personalized score...
+                  </Text>
+                ) : (
+                  <Text style={[
+                    styles.scoreStatus,
+                    { color: getHealthScoreColor(scoreValue) }
+                  ]}>
+                    {getHealthScoreText(scoreValue)}
+                  </Text>
+                )}
               </View>
             </View>
+
+            {/* Visual score range indicator */}
+            {!personalizedScoreLoading && (
+              <View style={{ marginTop: SPACING.md }}>
+                <View style={{ 
+                  height: 8, 
+                  backgroundColor: COLORS.border,
+                  borderRadius: 4,
+                  overflow: 'hidden',
+                  position: 'relative'
+                }}>
+                  {/* Score fill */}
+                  <View style={{ 
+                    position: 'absolute',
+                    left: 0,
+                    top: 0,
+                    bottom: 0,
+                    width: `${scoreValue}%`,
+                    backgroundColor: getHealthScoreColor(scoreValue),
+                    borderRadius: 4
+                  }} />
+                </View>
+                {/* Score range labels */}
+                <View style={{ 
+                  flexDirection: 'row', 
+                  justifyContent: 'space-between',
+                  marginTop: 4
+                }}>
+                  <Text style={{ fontSize: 10, color: COLORS.textSecondary }}>0</Text>
+                  <Text style={{ fontSize: 10, color: COLORS.textSecondary }}>Dangerous</Text>
+                  <Text style={{ fontSize: 10, color: COLORS.textSecondary }}>Poor</Text>
+                  <Text style={{ fontSize: 10, color: COLORS.textSecondary }}>Moderate</Text>
+                  <Text style={{ fontSize: 10, color: COLORS.textSecondary }}>Good</Text>
+                  <Text style={{ fontSize: 10, color: COLORS.textSecondary }}>100</Text>
+                </View>
+              </View>
+            )}
+
+            {/* Show personalized scoring indicator if user has health conditions */}
+            {userProfile.healthConditions && userProfile.healthConditions.length > 0 && (
+              <View style={{ 
+                marginTop: SPACING.sm, 
+                padding: SPACING.sm, 
+                backgroundColor: COLORS.primary + '15',
+                borderRadius: BORDER_RADIUS.sm,
+                flexDirection: 'row',
+                alignItems: 'center'
+              }}>
+                <MaterialIcons name="person" size={16} color={COLORS.primary} />
+                <Text style={{ 
+                  marginLeft: SPACING.xs, 
+                  fontSize: 12, 
+                  color: COLORS.primary,
+                  flex: 1
+                }}>
+                  Personalized for: {userProfile.healthConditions.map(c => 
+                    c.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())
+                  ).join(', ')}
+                </Text>
+              </View>
+            )}
+
+            {/* Critical health warning for very low scores */}
+            {analysis?.critical_warning && !personalizedScoreLoading && (
+              <View style={{ 
+                marginTop: SPACING.md,
+                padding: SPACING.md,
+                backgroundColor: '#ffebee',
+                borderRadius: BORDER_RADIUS.md,
+                borderWidth: 2,
+                borderColor: '#c0392b'
+              }}>
+                <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
+                  <Text style={{ fontSize: 24, marginRight: SPACING.sm }}>⚠️</Text>
+                  <View style={{ flex: 1 }}>
+                    <Text style={{ 
+                      fontSize: 14, 
+                      fontWeight: '700', 
+                      color: '#c0392b',
+                      marginBottom: 4
+                    }}>
+                      CRITICAL HEALTH WARNING
+                    </Text>
+                    <Text style={{ fontSize: 13, color: '#d32f2f', lineHeight: 18 }}>
+                      This product contains harmful levels of ingredients that pose significant risks for your health condition. Strongly avoid consumption and consult your doctor if consumed regularly.
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            )}
+
+            {/* Recommendation from personalized score */}
+            {analysis?.recommendation && !personalizedScoreLoading && (
+              <View style={{ 
+                marginTop: SPACING.md, 
+                padding: SPACING.md, 
+                backgroundColor: COLORS.backgroundLight,
+                borderRadius: BORDER_RADIUS.md,
+                borderLeftWidth: 4,
+                borderLeftColor: getHealthScoreColor(scoreValue)
+              }}>
+                <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
+                  <Text style={{ fontSize: 20, marginRight: SPACING.sm }}>
+                    {analysis.emoji || '💡'}
+                  </Text>
+                  <View style={{ flex: 1 }}>
+                    <Text style={{ 
+                      fontSize: 14, 
+                      fontWeight: '600', 
+                      color: COLORS.text,
+                      marginBottom: SPACING.xs
+                    }}>
+                      Recommendation
+                    </Text>
+                    <Text style={{ 
+                      fontSize: 13, 
+                      color: COLORS.text,
+                      lineHeight: 18
+                    }}>
+                      {analysis.recommendation}
+                    </Text>
+                  </View>
+                </View>
+                
+                {/* Guideline details */}
+                {analysis.guideline && (
+                  <View style={{ 
+                    marginTop: SPACING.sm, 
+                    paddingTop: SPACING.sm,
+                    borderTopWidth: 1,
+                    borderTopColor: COLORS.border
+                  }}>
+                    <Text style={{ 
+                      fontSize: 12, 
+                      color: COLORS.textSecondary,
+                      fontStyle: 'italic'
+                    }}>
+                      {analysis.guideline}
+                    </Text>
+                  </View>
+                )}
+              </View>
+            )}
 
             {((analysis?.personalizedWarnings?.length > 0) || (product?.personalizedWarnings?.length > 0)) && (
               <View style={[styles.warningContainer, { flexDirection: 'column', alignItems: 'stretch' }]}>
@@ -580,13 +874,100 @@ const ProductDetailsScreen = ({ route, navigation }) => {
                 </TouchableOpacity>
                 {explanationOpen && (
                   <View style={{ marginTop: SPACING.sm, paddingLeft: 10 }}>
-                    {Array.isArray(analysis.breakdown) ? analysis.breakdown.map((item, idx) => (
-                      <View key={idx} style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 }}>
-                        <Text style={{ fontSize: 12, color: COLORS.text, flex: 1 }}>• {item.text}</Text>
-                        <Text style={{ fontSize: 12, color: item.points < 0 ? COLORS.error : COLORS.success, fontWeight: 'bold' }}>{item.points > 0 ? '+' : ''}{item.points}</Text>
-                      </View>
-                    )) : (
-                      <Text style={{ fontSize: 12, color: COLORS.textSecondary }}>Analysis breakdown not available</Text>
+                    {analysis.breakdown ? (
+                      <>
+                        {/* ML Penalties */}
+                        {analysis.breakdown.ml_penalties && analysis.breakdown.ml_penalties.length > 0 && (
+                          <View style={{ marginBottom: SPACING.sm }}>
+                            <Text style={{ fontSize: 13, fontWeight: '600', color: COLORS.text, marginBottom: 4 }}>
+                              🔬 Ingredient Analysis
+                            </Text>
+                            {analysis.breakdown.ml_penalties.map((item, idx) => (
+                              <View key={`ml-${idx}`} style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 2, paddingLeft: 8 }}>
+                                <Text style={{ fontSize: 12, color: COLORS.text, flex: 1 }}>
+                                  • {item.ingredient} ({item.category})
+                                </Text>
+                                <Text style={{ fontSize: 12, color: COLORS.error, fontWeight: 'bold' }}>
+                                  -{item.adjusted_penalty || item.final_penalty || 0}
+                                </Text>
+                              </View>
+                            ))}
+                            <Text style={{ fontSize: 11, color: COLORS.textSecondary, marginTop: 2, paddingLeft: 8 }}>
+                              Total: -{analysis.breakdown.total_ml_penalty || 0} pts
+                            </Text>
+                          </View>
+                        )}
+
+                        {/* Nutrition Penalties */}
+                        {analysis.breakdown.nutrition_penalties && analysis.breakdown.nutrition_penalties.length > 0 && (
+                          <View style={{ marginBottom: SPACING.sm }}>
+                            <Text style={{ fontSize: 13, fontWeight: '600', color: COLORS.text, marginBottom: 4 }}>
+                              🥗 Nutritional Impact
+                            </Text>
+                            {analysis.breakdown.nutrition_penalties.map((item, idx) => (
+                              <View key={`nutr-${idx}`} style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 2, paddingLeft: 8 }}>
+                                <Text style={{ fontSize: 12, color: COLORS.text, flex: 1 }}>
+                                  • {item.nutrient}: {item.value}g/100g
+                                </Text>
+                                <Text style={{ fontSize: 12, color: COLORS.error, fontWeight: 'bold' }}>
+                                  -{item.adjusted_penalty || item.penalty || 0}
+                                </Text>
+                              </View>
+                            ))}
+                            <Text style={{ fontSize: 11, color: COLORS.textSecondary, marginTop: 2, paddingLeft: 8 }}>
+                              Total: -{analysis.breakdown.total_nutrition_penalty || 0} pts
+                            </Text>
+                          </View>
+                        )}
+
+                        {/* Bonuses */}
+                        {analysis.breakdown.bonuses && analysis.breakdown.bonuses.length > 0 && (
+                          <View style={{ marginBottom: SPACING.sm }}>
+                            <Text style={{ fontSize: 13, fontWeight: '600', color: COLORS.success, marginBottom: 4 }}>
+                              ✨ Health Bonuses
+                            </Text>
+                            {analysis.breakdown.bonuses.map((item, idx) => (
+                              <View key={`bonus-${idx}`} style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 2, paddingLeft: 8 }}>
+                                <Text style={{ fontSize: 12, color: COLORS.text, flex: 1 }}>
+                                  • {item.nutrient}: {item.value}g/100g
+                                </Text>
+                                <Text style={{ fontSize: 12, color: COLORS.success, fontWeight: 'bold' }}>
+                                  +{item.adjusted_bonus || item.bonus || 0}
+                                </Text>
+                              </View>
+                            ))}
+                            <Text style={{ fontSize: 11, color: COLORS.textSecondary, marginTop: 2, paddingLeft: 8 }}>
+                              Total: +{analysis.breakdown.total_bonus || 0} pts
+                            </Text>
+                          </View>
+                        )}
+
+                        {/* Summary */}
+                        <View style={{ 
+                          marginTop: SPACING.sm, 
+                          paddingTop: SPACING.sm, 
+                          borderTopWidth: 1, 
+                          borderTopColor: COLORS.border 
+                        }}>
+                          <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 }}>
+                            <Text style={{ fontSize: 13, fontWeight: '600', color: COLORS.text }}>
+                              Total Score Calculation
+                            </Text>
+                          </View>
+                          <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingLeft: 8 }}>
+                            <Text style={{ fontSize: 12, color: COLORS.text }}>
+                              100 - {analysis.breakdown.net_penalty || 0} penalty pts
+                            </Text>
+                            <Text style={{ fontSize: 12, fontWeight: 'bold', color: getHealthScoreColor(scoreValue) }}>
+                              = {scoreValue}/100
+                            </Text>
+                          </View>
+                        </View>
+                      </>
+                    ) : (
+                      <Text style={{ fontSize: 12, color: COLORS.textSecondary }}>
+                        Analysis breakdown not available
+                      </Text>
                     )}
                   </View>
                 )}
@@ -676,6 +1057,16 @@ const ProductDetailsScreen = ({ route, navigation }) => {
                 rawIngredients={rawIngredientsArray}
                 onIngredientPress={handleIngredientPress}
               />
+              
+              {/* Warning when ingredients are empty/corrupted */}
+              {ingredientList.length === 0 && (
+                <View style={styles.dataWarningBox}>
+                  <MaterialIcons name="info-outline" size={20} color={COLORS.warning} />
+                  <Text style={styles.dataWarningText}>
+                    Ingredients data needs verification. Corrupted or missing ingredient information has been filtered out.
+                  </Text>
+                </View>
+              )}
 
               {/* Why This Score? Section */}
               {analysis && analysis.score && (
@@ -706,6 +1097,16 @@ const ProductDetailsScreen = ({ route, navigation }) => {
             </>
           ) : (
             <>
+              {/* Warning when nutrition data is empty */}
+              {(!displayNutrition || Object.keys(displayNutrition).length === 0) && (
+                <View style={styles.dataWarningBox}>
+                  <MaterialIcons name="info-outline" size={20} color={COLORS.warning} />
+                  <Text style={styles.dataWarningText}>
+                    Nutrition data is missing or incomplete. Please help verify product information through the scan screen.
+                  </Text>
+                </View>
+              )}
+              
               <NutritionalTable
                 nutrition={displayNutrition}
                 showPerUnit={product.size || '100ml'}
@@ -977,6 +1378,23 @@ const styles = StyleSheet.create({
     color: COLORS.warning,
     marginLeft: SPACING.sm,
     fontWeight: TYPOGRAPHY.fontWeight.medium,
+  },
+  dataWarningBox: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    backgroundColor: '#FFF3E0',
+    padding: SPACING.md,
+    borderRadius: BORDER_RADIUS.md,
+    marginVertical: SPACING.md,
+    borderLeftWidth: 3,
+    borderLeftColor: COLORS.warning,
+  },
+  dataWarningText: {
+    flex: 1,
+    fontSize: TYPOGRAPHY.fontSize.sm,
+    color: COLORS.text,
+    marginLeft: SPACING.sm,
+    lineHeight: 20,
   },
   tabContainer: {
     flexDirection: 'row',

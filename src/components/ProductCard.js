@@ -87,6 +87,23 @@ const ProductCard = ({
           )}
         </View>
         
+        {/* Verification Status Badge */}
+        {product.needsVerification && (
+          <View style={styles.verificationContainer}>
+            <MaterialIcons 
+              name={product.isCorrupted ? "error-outline" : "verified-user"} 
+              size={14} 
+              color={product.isCorrupted ? COLORS.highRisk : COLORS.warning} 
+            />
+            <Text style={styles.verificationText}>
+              {product.isCorrupted 
+                ? 'Data needs verification (corrupted)' 
+                : `Needs verification (${product.verifiedCount || 0}/3)`
+              }
+            </Text>
+          </View>
+        )}
+        
         {showDetails && product.personalizedWarnings && product.personalizedWarnings.length > 0 && (
           <View style={styles.warningsContainer}>
             <MaterialIcons name="warning" size={16} color={COLORS.warning} />
@@ -184,6 +201,22 @@ const styles = StyleSheet.create({
   scannedDate: {
     fontSize: TYPOGRAPHY.fontSize.xs,
     color: COLORS.textLight,
+  },
+  verificationContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFF3E0',
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: 4,
+    borderRadius: BORDER_RADIUS.sm,
+    marginTop: SPACING.xs,
+  },
+  verificationText: {
+    fontSize: TYPOGRAPHY.fontSize.xs,
+    color: COLORS.text,
+    marginLeft: SPACING.xs,
+    flex: 1,
+    fontWeight: '500',
   },
   warningsContainer: {
     flexDirection: 'row',

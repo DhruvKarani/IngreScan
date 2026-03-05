@@ -1,0 +1,200 @@
+{
+  "maltodextrin": {
+    "description": "Maltodextrin is a starchy white powder derived from corn, rice, potato, or wheat. It's easily digestible and quickly absorbed, making it a common thickener and filler in processed foods. Often used to improve texture and extend shelf life.",
+    "purpose": "Thickener and filler",
+    "riskLevel": "LOW",
+    "commonSources": ["corn", "rice", "potato", "wheat"]
+  },
+  "sodium phosphate": {
+    "description": "Sodium Phosphate is a food additive used to preserve moisture and improve texture in processed meats and cheeses. It helps prevent protein breakdown during storage and cooking, keeping foods tender and juicy.",
+    "purpose": "Moisture retention and texture improver",
+    "riskLevel": "LOW",
+    "eNumber": "E339"
+  },
+  "monosodium glutamate": {
+    "description": "Monosodium Glutamate (MSG) is a flavor enhancer that adds savory umami taste to foods. Derived from fermented sugar beets or corn, it's commonly used in Asian cuisine, snacks, and processed meats. Safe for most people though some may be sensitive.",
+    "purpose": "Flavor enhancer (umami)",
+    "riskLevel": "LOW",
+    "eNumber": "E621"
+  },
+  "citric acid": {
+    "description": "Citric Acid is a natural acid found in citrus fruits, used as a preservative and flavor enhancer. It adds tartness to foods and beverages, prevents spoilage by lowering pH, and acts as an antioxidant to maintain color and flavor.",
+    "purpose": "Preservative and acidity regulator",
+    "riskLevel": "LOW",
+    "eNumber": "E330"
+  },
+  "sodium benzoate": {
+    "description": "Sodium Benzoate is a widely-used preservative that prevents bacteria and mold growth in acidic foods and beverages. Commonly found in soft drinks, pickles, and sauces. Generally safe in normal amounts.",
+    "purpose": "Preservative",
+    "riskLevel": "LOW",
+    "eNumber": "E211"
+  },
+  "potassium sorbate": {
+    "description": "Potassium Sorbate is a preservative that inhibits mold and yeast growth in foods. Commonly used in cheese, wine, and baked goods to extend shelf life without affecting taste. It's one of the least toxic food preservatives available.",
+    "purpose": "Preservative (anti-fungal)",
+    "riskLevel": "LOW",
+    "eNumber": "E202"
+  },
+  "xanthan gum": {
+    "description": "Xanthan Gum is a thickening agent produced by bacterial fermentation. It creates smooth, stable textures in sauces, dressings, and gluten-free baked goods. Helps prevent ingredient separation and improves mouthfeel.",
+    "purpose": "Thickener and stabilizer",
+    "riskLevel": "LOW",
+    "eNumber": "E415"
+  },
+  "guar gum": {
+    "description": "Guar Gum is a fiber extracted from guar beans, used as a thickener and stabilizer. It helps bind water and create smooth textures in ice cream, sauces, and gluten-free products. May cause digestive discomfort in large amounts.",
+    "purpose": "Thickener and stabilizer",
+    "riskLevel": "LOW",
+    "eNumber": "E412"
+  },
+  "lecithin": {
+    "description": "Lecithin is a natural emulsifier derived from soybeans or eggs that helps mix oil and water. Commonly used in chocolate, baked goods, and margarine to create smooth, uniform textures and prevent separation.",
+    "purpose": "Emulsifier",
+    "riskLevel": "LOW",
+    "eNumber": "E322"
+  },
+  "carrageenan": {
+    "description": "Carrageenan is a seaweed extract used as a thickener and stabilizer in dairy products, plant-based milks, and processed meats. It improves texture and prevents separation. May cause digestive issues in sensitive individuals.",
+    "purpose": "Thickener and stabilizer",
+    "riskLevel": "MEDIUM",
+    "eNumber": "E407"
+  },
+  "ascorbic acid": {
+    "description": "Ascorbic Acid is the chemical name for Vitamin C, used as an antioxidant and preservative. It prevents browning in fruits and vegetables, maintains color in cured meats, and fortifies foods with vitamin C.",
+    "purpose": "Antioxidant and preservative",
+    "riskLevel": "LOW",
+    "eNumber": "E300"
+  },
+  "calcium carbonate": {
+    "description": "Calcium Carbonate is a white powder used as a calcium supplement and acidity regulator. It strengthens bones, neutralizes acidity in foods, and acts as a white coloring agent. Also used as an anti-caking agent.",
+    "purpose": "Acidity regulator and calcium supplement",
+    "riskLevel": "LOW",
+    "eNumber": "E170"
+  },
+  "modified starch": {
+    "description": "Modified Starch is regular starch that has been chemically or physically altered to improve its properties. Used as a thickener, stabilizer, or texturizer in soups, sauces, and processed foods. Helps products withstand temperature changes.",
+    "purpose": "Thickener and stabilizer",
+    "riskLevel": "LOW",
+    "eNumber": "E1400-E1450"
+  },
+  "caramel color": {
+    "description": "Caramel Color is made by heating sugars and is one of the most widely used food colorings. It gives brown color to colas, sauces, and baked goods. Different types exist, with Class III and IV raising some health concerns.",
+    "purpose": "Coloring agent",
+    "riskLevel": "MEDIUM",
+    "eNumber": "E150"
+  },
+  "tartrazine": {
+    "description": "Tartrazine is a synthetic yellow dye used to color foods, beverages, and candies. It may cause allergic reactions and hyperactivity in sensitive children. Banned in some countries but approved in the US and EU with labeling requirements.",
+    "purpose": "Yellow coloring agent",
+    "riskLevel": "MEDIUM",
+    "eNumber": "E102"
+  },
+  "sunset yellow": {
+    "description": "Sunset Yellow is an artificial orange-yellow dye used in snacks, beverages, and desserts. May cause hyperactivity in children and allergic reactions in aspirin-sensitive individuals. Requires warning labels in the EU.",
+    "purpose": "Orange-yellow coloring",
+    "riskLevel": "MEDIUM",
+    "eNumber": "E110"
+  },
+  "allura red": {
+    "description": "Allura Red is a synthetic red dye commonly used in beverages, candies, and baked goods. Replaces Red #2 which was banned. May cause allergic reactions and hyperactivity in sensitive children.",
+    "purpose": "Red coloring agent",
+    "riskLevel": "MEDIUM",
+    "eNumber": "E129"
+  },
+  "sodium nitrite": {
+    "description": "Sodium Nitrite is a preservative used in cured meats like bacon, ham, and hot dogs. It prevents botulism, maintains pink color, and adds flavor. Can form potentially harmful compounds when cooked at high heat.",
+    "purpose": "Preservative and color fixative",
+    "riskLevel": "MEDIUM",
+    "eNumber": "E250"
+  },
+  "bht": {
+    "description": "BHT (Butylated Hydroxytoluene) is a synthetic antioxidant that prevents fats and oils from going rancid. Commonly used in cereals, chips, and baked goods. Safety debated, with some countries restricting its use.",
+    "purpose": "Antioxidant preservative",
+    "riskLevel": "MEDIUM",
+    "eNumber": "E321"
+  },
+  "bha": {
+    "description": "BHA (Butylated Hydroxyanisole) is a synthetic antioxidant that prevents rancidity in fats and oils. Found in cereals, snack foods, and preserved meats. Classified as possibly carcinogenic, though still approved at low levels.",
+    "purpose": "Antioxidant preservative",
+    "riskLevel": "MEDIUM",
+    "eNumber": "E320"
+  },
+  "high fructose corn syrup": {
+    "description": "High Fructose Corn Syrup (HFCS) is a liquid sweetener made from corn starch. It's cheaper than sugar and extends shelf life, making it popular in sodas, juices, and processed foods. High consumption linked to obesity and metabolic issues.",
+    "purpose": "Sweetener",
+    "riskLevel": "MEDIUM",
+    "commonSources": ["corn"]
+  },
+  "aspartame": {
+    "description": "Aspartame is an artificial sweetener about 200 times sweeter than sugar. Used in diet sodas, sugar-free gum, and low-calorie foods. Not suitable for people with phenylketonuria (PKU). Safety extensively studied and approved.",
+    "purpose": "Artificial sweetener",
+    "riskLevel": "LOW",
+    "eNumber": "E951"
+  },
+  "sucralose": {
+    "description": "Sucralose is an artificial sweetener made from sugar but 600 times sweeter. Heat-stable so it can be used in baking. Found in Splenda and many sugar-free products. Generally considered safe though long-term effects still studied.",
+    "purpose": "Artificial sweetener",
+    "riskLevel": "LOW",
+    "eNumber": "E955"
+  },
+  "titanium dioxide": {
+    "description": "Titanium Dioxide is a white powder used as a coloring agent to make foods appear whiter and brighter. Common in candies, gum, and frosting. Recently banned in the EU due to potential health concerns, but still approved in the US.",
+    "purpose": "White coloring agent",
+    "riskLevel": "MEDIUM",
+    "eNumber": "E171"
+  },
+  "propylene glycol": {
+    "description": "Propylene Glycol is a synthetic liquid used to retain moisture and dissolve flavors and colors. Found in salad dressings, cake mixes, and soft drinks. Also used in antifreeze, though food-grade is considered safe.",
+    "purpose": "Moisture retention and solvent",
+    "riskLevel": "LOW",
+    "eNumber": "E1520"
+  },
+  "disodium guanylate": {
+    "description": "Disodium Guanylate is a flavor enhancer that works synergistically with MSG to boost savory umami taste. Derived from fish or yeast, it's used in chips, instant noodles, and soups. Generally safe but not suitable for people with gout.",
+    "purpose": "Flavor enhancer",
+    "riskLevel": "LOW",
+    "eNumber": "E627"
+  },
+  "disodium inosinate": {
+    "description": "Disodium Inosinate is a flavor enhancer often used with MSG and disodium guanylate to create stronger umami flavors. Derived from meat or fish, common in savory snacks and instant foods. May worsen gout symptoms.",
+    "purpose": "Flavor enhancer",
+    "riskLevel": "LOW",
+    "eNumber": "E631"
+  },
+  "sodium acid pyrophosphate": {
+    "description": "Sodium Acid Pyrophosphate (SAPP) is a leavening agent used in baking to help doughs rise. Also prevents discoloration in potatoes and seafood. Commonly found in cake mixes, pancake batter, and frozen french fries.",
+    "purpose": "Leavening agent and preservative",
+    "riskLevel": "LOW",
+    "eNumber": "E450"
+  },
+  "annatto": {
+    "description": "Annatto is a natural orange-red coloring extracted from the seeds of the achiote tree. Used to color cheese, butter, margarine, and snacks. Generally safe, though may cause allergic reactions in rare cases.",
+    "purpose": "Natural coloring (orange-red)",
+    "riskLevel": "LOW",
+    "eNumber": "E160b"
+  },
+  "beta carotene": {
+    "description": "Beta Carotene is a natural orange pigment found in carrots and other vegetables. Used as a coloring agent and vitamin A source. Converts to vitamin A in the body and acts as an antioxidant. Considered very safe.",
+    "purpose": "Natural coloring and vitamin A source",
+    "riskLevel": "LOW",
+    "eNumber": "E160a"
+  },
+  "polysorbate 80": {
+    "description": "Polysorbate 80 is a synthetic emulsifier that helps mix oil and water in foods. Common in ice cream, whipped toppings, and salad dressings. Prevents separation and creates smooth textures. Generally safe in small amounts.",
+    "purpose": "Emulsifier",
+    "riskLevel": "LOW",
+    "eNumber": "E433"
+  },
+  "sodium caseinate": {
+    "description": "Sodium Caseinate is a milk protein used as a thickener, emulsifier, and whitening agent. Found in coffee creamers, processed meats, and protein supplements. Contains dairy, so not suitable for lactose-intolerant or vegan individuals.",
+    "purpose": "Thickener and protein source",
+    "riskLevel": "LOW",
+    "allergen": "milk"
+  },
+  "mono and diglycerides": {
+    "description": "Mono and Diglycerides are emulsifiers derived from fats and oils. They help mix ingredients that normally don't blend, like oil and water. Common in baked goods, margarine, and ice cream to improve texture and extend shelf life.",
+    "purpose": "Emulsifier",
+    "riskLevel": "LOW",
+    "eNumber": "E471"
+  }
+}

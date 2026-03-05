@@ -24,22 +24,56 @@ def _load_transformers():
         return
     
     try:
-        from transformers import pipeline
-        from sentence_transformers import SentenceTransformer, util
+        import torch
+        from transformers import DistilBertTokenizer, DistilBertForSequenceClassification
         
         logging.info("Loading ML models (this may take a minute on first run)...")
         
-        # Zero-shot classification for ingredient categorization
-        _models_cache['zero_shot'] = pipeline(
-            "zero-shot-classification",
-            model="facebook/bart-large-mnli",
-            device=-1  # CPU
-        )
+        # Custom fine-tuned DistilBERT for ingredient classification
+        model_path = os.path.join(os.path.dirname(__file__), "ml_training", "distilbert_ingredient_classifier")
         
-        # Sentence similarity for alias matching
-        _models_cache['similarity'] = SentenceTransformer('all-MiniLM-L6-v2')
+        try:
+            # Load custom trained model
+            _models_cache['distilbert_model'] = DistilBertForSequenceClassification.from_pretrained(
+                os.path.join(model_path, "model")
+            )
+            _models_cache['distilbert_tokenizer'] = DistilBertTokenizer.from_pretrained(
+                os.path.join(model_path, "tokenizer")
+            )
+            
+            # Load label mapping
+            with open(os.path.join(model_path, "label_mapping.json"), 'r') as f:
+                _models_cache['label_mapping'] = json.load(f)
+            
+            # Set model to evaluation mode
+            _models_cache['distilbert_model'].eval()
+            
+            # Set device (CPU for now, can use GPU if available)
+            device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+            _models_cache['distilbert_model'].to(device)
+            _models_cache['device'] = device
+            
+            logging.info(f"✓ Custom DistilBERT model loaded from {model_path}")
+            logging.info(f"  Device: {device}")
+            logging.info(f"  Categories: {_models_cache['label_mapping']['num_labels']}")
+            
+            _transformers_loaded = True
+            
+        except Exception as e:
+            logging.error(f"Failed to load custom DistilBERT model: {e}")
+            logging.warning("Model not found - using heuristic classification")
+            _transformers_loaded = False
+            return
         
-        _transformers_loaded = True
+        # Try to load sentence similarity (optional)
+        try:
+            from sentence_transformers import SentenceTransformer, util
+            _models_cache['similarity'] = SentenceTransformer('all-MiniLM-L6-v2')
+            logging.info("✓ Sentence similarity model loaded")
+        except Exception as e:
+            logging.warning(f"Sentence similarity model not loaded: {e}")
+            logging.info("Continuing without similarity matching")
+        
         logging.info("ML models loaded successfully")
         
     except Exception as e:
@@ -76,14 +110,88 @@ try:
 except:
     UNKNOWN_CACHE = {"learned_ingredients": {}, "last_updated": None, "version": "1.0"}
 
+# Load E-number mapping
+E_NUMBER_PATH = os.path.join(os.path.dirname(__file__), "e_number_mapping.json")
+try:
+    with open(E_NUMBER_PATH, 'r', encoding='utf-8') as f:
+        E_NUMBER_DATA = json.load(f)
+        E_NUMBER_MAPPING = E_NUMBER_DATA.get("mappings", {})
+    logging.info(f"Loaded E-number mapping: {len(E_NUMBER_MAPPING)} additives")
+except FileNotFoundError:
+    logging.warning(f"E-number mapping not found at {E_NUMBER_PATH}")
+    E_NUMBER_MAPPING = {}
+
+
+def normalize_e_numbers(ingredient: str) -> str:
+    """
+    Normalize E-numbers and INS numbers to common ingredient names
+    Examples:
+    - "colour(150d)" → "caramel color"
+    - "Acidity Regulator(338)" → "phosphoric acid"
+    - "INS 621" → "monosodium glutamate"
+    - "E330" → "citric acid"
+    """
+    if not E_NUMBER_MAPPING:
+        return ingredient
+    
+    ingredient_lower = ingredient.lower()
+    
+    # Pattern 1: Generic name with E-number/number in parentheses
+    # Examples: "colour(150d)", "preservative(211)", "Acidity Regulator(338)"
+    match = re.search(r'\((E?\d+[a-z]?)\)', ingredient_lower, re.IGNORECASE)
+    if match:
+        number = match.group(1).replace('e', '').replace('E', '')
+        if number in E_NUMBER_MAPPING:
+            common_name = E_NUMBER_MAPPING[number]
+            logging.debug(f"E-number normalization: '{ingredient}' → '{common_name}'")
+            return common_name
+    
+    # Pattern 2: Standalone E-number
+    # Examples: "E150d", "E330", "E621"
+    match = re.match(r'^E(\d+[a-z]?)$', ingredient_lower, re.IGNORECASE)
+    if match:
+        number = match.group(1)
+        if number in E_NUMBER_MAPPING:
+            common_name = E_NUMBER_MAPPING[number]
+            logging.debug(f"E-number normalization: '{ingredient}' → '{common_name}'")
+            return common_name
+    
+    # Pattern 3: INS number format
+    # Examples: "INS 621", "INS-330"
+    match = re.match(r'^INS[\s-]*(\d+[a-z]?)$', ingredient_lower, re.IGNORECASE)
+    if match:
+        number = match.group(1)
+        if number in E_NUMBER_MAPPING:
+            common_name = E_NUMBER_MAPPING[number]
+            logging.debug(f"INS normalization: '{ingredient}' → '{common_name}'")
+            return common_name
+    
+    # Pattern 4: Generic descriptor + number (no E prefix)
+    # Examples: "Preservative 211", "Colour 150d", "Stabilizer 407"
+    match = re.match(r'^(preservative|color|colour|flavour|flavor|emulsifier|stabilizer|acidity regulator|antioxidant)[\s-]*(\d+[a-z]?)$', ingredient_lower, re.IGNORECASE)
+    if match:
+        number = match.group(2)
+        if number in E_NUMBER_MAPPING:
+            common_name = E_NUMBER_MAPPING[number]
+            logging.debug(f"Descriptor normalization: '{ingredient}' → '{common_name}'")
+            return common_name
+    
+    return ingredient
+
 
 def extract_ingredients(ingredients_text: str) -> List[str]:
     """
     Extract clean ingredient list from messy text
     Handles comma-separated, semicolon-separated, and line-separated lists
+    Normalizes E-numbers and INS numbers to common ingredient names
     """
     if not ingredients_text:
         return []
+    
+    # Handle both string and list inputs
+    if isinstance(ingredients_text, list):
+        # Already a list, just normalize and return
+        return [normalize_e_numbers(ing.strip()) for ing in ingredients_text if ing.strip()]
     
     # Clean the text
     text = ingredients_text.lower().strip()
@@ -113,7 +221,11 @@ def extract_ingredients(ingredients_text: str) -> List[str]:
     cleaned = []
     for ing in ingredients:
         ing = ing.strip()
-        # Remove parenthetical notes
+        
+        # FIRST: Normalize E-numbers/INS numbers BEFORE removing parentheses
+        ing = normalize_e_numbers(ing)
+        
+        # THEN: Remove remaining parenthetical notes
         ing = re.sub(r'\([^)]*\)', '', ing).strip()
         # Remove percentage indicators
         ing = re.sub(r'\d+\.?\d*\s*%', '', ing).strip()
@@ -182,46 +294,88 @@ def classify_unknown_ingredient(ingredient: str) -> Dict[str, Any]:
         logging.info(f"Found cached classification for '{ingredient}': {cached['category']}")
         return cached
     
-    # Use zero-shot classification if available
-    if _transformers_loaded and 'zero_shot' in _models_cache:
+    # Use custom DistilBERT classification if available
+    if _transformers_loaded and 'distilbert_model' in _models_cache:
         try:
-            classifier = _models_cache['zero_shot']
+            import torch
             
-            # Categories to classify into
-            candidate_labels = [
-                "natural sweetener",
-                "artificial sweetener", 
-                "refined sugar",
-                "natural food ingredient",
-                "preservative",
-                "artificial additive",
-                "healthy ingredient",
-                "unhealthy ingredient"
-            ]
+            model = _models_cache['distilbert_model']
+            tokenizer = _models_cache['distilbert_tokenizer']
+            label_mapping = _models_cache['label_mapping']
+            device = _models_cache['device']
             
-            result = classifier(ingredient, candidate_labels)
+            # Tokenize input
+            inputs = tokenizer(
+                ingredient,
+                max_length=64,
+                padding='max_length',
+                truncation=True,
+                return_tensors='pt'
+            )
             
-            top_category = result['labels'][0]
-            confidence = result['scores'][0]
+            # Move to device
+            inputs = {k: v.to(device) for k, v in inputs.items()}
+            
+            # Get prediction
+            with torch.no_grad():
+                outputs = model(**inputs)
+                logits = outputs.logits
+                probabilities = torch.softmax(logits, dim=1)
+                predicted_class = torch.argmax(probabilities, dim=1).item()
+                confidence = probabilities[0][predicted_class].item()
+            
+            # Get category name from label mapping
+            category = label_mapping['id_to_label'][str(predicted_class)]
+            
+            # Map category to harm level and type
+            harm_mapping = {
+                "hydrogenated_oil": {"harm_level": "VERY_HIGH", "type": "processed", "score_impact": -15},
+                "trans_fat": {"harm_level": "VERY_HIGH", "type": "processed", "score_impact": -20},
+                "very_harmful_preservative": {"harm_level": "VERY_HIGH", "type": "artificial", "score_impact": -15},
+                "harmful_color": {"harm_level": "HIGH", "type": "artificial", "score_impact": -10},
+                "harmful_preservative": {"harm_level": "HIGH", "type": "artificial", "score_impact": -10},
+                "refined_palm_oil": {"harm_level": "MEDIUM_HIGH", "type": "processed", "score_impact": -8},
+                "artificial_sweetener": {"harm_level": "MEDIUM", "type": "artificial", "score_impact": -7},
+                "refined_flour": {"harm_level": "MEDIUM", "type": "processed", "score_impact": -6},
+                "refined_sugar": {"harm_level": "MEDIUM", "type": "processed", "score_impact": -5},
+                "flavor_enhancer": {"harm_level": "MEDIUM", "type": "processed", "score_impact": -6},
+                "moderate_color": {"harm_level": "MEDIUM", "type": "processed", "score_impact": -4},
+                "moderate_preservative": {"harm_level": "MEDIUM", "type": "processed", "score_impact": -4},
+                "sugar_alcohol": {"harm_level": "LOW", "type": "processed", "score_impact": -2},
+                "emulsifier_stabilizer": {"harm_level": "LOW", "type": "processed", "score_impact": -2},
+                "natural_sugar": {"harm_level": "LOW", "type": "natural", "score_impact": -1},
+                "thickener": {"harm_level": "LOW", "type": "processed", "score_impact": -1},
+                "natural_color": {"harm_level": "LOW", "type": "natural", "score_impact": 0},
+                "fat": {"harm_level": "LOW", "type": "natural", "score_impact": 0},
+                "acid": {"harm_level": "LOW", "type": "natural", "score_impact": 0},
+                "natural_preservative": {"harm_level": "LOW", "type": "natural", "score_impact": 1},
+                "leavening_agent": {"harm_level": "VERY_LOW", "type": "natural", "score_impact": 1},
+                "natural_sweetener": {"harm_level": "VERY_LOW", "type": "natural", "score_impact": 2},
+                "other": {"harm_level": "MEDIUM", "type": "unknown", "score_impact": -3}
+            }
+            
+            harm_info = harm_mapping.get(category, {"harm_level": "MEDIUM", "type": "unknown", "score_impact": -3})
             
             classification = {
                 "name": ingredient,
-                "category": top_category,
+                "category": category,
                 "confidence": confidence,
-                "type": "natural" if "natural" in top_category else "artificial" if "artificial" in top_category else "processed",
-                "detected_by": "ml_zero_shot"
+                "type": harm_info["type"],
+                "harm_level": harm_info["harm_level"],
+                "score_impact": harm_info["score_impact"],
+                "detected_by": "ml_distilbert_custom"
             }
             
             # Cache if confidence is high
-            if confidence > 0.6:
+            if confidence > 0.8:
                 UNKNOWN_CACHE["learned_ingredients"][ingredient_lower] = classification
                 save_unknown_cache()
-                logging.info(f"Learned new ingredient '{ingredient}' as '{top_category}' (confidence: {confidence:.2f})")
+                logging.info(f"Classified '{ingredient}' as '{category}' (confidence: {confidence:.2%})")
             
             return classification
             
         except Exception as e:
-            logging.warning(f"Zero-shot classification failed for '{ingredient}': {e}")
+            logging.warning(f"DistilBERT classification failed for '{ingredient}': {e}")
     
     # Fallback: basic heuristic classification
     return classify_ingredient_heuristic(ingredient)
@@ -582,7 +736,15 @@ def ml_analyze_product(product):
     
     # Extract clean ingredients
     ingredients_list = extract_ingredients(ingredients_text)
-    ingredients_analyzed = ingredients_list  # Store for later use
+    
+    # OPTIMIZATION: Limit to first 30 ingredients to prevent timeout on complex products
+    # (Most important ingredients appear first by regulation)
+    MAX_INGREDIENTS = 30
+    if len(ingredients_list) > MAX_INGREDIENTS:
+        logging.info(f"Product has {len(ingredients_list)} ingredients, limiting analysis to first {MAX_INGREDIENTS}")
+        ingredients_analyzed = ingredients_list[:MAX_INGREDIENTS]
+    else:
+        ingredients_analyzed = ingredients_list
     
     # Initialize tracking
     ingredient_categories = {}
@@ -600,8 +762,12 @@ def ml_analyze_product(product):
         "natural_flavor", "artificial_flavor", "flavor_enhancer",
         # Textures
         "emulsifier_stabilizer",
+        # Fats - ORDER MATTERS: check harmful fats BEFORE generic "fat"
+        "hydrogenated_oil", "refined_palm_oil", "fat",
+        # Flour - check refined BEFORE generic
+        "refined_flour",
         # Others
-        "fat", "gluten", "dairy", "sodium", "gmo"
+        "gluten", "dairy", "sodium", "gmo"
     ]
     
     for category in categories_to_check:

@@ -71,5 +71,9 @@ dist/
 coverage/
 *.log
 
+# Firebase credentials (NEVER commit these!)
+server/firebase-credentials.json
+**/firebase-credentials.json
+
 # NOTE: per your instruction, I did NOT add .env or other secret files to gitignore.
 # If you later want to ignore them, add .env, .env.* or src/secrets.local.js here.

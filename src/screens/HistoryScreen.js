@@ -15,6 +15,7 @@ import { COLORS, SPACING, BORDER_RADIUS, TYPOGRAPHY, SHADOWS } from '../constant
 import { SAMPLE_PRODUCTS } from '../constants/data';
 import { db, auth } from '../firebase';
 import { collection, query, orderBy, onSnapshot, doc, deleteDoc, getDoc, setDoc } from 'firebase/firestore';
+import { detectProductCorruption } from '../utils/dataCorruptionDetector';
 
 const HistoryScreen = ({ navigation }) => {
   const [historyData, setHistoryData] = useState([]);
@@ -79,6 +80,14 @@ const HistoryScreen = ({ navigation }) => {
           console.warn('Failed to fetch authoritative product doc', fetchErr && fetchErr.message ? fetchErr.message : fetchErr);
         }
       }
+
+      // Check verification status and corruption
+      const verifiedCount = merged.verifiedCount || 0;
+      const corruptionResult = detectProductCorruption(merged);
+      merged.needsVerification = verifiedCount < 3 || corruptionResult.isCorrupted;
+      merged.verifiedCount = verifiedCount;
+      merged.isCorrupted = corruptionResult.isCorrupted;
+      merged.corruptionIssues = corruptionResult.issues || [];
 
       // Ensure a product_name exists for display
       if (!merged.product_name) merged.product_name = product.productName || product.product_name || product.name || '';
@@ -204,6 +213,14 @@ const HistoryScreen = ({ navigation }) => {
           if (!snapshot.product_name) snapshot.product_name = item.productName || item.product_name || item.name || '';
           // prefer scannedAt from the scan doc
           snapshot.scannedAt = snapshot.scannedAt || item.scannedAt || item.lastScannedAt || null;
+          
+          // Check verification status and corruption
+          const verifiedCount = snapshot.verifiedCount || 0;
+          const corruptionResult = detectProductCorruption(snapshot);
+          snapshot.needsVerification = verifiedCount < 3 || corruptionResult.isCorrupted;
+          snapshot.verifiedCount = verifiedCount;
+          snapshot.isCorrupted = corruptionResult.isCorrupted;
+          
           return (
             <ProductCard
               product={{ ...snapshot, analysis: item.analysis }}

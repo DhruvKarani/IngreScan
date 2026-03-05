@@ -37,11 +37,21 @@ export async function scoreFromRulesML(nutrients = {}, ingredientsText = '', use
 function scoreFromRulesLegacy(nutrients = {}, ingredientsText = '', userProfile = { conditions: [], allergies: [] }) {
   const ingredients = String(ingredientsText || '').toLowerCase();
 
-  // Check if we have meaningful nutrition data
-  const nutritionKeys = Object.keys(nutrients).filter(key =>
-    key.includes('100g') && nutrients[key] > 0
-  );
-  const hasNutritionData = nutritionKeys.length > 0;
+  // Check if we have meaningful nutrition data (only valid nutrition fields)
+  const VALID_NUTRITION_KEYS = [
+    'energy-kcal_100g', 'energy_100g', 'calories_100g', 'calories',
+    'sugars_100g', 'sugars',
+    'fat_100g', 'fat',
+    'proteins_100g', 'protein_100g', 'protein',
+    'carbohydrates_100g', 'carbohydrates',
+    'sodium_100g', 'salt_100g', 'sodium', 'salt',
+    'fiber_100g', 'fiber'
+  ];
+  
+  const hasNutritionData = VALID_NUTRITION_KEYS.some(key => {
+    const value = nutrients[key];
+    return value !== undefined && value !== null && Number(value) > 0;
+  });
   const hasIngredientsData = ingredients.trim().length > 0;
 
   // If no nutrition or ingredients data, give a low score to indicate incomplete data

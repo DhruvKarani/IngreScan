@@ -154,22 +154,31 @@ const NutritionalTable = ({ nutrition = {}, showPerUnit = '100g' }) => {
         </View>
 
         <ScrollView style={styles.tableBody}>
-          {nutritionItems.map((item, index) => (
-            <View
-              key={item.key}
-              style={[
-                styles.tableRow,
-                index % 2 === 0 && styles.tableRowEven,
-                index === nutritionItems.length - 1 && styles.tableRowLast
-              ]}
-            >
-              <Text style={styles.nutrientName}>{item.label}</Text>
-              <View style={styles.valueContainer}>
-                <Text style={styles.nutrientValue}>{item.value}</Text>
-                {item.unit ? <Text style={styles.nutrientUnit}> {item.unit}</Text> : null}
+          {nutritionItems.length > 0 ? (
+            nutritionItems.map((item, index) => (
+              <View
+                key={item.key}
+                style={[
+                  styles.tableRow,
+                  index % 2 === 0 && styles.tableRowEven,
+                  index === nutritionItems.length - 1 && styles.tableRowLast
+                ]}
+              >
+                <Text style={styles.nutrientName}>{item.label}</Text>
+                <View style={styles.valueContainer}>
+                  <Text style={styles.nutrientValue}>{item.value}</Text>
+                  {item.unit ? <Text style={styles.nutrientUnit}> {item.unit}</Text> : null}
+                </View>
               </View>
+            ))
+          ) : (
+            <View style={styles.emptyState}>
+              <Text style={styles.emptyStateText}>No nutritional data available</Text>
+              <Text style={styles.emptyStateSubtext}>
+                This product may need verification or manual data entry
+              </Text>
             </View>
-          ))}
+          )}
         </ScrollView>
 
         <Text style={styles.disclaimer}>*Approximate values</Text>
@@ -256,6 +265,24 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     marginTop: SPACING.sm,
     textAlign: 'center',
+  },
+  emptyState: {
+    paddingVertical: SPACING.xl,
+    paddingHorizontal: SPACING.md,
+    alignItems: 'center',
+  },
+  emptyStateText: {
+    fontSize: TYPOGRAPHY.fontSize.base,
+    fontWeight: TYPOGRAPHY.fontWeight.semibold,
+    color: COLORS.textSecondary,
+    textAlign: 'center',
+    marginBottom: SPACING.xs,
+  },
+  emptyStateSubtext: {
+    fontSize: TYPOGRAPHY.fontSize.sm,
+    color: COLORS.textSecondary,
+    textAlign: 'center',
+    fontStyle: 'italic',
   },
 });
 
