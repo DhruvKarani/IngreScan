@@ -1,13 +1,23 @@
-// SCORE_API_URL: set this to the scoring API endpoint reachable by your app.
-// - For Android emulator: use 10.0.2.2 (maps to host localhost)
-// - For a physical phone (Expo Go): set to your computer's LAN IP, e.g. http://192.168.1.100:5000/analyze
-// - For local desktop testing (if app runs on same host): use http://127.0.0.1:5000/analyze
+// ============================================================================
+// 🔧 CONFIGURE YOUR SERVER IP HERE
+// ============================================================================
+// IMPORTANT: Update this IP address when your network or device changes!
+// 
+// How to find your IP:
+// - Windows: Run "ipconfig" in terminal, look for "IPv4 Address"
+// - Mac/Linux: Run "ifconfig" or "ip addr", look for inet address
+// - The IP starts with 192.168.x.x or 10.0.x.x
+//
+// Current setup: Server IP = 192.168.0.104 (update this if it changes!)
+// ============================================================================
+
+const SERVER_LAN_IP = '192.168.0.104'; // 👈 CHANGE THIS TO YOUR COMPUTER'S IP
 
 // Auto-detect the appropriate API URL based on environment
 const getScoreApiUrl = () => {
   // For Expo Go on mobile device, use LAN IP
   if (__DEV__ && typeof navigator !== 'undefined') {
-    return 'http://192.168.0.100:5000/analyze';
+    return `http://${SERVER_LAN_IP}:5000/analyze`;
   }
   // For web production build (bundled)
   if (typeof window !== 'undefined') {
