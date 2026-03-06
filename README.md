@@ -14,37 +14,6 @@
 
 ---
 
-## 📱 Screenshots
-
-<table>
-  <tr>
-    <td align="center"><b>Home Dashboard</b></td>
-    <td align="center"><b>Barcode Scanner</b></td>
-    <td align="center"><b>Health Score</b></td>
-    <td align="center"><b>Ingredient Analysis</b></td>
-  </tr>
-  <tr>
-    <td><img src="assets/home.jpeg" width="200"/></td>
-    <td><img src="assets/scanner.jpeg" width="200"/></td>
-    <td><img src="assets/score.jpeg" width="200"/></td>
-    <td><img src="assets/ingredients.jpeg" width="200"/></td>
-  </tr>
-  <tr>
-    <td align="center"><b>Nutritional Info</b></td>
-    <td align="center"><b>Scan History</b></td>
-    <td align="center"><b>Health Conditions</b></td>
-    <td align="center"><b>Daily Intake</b></td>
-  </tr>
-  <tr>
-    <td><img src="assets/nutrition.jpeg" width="200"/></td>
-    <td><img src="assets/history.jpeg" width="200"/></td>
-    <td><img src="assets/conditions.jpeg" width="200"/></td>
-    <td><img src="assets/intake.jpeg" width="200"/></td>
-  </tr>
-</table>
-
----
-
 ## 🚀 Features
 
 ### 🔍 Barcode Scanning
@@ -84,6 +53,37 @@ Track daily intake across:
 
 ### 👥 Community Verification
 Products require multiple user confirmations before being marked as trusted data.
+
+---
+
+## 📱 Screenshots
+
+<table>
+  <tr>
+    <td align="center"><b>Home Dashboard</b></td>
+    <td align="center"><b>Barcode Scanner</b></td>
+    <td align="center"><b>Health Score</b></td>
+    <td align="center"><b>Ingredient Analysis</b></td>
+  </tr>
+  <tr>
+    <td><img src="assets/home.jpeg" width="200"/></td>
+    <td><img src="assets/scanner.jpeg" width="200"/></td>
+    <td><img src="assets/score.jpeg" width="200"/></td>
+    <td><img src="assets/ingredients.jpeg" width="200"/></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Nutritional Info</b></td>
+    <td align="center"><b>Scan History</b></td>
+    <td align="center"><b>Health Conditions</b></td>
+    <td align="center"><b>Daily Intake</b></td>
+  </tr>
+  <tr>
+    <td><img src="assets/nutrition.jpeg" width="200"/></td>
+    <td><img src="assets/history.jpeg" width="200"/></td>
+    <td><img src="assets/conditions.jpeg" width="200"/></td>
+    <td><img src="assets/intake.jpeg" width="200"/></td>
+  </tr>
+</table>
 
 ---
 
