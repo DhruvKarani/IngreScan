@@ -281,17 +281,18 @@ def detect_ingredient_category(ingredient: str, category: str, threshold: float 
     return False, 0.0, ingredient_type, harm_level
 
 
-def classify_unknown_ingredient(ingredient: str) -> Dict[str, Any]:
+def classify_with_distilbert(ingredient: str, skip_cache: bool = False) -> Dict[str, Any]:
     """
-    Classify an unknown ingredient using ML and cache the result
-    Uses zero-shot classification to determine category
+    Classify an ingredient using fine-tuned DistilBERT model
+    This is now the PRIMARY classification method
+    Returns classification dict or None if model unavailable
     """
     ingredient_lower = ingredient.lower().strip()
     
-    # Check cache first
-    if ingredient_lower in UNKNOWN_CACHE.get("learned_ingredients", {}):
+    # Check cache first (unless explicitly skipped)
+    if not skip_cache and ingredient_lower in UNKNOWN_CACHE.get("learned_ingredients", {}):
         cached = UNKNOWN_CACHE["learned_ingredients"][ingredient_lower]
-        logging.info(f"Found cached classification for '{ingredient}': {cached['category']}")
+        logging.debug(f"[CACHE] '{ingredient}': {cached['category']}")
         return cached
     
     # Use custom DistilBERT classification if available
@@ -367,18 +368,76 @@ def classify_unknown_ingredient(ingredient: str) -> Dict[str, Any]:
             }
             
             # Cache if confidence is high
-            if confidence > 0.8:
+            if confidence > 0.75:
                 UNKNOWN_CACHE["learned_ingredients"][ingredient_lower] = classification
                 save_unknown_cache()
-                logging.info(f"Classified '{ingredient}' as '{category}' (confidence: {confidence:.2%})")
+                logging.debug(f"[ML-CACHED] '{ingredient}' → '{category}' ({confidence:.1%})")
             
             return classification
             
         except Exception as e:
             logging.warning(f"DistilBERT classification failed for '{ingredient}': {e}")
+            return None
     
-    # Fallback: basic heuristic classification
-    return classify_ingredient_heuristic(ingredient)
+    # Model not available
+    return None
+
+
+def classify_ingredient_primary(ingredient: str, target_category: str = None) -> Dict[str, Any]:
+    """
+    PRIMARY ingredient classifier - uses DistilBERT first, falls back to aliases/heuristics
+    
+    Classification priority:
+    1. DistilBERT (fine-tuned ML model) - HIGH ACCURACY
+    2. Alias matching (if category specified) - HIGH SPEED
+    3. Heuristic rules - FALLBACK
+    
+    Args:
+        ingredient: Ingredient name to classify
+        target_category: Optional category to check against (for alias matching)
+    
+    Returns:
+        Classification dict with category, confidence, type, harm_level, etc.
+    """
+    ingredient_lower = ingredient.lower().strip()
+    
+    # STEP 1: Try DistilBERT (PRIMARY METHOD)
+    ml_result = classify_with_distilbert(ingredient)
+    if ml_result is not None:
+        # If we have a target category, check if ML prediction matches
+        if target_category:
+            predicted_category = ml_result.get('category', '')
+            # Check if prediction matches target (exact or contains)
+            if target_category in predicted_category or predicted_category == target_category:
+                logging.debug(f"[ML-MATCH] '{ingredient}' → {target_category} ({ml_result['confidence']:.1%})")
+                return ml_result
+            # ML says it's NOT this category
+            elif ml_result['confidence'] > 0.7:
+                logging.debug(f"[ML-REJECT] '{ingredient}' is '{predicted_category}', not '{target_category}'")
+                return None  # High confidence it's NOT this category
+        else:
+            # No target category specified, return ML classification
+            logging.debug(f"[ML-PRIMARY] '{ingredient}' → {ml_result['category']} ({ml_result['confidence']:.1%})")
+            return ml_result
+    
+    # STEP 2: Fallback to alias matching (if target category specified)
+    if target_category:
+        is_match, confidence, ing_type, harm_level = detect_ingredient_category(ingredient, target_category, threshold=0.7)
+        if is_match:
+            logging.debug(f"[ALIAS-MATCH] '{ingredient}' → {target_category}")
+            return {
+                "name": ingredient,
+                "category": target_category,
+                "confidence": confidence,
+                "type": ing_type,
+                "harm_level": harm_level,
+                "detected_by": "alias_fallback"
+            }
+    
+    # STEP 3: Final fallback to heuristics
+    heuristic_result = classify_ingredient_heuristic(ingredient)
+    logging.debug(f"[HEURISTIC] '{ingredient}' → {heuristic_result.get('category', 'unknown')}")
+    return heuristic_result
 
 
 def classify_ingredient_heuristic(ingredient: str) -> Dict[str, Any]:
@@ -492,39 +551,38 @@ def save_unknown_cache():
 def detect_all_forms(ingredients_list: List[str], category: str) -> Dict[str, Any]:
     """
     Detect all forms of a specific category (e.g., all sugar forms)
+    NOW USES ML-FIRST APPROACH: DistilBERT → Aliases → Heuristics
     Returns dict with detected items, types (natural/artificial), harm levels, and confidence scores
     """
     detected = []
     unknown_ingredients = []
+    classification_methods = []  # Track which method was used for each
     
     for ingredient in ingredients_list:
-        is_match, confidence, ing_type, harm_level = detect_ingredient_category(ingredient, category)
-        if is_match:
-            detected.append({
-                "name": ingredient,
-                "confidence": confidence,
-                "category": category,
-                "type": ing_type,  # natural, artificial, processed
-                "harm_level": harm_level  # VERY_LOW, LOW, MEDIUM, HIGH, VERY_HIGH
-            })
+        # Use new PRIMARY classifier (ML-first approach)
+        classification = classify_ingredient_primary(ingredient, target_category=category)
+        
+        if classification is not None:
+            # Classification succeeded
+            detected_category = classification.get('category', '')
+            
+            # Check if it matches our target category
+            if category in detected_category or detected_category == category:
+                detected.append({
+                    "name": ingredient,
+                    "confidence": classification.get('confidence', 0.0),
+                    "category": detected_category,
+                    "type": classification.get('type', 'unknown'),
+                    "harm_level": classification.get('harm_level', 'UNKNOWN'),
+                    "detected_by": classification.get('detected_by', 'unknown')
+                })
+                classification_methods.append(classification.get('detected_by', 'unknown'))
+            else:
+                # Classified as something else, not our target category
+                unknown_ingredients.append(ingredient)
         else:
-            # Track unknown ingredients for learning
+            # Could not classify
             unknown_ingredients.append(ingredient)
-    
-    # Try to classify unknown ingredients if high confidence needed
-    if unknown_ingredients and category in ["sugar", "sweetener"]:
-        for unknown in unknown_ingredients:
-            classification = classify_unknown_ingredient(unknown)
-            if classification["confidence"] > 0.6:
-                # Check if it matches our category
-                if category in classification["category"] or "sweetener" in classification["category"]:
-                    detected.append({
-                        "name": unknown,
-                        "confidence": classification["confidence"],
-                        "category": classification["category"],
-                        "type": classification["type"],
-                        "harm_level": classification.get("harm_level", "UNKNOWN")
-                    })
     
     # Separate by type
     natural = [d for d in detected if d.get("type") == "natural"]
@@ -543,7 +601,8 @@ def detect_all_forms(ingredients_list: List[str], category: str) -> Dict[str, An
             "processed": processed,
             "unknown": unknown
         },
-        "unknown_ingredients": unknown_ingredients
+        "unknown_ingredients": unknown_ingredients,
+        "classification_methods": classification_methods  # NEW: Track how ingredients were classified
     }
 
 
@@ -727,6 +786,7 @@ def analyze_ingredient_synergies(nutrients: Dict[str, Any]) -> List[Dict[str, An
 def ml_analyze_product(product):
     """
     Main ML analysis function with expanded categories
+    NOW USING ML-FIRST ARCHITECTURE: DistilBERT → Aliases → Heuristics
     """
     # Extract data first
     product_name = product.get("product_name", "") or product.get("name", "")
@@ -750,6 +810,17 @@ def ml_analyze_product(product):
     ingredient_categories = {}
     all_unknown = []
     harm_summary = {"VERY_LOW": 0, "LOW": 0, "MEDIUM": 0, "HIGH": 0, "VERY_HIGH": 0}
+    
+    # Track classification method statistics
+    classification_stats = {
+        "ml_distilbert": 0,
+        "alias_matching": 0,
+        "heuristic": 0,
+        "unknown": 0
+    }
+    
+    logging.info(f"[ML-ANALYZE] Starting analysis: {len(ingredients_analyzed)} ingredients")
+    logging.info(f"[ML-ANALYZE] Method priority: DistilBERT → Aliases → Heuristics")
     
     categories_to_check = [
         # Sweeteners
@@ -780,9 +851,30 @@ def ml_analyze_product(product):
                 harm = item.get("harm_level", "UNKNOWN")
                 if harm in harm_summary:
                     harm_summary[harm] += 1
+            
+            # Track classification methods used
+            for method in result.get("classification_methods", []):
+                if "distilbert" in method:
+                    classification_stats["ml_distilbert"] += 1
+                elif "alias" in method:
+                    classification_stats["alias_matching"] += 1
+                elif "heuristic" in method:
+                    classification_stats["heuristic"] += 1
         
         # Collect unknown ingredients
         all_unknown.extend(result.get("unknown_ingredients", []))
+    
+    # Remove duplicates from unknown list
+    all_unknown = list(set(all_unknown))
+    
+    # Log classification performance
+    total_classified = sum(classification_stats.values())
+    if total_classified > 0:
+        logging.info(f"[ML-STATS] Classified {total_classified} ingredients:")
+        logging.info(f"  → DistilBERT: {classification_stats['ml_distilbert']} ({classification_stats['ml_distilbert']/total_classified*100:.1f}%)")
+        logging.info(f"  → Aliases:    {classification_stats['alias_matching']} ({classification_stats['alias_matching']/total_classified*100:.1f}%)")
+        logging.info(f"  → Heuristic:  {classification_stats['heuristic']} ({classification_stats['heuristic']/total_classified*100:.1f}%)")
+        logging.info(f"  → Unknown:    {len(all_unknown)} ingredients")
     
     # Remove duplicates from unknown list
     all_unknown = list(set(all_unknown))
@@ -832,7 +924,10 @@ def ml_analyze_product(product):
                       [f"FALSE CLAIM: {c.replace('_', ' ').title()}" for c in false_claims] +
                       generate_harm_warnings(harm_summary),
         "unknown_ingredients": all_unknown,
-        "learned_count": len(UNKNOWN_CACHE.get("learned_ingredients", {}))
+        "learned_count": len(UNKNOWN_CACHE.get("learned_ingredients", {})),
+        # NEW: Classification method statistics
+        "classification_stats": classification_stats,
+        "ml_architecture": "DistilBERT-First (v2.0)"
     }
 
 
