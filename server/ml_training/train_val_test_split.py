@@ -156,18 +156,7 @@ def main():
     logger.info("\nSample data from train set:")
     sample = train_df[['ingredient_name', 'our_category', 'harm_level']].head(10)
     print("\n" + sample.to_string())
-    
-    logger.info("\n" + "=" * 60)
-    logger.info("DATA PREPARATION PIPELINE COMPLETE!")
-    logger.info("=" * 60)
-    logger.info("\nAll 6 steps finished:")
-    logger.info("  ✓ Step 1: Collected 212 authoritative ingredients (EFSA/FDA/FooDB)")
-    logger.info("  ✓ Step 2: Auto-classified into 19 domain categories")
-    logger.info("  ✓ Step 3: Added harm level justifications with scientific sources")
-    logger.info("  ✓ Step 4: Augmented with 8 crowdsourced ingredients from Firebase")
-    logger.info("  ✓ Step 5: Generated 9,481 augmented samples with class balancing")
-    logger.info("  ✓ Step 6: Split into train/val/test sets (stratified)")
-    
+
     logger.info("\n📊 Final Dataset Statistics:")
     logger.info(f"  Training samples: {len(train_df)}")
     logger.info(f"  Validation samples: {len(val_df)}")
@@ -175,14 +164,6 @@ def main():
     logger.info(f"  Categories: {df['our_category'].nunique()}")
     logger.info(f"  Samples per category: ~{len(train_df) // df['our_category'].nunique()}")
     
-    logger.info("\n🚀 Next Steps:")
-    logger.info("  1. Fine-tune DistilBERT on train.csv")
-    logger.info("  2. Validate on val.csv (tune hyperparameters)")
-    logger.info("  3. Evaluate final model on test.csv")
-    logger.info("  4. Deploy to ml_engine.py")
-    
-    logger.info("\n✓ Ready to start model training!")
-
 
 if __name__ == "__main__":
     main()
