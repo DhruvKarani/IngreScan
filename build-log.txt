@@ -1,0 +1,41 @@
+﻿Initialized native services in: C:\Users\dhruv\.gradle\native
+Initialized jansi services in: C:\Users\dhruv\.gradle\native
+Found daemon DaemonInfo{pid=18408, address=[7aa0e61d-676f-4f76-84b8-db002e069f3e port:49622, addresses:[/127.0.0.1]], state=Idle, lastBusy=1773121209991, context=DefaultDaemonContext[uid=3cfd6f9a-2de6-455e-aa53-6a4304e3009a,javaHome=C:\Users\dhruv\.vscode\extensions\redhat.java-1.53.0-win32-x64\jre\21.0.10-win32-x86_64,javaVersion=21,javaVendor=Eclipse Adoptium,daemonRegistryDir=C:\Users\dhruv\.gradle\daemon,pid=18408,idleTimeout=10800000,priority=NORMAL,applyInstrumentationAgent=true,nativeServicesMode=ENABLED,daemonOpts=-XX:MaxMetaspaceSize=512m,-Xmx2048m,-Dfile.encoding=UTF-8,-Duser.country=IN,-Duser.language=en,-Duser.variant]} however its context does not match the desired criteria.
+JVM is incompatible.
+Wanted: DaemonRequestContext{jvmCriteria=C:\Program Files\Java\jdk-22 (no JDK specified, using current Java home), daemonOpts=[-XX:MaxMetaspaceSize=512m, -Xmx2048m, -Dfile.encoding=UTF-8, -Duser.country=IN, -Duser.language=en, -Duser.variant], applyInstrumentationAgent=true, nativeServicesMode=ENABLED, priority=NORMAL}
+Actual: DefaultDaemonContext[uid=3cfd6f9a-2de6-455e-aa53-6a4304e3009a,javaHome=C:\Users\dhruv\.vscode\extensions\redhat.java-1.53.0-win32-x64\jre\21.0.10-win32-x86_64,javaVersion=21,javaVendor=Eclipse Adoptium,daemonRegistryDir=C:\Users\dhruv\.gradle\daemon,pid=18408,idleTimeout=10800000,priority=NORMAL,applyInstrumentationAgent=true,nativeServicesMode=ENABLED,daemonOpts=-XX:MaxMetaspaceSize=512m,-Xmx2048m,-Dfile.encoding=UTF-8,-Duser.country=IN,-Duser.language=en,-Duser.variant]
+
+  Looking for a different daemon...
+The client will now receive all logging from the daemon (pid: 3000). The daemon log file: C:\Users\dhruv\.gradle\daemon\8.14.3\daemon-3000.out.log
+Starting 7th build in daemon [uptime: 2 hrs 9 mins 30.287 secs, performance: 100%, GC rate: 0.00/s, heap usage: 7% of 2 GiB, non-heap usage: 77% of 512 MiB]
+Using 8 worker leases.
+Now considering [D:\foodscan (3)\foodscan\foodscan\ingrescan\ingrescan\android, D:\foodscan (3)\foodscan\foodscan\ingrescan\ingrescan\node_modules\expo-modules-core\expo-module-gradle-plugin] as hierarchies to watch
+Watching the file system is configured to be enabled if available
+File system watching is active
+Starting Build
+Starting process 'command 'node''. Working directory: D:\foodscan (3)\foodscan\foodscan\ingrescan\ingrescan\android Command: node --print require.resolve('@react-native/gradle-plugin/package.json', { paths: [require.resolve('react-native/package.json')] })
+Successfully started process 'command 'node''
+.\gradlew : 
+At line:1 char:1
++ .\gradlew assembleRelease --info 2>&1 | Out-File -FilePath "..\build- ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+FAILURE: Build failed with an exception.
+
+* Where:
+Settings file 'D:\foodscan (3)\foodscan\foodscan\ingrescan\ingrescan\android\settings.gradle' line: 3
+
+* What went wrong:
+A problem occurred evaluating settings 'android'.
+> Process 'command 'node'' finished with non-zero exit value 1
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 2s
+Watched directory hierarchies: [D:\foodscan (3)\foodscan\foodscan\ingrescan\ingrescan\android, D:\foodscan (3)\foodscan\foodscan\ingrescan\ingrescan\node_modules\expo-modules-core\expo-module-gradle-plugin]

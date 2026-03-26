@@ -31,5 +31,12 @@ export const SCORE_API_URL = getScoreApiUrl();
 
 // Gemini API Configuration
 // Replace with your actual Gemini API key from Google AI Studio
-export const GEMINI_API_KEY = 'AIzaSyBiA_1yzO2kyDcq1JIgOqC-XyWVNuHk124';
+// Gemini API Configuration
+// IMPORTANT: Do NOT hardcode API keys in public repositories.
+// Use environment variables or a secure config file (excluded via .gitignore).
+// Example for React Native (with react-native-dotenv):
+//   import { GEMINI_API_KEY } from '@env';
+// For Node.js: process.env.GEMINI_API_KEY
+// Fallback to empty string if not set.
+export const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';
 export const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
