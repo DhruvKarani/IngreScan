@@ -111,8 +111,19 @@ const ManualProductEntryScreen = ({ route, navigation }) => {
             fieldsSet.add('fiber');
           }
           if (nutr.sodium || nutr.sodium_100g || nutr.salt || nutr.salt_100g) {
-            const sodiumValue = nutr.sodium || nutr.sodium_100g || (nutr.salt || nutr.salt_100g) * 1000;
-            setSodium(String(sodiumValue));
+            const rawSodium = nutr.sodium || nutr.sodium_100g;
+            let sodiumValueMg = 0;
+
+            if (rawSodium !== undefined && rawSodium !== null) {
+              // OFF sodium is typically g/100g; some manual sources may already be mg.
+              sodiumValueMg = Number(rawSodium) > 5 ? Number(rawSodium) : Number(rawSodium) * 1000;
+            } else {
+              // Convert salt (g/100g) to sodium mg/100g.
+              const saltValue = Number(nutr.salt || nutr.salt_100g || 0);
+              sodiumValueMg = saltValue * 393;
+            }
+
+            setSodium(String(Math.round(sodiumValueMg)));
             fieldsSet.add('sodium');
           }
           
@@ -211,7 +222,7 @@ const ManualProductEntryScreen = ({ route, navigation }) => {
     if (fat.trim()) nutrition.fat_100g = parseFloat(fat);
     if (saturatedFat.trim()) nutrition.saturated_fat_100g = parseFloat(saturatedFat);
     if (fiber.trim()) nutrition.fiber_100g = parseFloat(fiber);
-    if (sodium.trim()) nutrition.sodium_100g = parseFloat(sodium);
+    if (sodium.trim()) nutrition.sodium_100g = parseFloat(sodium) / 1000;
     if (caffeine.trim()) nutrition.caffeine_100g = parseFloat(caffeine);
 
     return nutrition;
@@ -467,7 +478,7 @@ const ManualProductEntryScreen = ({ route, navigation }) => {
           {renderNutritionInput('Total Fat', fat, setFat)}
           {renderNutritionInput('Saturated Fat', saturatedFat, setSaturatedFat)}
           {renderNutritionInput('Fiber', fiber, setFiber)}
-          {renderNutritionInput('Sodium', sodium, setSodium, 'g', 'mg')}
+          {renderNutritionInput('Sodium', sodium, setSodium, 'mg', 'e.g., 130')}
           {renderNutritionInput('Caffeine', caffeine, setCaffeine, 'g', 'mg')}
         </View>
 

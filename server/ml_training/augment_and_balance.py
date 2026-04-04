@@ -307,7 +307,7 @@ def main():
     balanced_df = balanced_df.sample(frac=1, random_state=42).reset_index(drop=True)
     
     # Save
-    logger.info("\n[4/4] Saving balanced training data...")
+    logger.info("\nSaving balanced training data...")
     output_path = 'balanced_training_data.csv'
     balanced_df.to_csv(output_path, index=False, encoding='utf-8')
     

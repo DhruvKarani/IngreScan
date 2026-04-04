@@ -222,7 +222,6 @@ class FDACollector:
         """
         logger.info("Loading FDA GRAS ingredient data...")
         
-        # Common FDA GRAS ingredients for food
         fda_gras = [
             # Sweeteners
             {"name": "Sucrose", "category": "Sweetener", "cfr_reference": "21 CFR 184.1854", "source": "FDA GRAS"},

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3    157
 """
 Data Quality Validator
 Validates product data completeness and determines verification requirements.
@@ -14,13 +14,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-
-# =============================================================================
-# PRODUCT SCHEMA DEFINITION
-# =============================================================================
-
 PRODUCT_SCHEMA = {
-    # Critical: Essential for ingredient-based health scoring (50 points)
     'critical': {
         'ingredients_text': {
             'weight': 50,
@@ -28,7 +22,6 @@ PRODUCT_SCHEMA = {
         }
     },
     
-    # Important: Key data used for health scoring (5 points each = 35 total)
     'important': {
         'calories': {
             'weight': 5,

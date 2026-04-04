@@ -8,13 +8,13 @@ const getScoreApiUrl = () => {
   // Try to get from environment or config
   try {
     const { SCORE_API_URL } = require('../constants/config');
-    const baseUrl = SCORE_API_URL || 'http://192.168.0.104:5000';
+    const baseUrl = SCORE_API_URL || 'http://192.168.0.105:5001';
     // Remove /analyze suffix if present (we'll add specific endpoints)
     return baseUrl.replace(/\/analyze$/, '');
   } catch (e) {
     // Fallback if config is not available
     console.warn('[ML-API] Could not load config, using fallback URL');
-    return 'http://192.168.0.104:5000';
+    return 'http://192.168.0.105:5001';
   }
 };
 

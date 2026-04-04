@@ -19,25 +19,8 @@ except FileNotFoundError:
     logging.error("nutritional_thresholds.json not found")
     THRESHOLDS = {}
 
-
-# ==================== STEP 1: POSITION & PENALTY FUNCTIONS ====================
-
 def calculate_position_weight(position: int) -> float:
-    """
-    Calculate penalty weight based on ingredient position in list.
-    FDA requires descending order, so early position = higher quantity.
     
-    Args:
-        position: 1-indexed position (1 = first ingredient)
-        
-    Returns:
-        float: Multiplier for penalty (1.0 to 1.5)
-        
-    Examples:
-        position 1 (most common) → 1.5×
-        position 5 (middle) → 1.2×
-        position 12 (trace) → 1.0×
-    """
     if position <= 3:
         return 1.5  # Top 3 ingredients (dominant)
     elif position <= 7:
@@ -646,6 +629,31 @@ def calculate_nutrition_penalties(nutrients: Dict[str, float]) -> Dict[str, Any]
         "protein": "protein"
     }
     
+    def normalize_nutrient_value_for_penalty(
+        nutrient_key: str,
+        normalized_nutrient: str,
+        raw_value: float
+    ) -> float:
+        """
+        Normalize unit mismatches before applying penalty scales.
+
+        Sodium scales are defined in g/100g, but some sources (and manual entry)
+        provide sodium in mg/100g. We also convert salt->sodium when salt fields are used.
+        """
+        value = float(raw_value or 0)
+        key = (nutrient_key or "").lower()
+
+        if normalized_nutrient == "sodium":
+            # Salt values are in g/100g salt; convert to sodium g/100g.
+            if "salt" in key:
+                return value * 0.393
+
+            # If sodium looks like mg/100g (e.g., 130), convert mg->g.
+            if value > 5:
+                return value / 1000.0
+
+        return value
+
     penalties = []
     bonuses = []
     total_penalty = 0
@@ -668,7 +676,11 @@ def calculate_nutrition_penalties(nutrients: Dict[str, float]) -> Dict[str, Any]
             # Mark as processed immediately to prevent duplicates
             processed_penalties.add(normalized_nutrient)
             
-            value_float = float(value or 0)
+            value_float = normalize_nutrient_value_for_penalty(
+                nutrient_key,
+                normalized_nutrient,
+                value
+            )
             penalty, threshold = get_nutrient_penalty(normalized_nutrient, value_float)
             
             if penalty > 0:

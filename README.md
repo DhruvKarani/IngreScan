@@ -1,29 +1,29 @@
-# 🥗 IngreScan — AI-Powered Food Intelligence
+# IngreScan - AI-Powered Food Intelligence
 
 > Scan. Analyze. Eat smarter.
 
-📱 Mobile food analysis app that scans packaged products and evaluates their ingredients and nutrition.
+Mobile food analysis app that scans packaged products and evaluates their ingredients and nutrition.
 
-🧠 Uses machine learning and ingredient databases to analyze additives, preservatives, and nutritional values.
+Uses machine learning and ingredient databases to analyze additives, preservatives, and nutritional values.
 
-📊 Generates a personalized health score based on nutritional impact and ingredient risk levels.
+Generates a personalized health score based on nutritional impact and ingredient risk levels.
 
-🧬 Adapts recommendations according to user health conditions (e.g., diabetes, hypertension).
+Adapts recommendations according to user health conditions (e.g., diabetes, hypertension).
 
-🥗 Helps users make informed food choices by clearly explaining what is inside a product and its health impact.
+Helps users make informed food choices by clearly explaining what is inside a product and its health impact.
 
 ---
 
-## 🚀 Features
+## Features
 
-### 🔍 Barcode Scanning
+### Barcode Scanning
 Scan any packaged food product using your phone camera to instantly retrieve product data.
 
-### 🧠 Ingredient Risk Analysis
+### Ingredient Risk Analysis
 Ingredients are analyzed and categorized into risk levels using food additive databases and ML classification.
 
-### 📊 Personalized Health Score
-Each product receives a health score (0–100) based on:
+### Personalized Health Score
+Each product receives a health score (0-100) based on:
 - Sugar content
 - Sodium levels
 - Saturated fat
@@ -31,7 +31,7 @@ Each product receives a health score (0–100) based on:
 - Harmful additives
 - User health conditions
 
-### 🧬 Health Condition Personalization
+### Health Condition Personalization
 Users can select personal health conditions to receive tailored recommendations:
 - Diabetes
 - Heart disease
@@ -40,23 +40,23 @@ Users can select personal health conditions to receive tailored recommendations:
 - Pregnancy
 - Kidney disease, Gout, IBS, Fatty Liver, and more
 
-### 🧾 Ingredient Transparency
+### Ingredient Transparency
 Every ingredient is surfaced with:
 - Natural vs. artificial classification
-- Additive & preservative flagging
+- Additive and preservative flagging
 - Plain-language explanations
 
-### 📈 Daily Nutrition Tracking
+### Daily Nutrition Tracking
 Track daily intake across:
 - Calories, Carbohydrates, Fats
 - Sugar, Sodium
 
-### 👥 Community Verification
+### Community Verification
 Products require multiple user confirmations before being marked as trusted data.
 
 ---
 
-## 📱 Screenshots
+## Screenshots
 
 <table>
   <tr>
@@ -87,24 +87,29 @@ Products require multiple user confirmations before being marked as trusted data
 
 ---
 
-## 🏗 Architecture
+## Architecture
 
 ```
 Mobile App (React Native + Expo)
-            │
-            ▼
-      Firebase Backend
-            │
-            ▼
-    Python ML Scoring API
-            │
-            ▼
- External Food Databases
+    -> Firebase Backend
+  -> Unified FastAPI Backend
+    -> External Food Databases
 ```
 
 ---
 
-## 🧠 Health Score Logic
+## ML Pipeline
+
+The ML pipeline combines curated data, crowdsourced enrichment, and model training for ingredient classification.
+
+1. Data collection: authoritative sources are collected and standardized.
+2. Labeling and augmentation: ingredients are categorized, justified, and balanced across classes.
+3. Training: a DistilBERT classifier is trained using train/validation/test splits.
+4. Inference and scoring: model predictions are merged with nutritional and health-rule logic for personalized scoring.
+
+---
+
+## Health Score Logic
 
 The health score starts at 100 and penalties are applied based on nutritional thresholds:
 
@@ -130,19 +135,19 @@ The final score is adjusted based on the user's health profile.
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
 | Layer | Technologies |
 |---|---|
 | **Frontend** | React Native, Expo |
-| **Auth & DB** | Firebase Authentication, Firebase Firestore |
-| **Backend** | Python, FastAPI / Flask |
+| **Auth and DB** | Firebase Authentication, Firebase Firestore |
+| **Backend** | Python, FastAPI |
 | **ML** | DistilBERT, PyTorch, Transformers |
 | **External APIs** | OpenFoodFacts, Edamam, FatSecret |
 
 ---
 
-## ⚙️ Getting Started
+## Getting Started
 
 ### 1. Clone the Repository
 
@@ -154,7 +159,7 @@ cd ingrescan
 ### 2. Start the Backend Server
 
 ```bash
-python server/score_api.py
+python server/product_data_api.py
 ```
 
 ### 3. Start the Frontend App
@@ -165,46 +170,12 @@ npx expo start
 
 ---
 
-## 📂 Project Structure
 
-```
-ingrescan/
-│
-├── src/
-│   ├── screens/
-│   │   ├── HomeScreen.jsx
-│   │   ├── ScanScreen.jsx
-│   │   ├── ProductDetailsScreen.jsx
-│   │   ├── IngredientsScreen.jsx
-│   │   ├── NutritionScreen.jsx
-│   │   ├── ScanHistoryScreen.jsx
-│   │   └── HealthConditionsScreen.jsx
-│   ├── components/
-│   └── utils/
-│
-├── server/
-│   ├── score_api.py
-│   ├── ml_engine.py
-│   ├── train_distilbert_pytorch.py
-│   └── data_processing/
-│
-└── README.md
-```
 
----
-
-## ⭐ Why IngreScan?
+## Why IngreScan?
 
 Most nutrition apps stop at generic nutrition labels.
 
-**IngreScan focuses on personalized food intelligence** — helping users understand how specific products interact with their individual health conditions, not just aggregate calorie counts.
+**IngreScan focuses on personalized food intelligence** - helping users understand how specific products interact with their individual health conditions, not just aggregate calorie counts.
 
----
 
-## 👤 Author
-
-**Dhruv Karani & Amogh Iyer**
-
----
-
-*If you found this useful, consider giving the repo a ⭐*

@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   Alert,
   Switch,
-  TextInput
+  TextInput,
+  Platform
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { COLORS, SPACING, BORDER_RADIUS, TYPOGRAPHY, SHADOWS } from '../constants/theme';

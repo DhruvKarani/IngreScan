@@ -10,6 +10,7 @@
  */
 
 import { Platform } from 'react-native';
+import { SERVER_LAN_IP } from '../constants/config';
 
 // =============================================================================
 // CONFIGURATION
@@ -25,8 +26,7 @@ import { Platform } from 'react-native';
 const getOrchestratorApiUrl = () => {
   // For development with Expo Go on physical device
   if (__DEV__ && Platform.OS !== 'web') {
-    // Updated to match current computer IP address
-    return 'http://192.168.0.100:5001';
+    return `http://${SERVER_LAN_IP}:5001`;
   }
   
   // For web or desktop testing

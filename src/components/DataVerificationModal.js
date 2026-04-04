@@ -146,7 +146,7 @@ const DataVerificationModal = ({
     'carbohydrates': { label: 'Carbs (g/100g)', type: 'number', placeholder: 'e.g., 75.6' },
     'fiber': { label: 'Fiber (g/100g)', type: 'number', placeholder: 'e.g., 2.3' },
     'salt': { label: 'Salt (g/100g)', type: 'number', placeholder: 'e.g., 0.5' },
-    'sodium': { label: 'Sodium (g/100g)', type: 'number', placeholder: 'e.g., 0.2' },
+    'sodium': { label: 'Sodium (mg/100g)', type: 'number', placeholder: 'e.g., 130' },
     'saturated-fat': { label: 'Saturated Fat (g/100g)', type: 'number', placeholder: 'e.g., 1.5' },
     'quantity': { label: 'Package Quantity', type: 'text', placeholder: 'e.g., 250g, 500ml' },
     'categories': { label: 'Categories', type: 'text', placeholder: 'e.g., Biscuits, Snacks' },
@@ -209,8 +209,11 @@ const DataVerificationModal = ({
       if (fieldName === 'energy-kcal') {
         updatedNutriments['energy-kcal_100g'] = numValue;
         updatedNutriments['energy_kcal_100g'] = numValue;
-      } else if (['sugars', 'fat', 'proteins', 'carbohydrates', 'fiber', 'salt', 'sodium', 'saturated-fat'].includes(fieldName)) {
+      } else if (['sugars', 'fat', 'proteins', 'carbohydrates', 'fiber', 'salt', 'saturated-fat'].includes(fieldName)) {
         updatedNutriments[`${fieldName}_100g`] = numValue;
+      } else if (fieldName === 'sodium') {
+        // Store sodium in g/100g for scoring compatibility.
+        updatedNutriments['sodium_100g'] = numValue / 1000;
       } 
       // Meta fields stay at root level
       else if (['brands', 'quantity', 'categories', 'image_url'].includes(fieldName)) {

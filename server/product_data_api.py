@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3   125
 """
 Product Data Orchestrator API
 
@@ -25,6 +25,7 @@ Usage:
 
 from fastapi import FastAPI, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 import logging
 from typing import Dict, Optional, Any, List
@@ -37,6 +38,12 @@ sys.path.append(os.path.dirname(__file__))
 from api_fetchers import fetch_from_firebase, fetch_from_off, fetch_from_edamam, fetch_from_fatsecret
 from data_merger import DataMerger
 from data_quality_validator import validate_product_data, is_usable_data
+from score_api import (
+    analyze_legacy_product,
+    calculate_ml_score_payload,
+    calculate_personalized_score_payload,
+    get_scoring_health,
+)
 
 # Configure logging
 logging.basicConfig(
@@ -76,6 +83,9 @@ class HealthResponse(BaseModel):
     status: str
     service: str
     version: str
+    ml_available: bool
+    personalized_scoring_available: bool
+    endpoints: Dict[str, str]
 
 class ProductMetadata(BaseModel):
     sources_tried: List[str]
@@ -285,11 +295,6 @@ class ProductDataOrchestrator:
 # Initialize orchestrator
 orchestrator = ProductDataOrchestrator()
 
-
-# =============================================================================
-# API ROUTES
-# =============================================================================
-
 @app.get('/', tags=["Root"])
 async def root():
     """
@@ -306,10 +311,14 @@ async def health_check():
     
     Returns status, service name, and version.
     """
+    scoring_health = get_scoring_health()
     return {
         'status': 'healthy',
-        'service': 'Product Data Orchestrator',
-        'version': API_VERSION
+        'service': 'Product Data Orchestrator + Scoring',
+        'version': API_VERSION,
+        'ml_available': scoring_health['ml_available'],
+        'personalized_scoring_available': scoring_health['personalized_scoring_available'],
+        'endpoints': scoring_health['endpoints'],
     }
 
 
@@ -404,6 +413,47 @@ async def list_sources():
     return {'sources': sources}
 
 
+@app.post('/analyze', tags=["Scoring"])
+async def analyze_product(payload: Dict[str, Any]):
+    try:
+        return analyze_legacy_product(payload)
+    except ValueError as exc:
+        return JSONResponse(status_code=400, content={'error': str(exc)})
+    except LookupError as exc:
+        return JSONResponse(status_code=404, content={'error': str(exc)})
+    except Exception as exc:
+        logging.exception('Scoring failed')
+        return JSONResponse(status_code=500, content={'error': 'scoring_failed', 'message': str(exc)})
+
+
+@app.post('/ml-score', tags=["Scoring"])
+async def ml_score(payload: Dict[str, Any]):
+    try:
+        return calculate_ml_score_payload(payload)
+    except ValueError as exc:
+        return JSONResponse(status_code=400, content={'error': str(exc)})
+    except RuntimeError as exc:
+        message = str(exc)
+        if message == 'ML scoring not available':
+            return JSONResponse(status_code=503, content={'error': message})
+        logging.exception('ML scoring failed')
+        return JSONResponse(status_code=500, content={'error': 'ml_scoring_failed', 'message': message})
+
+
+@app.post('/personalized-score', tags=["Scoring"])
+async def personalized_score(payload: Dict[str, Any]):
+    try:
+        return calculate_personalized_score_payload(payload)
+    except ValueError as exc:
+        return JSONResponse(status_code=400, content={'error': str(exc)})
+    except RuntimeError as exc:
+        message = str(exc)
+        if message == 'Personalized scoring not available':
+            return JSONResponse(status_code=503, content={'error': message})
+        logging.exception('Personalized scoring failed')
+        return JSONResponse(status_code=500, content={'error': 'personalized_scoring_failed', 'message': message})
+
+
 # =============================================================================
 # MAIN
 # =============================================================================
@@ -445,15 +495,4 @@ if __name__ == '__main__':
         port=args.port,
         reload=args.reload,
         log_level="info"
-    )
-    print(f"  - GET /api/product/<barcode>")
-    print(f"  - GET /api/product/<barcode>/sources")
-    print(f"  - GET /api/sources")
-    print("=" * 70)
-    print()
-    
-    app.run(
-        host=args.host,
-        port=args.port,
-        debug=args.debug
     )

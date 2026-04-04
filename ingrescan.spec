@@ -14,14 +14,14 @@ a = Analysis(
     hiddenimports=[
         'engine',
         'scoring_engine',
-        'flask',
-        'werkzeug',
-        'jinja2',
-        'click',
-        'itsdangerous',
+        'fastapi',
+        'starlette',
+        'pydantic',
+        'uvicorn',
         'logging',
         'webbrowser',
-        'threading'
+        'threading',
+        'anyio'
     ],
     hookspath=[],
     hooksconfig={},

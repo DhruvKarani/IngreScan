@@ -63,7 +63,7 @@ Mobile App (React Native + Expo)
       Firebase Backend
             │
             ▼
-    Python ML Scoring API
+        Unified FastAPI Backend
             │
             ▼
  External Food Databases
@@ -103,7 +103,7 @@ The final score is adjusted based on the user's health profile.
 |---|---|
 | **Frontend** | React Native, Expo |
 | **Auth & DB** | Firebase Authentication, Firebase Firestore |
-| **Backend** | Python, FastAPI / Flask |
+| **Backend** | Python, FastAPI |
 | **ML** | DistilBERT, PyTorch, Transformers |
 | **External APIs** | OpenFoodFacts, Edamam, FatSecret |
 
@@ -121,7 +121,7 @@ cd ingrescan
 ### 2. Start the Backend Server
 
 ```bash
-python server/score_api.py
+python server/product_data_api.py
 ```
 
 ### 3. Start the Frontend App

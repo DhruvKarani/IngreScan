@@ -8,23 +8,23 @@
 // - Mac/Linux: Run "ifconfig" or "ip addr", look for inet address
 // - The IP starts with 192.168.x.x or 10.0.x.x
 //
-// Current setup: Server IP = 192.168.0.104 (update this if it changes!)
+// Current setup: Server IP = 192.168.0.105 (update this if it changes!)
 // ============================================================================
 
-const SERVER_LAN_IP = '192.168.0.104'; // 👈 CHANGE THIS TO YOUR COMPUTER'S IP
+export const SERVER_LAN_IP = '192.168.0.105'; // 👈 CHANGE THIS TO YOUR COMPUTER'S IP
 
 // Auto-detect the appropriate API URL based on environment
 const getScoreApiUrl = () => {
   // For Expo Go on mobile device, use LAN IP
   if (__DEV__ && typeof navigator !== 'undefined') {
-    return `http://${SERVER_LAN_IP}:5000/analyze`;
+    return `http://${SERVER_LAN_IP}:5001/analyze`;
   }
   // For web production build (bundled)
   if (typeof window !== 'undefined') {
-    return 'http://127.0.0.1:5000/analyze';
+    return 'http://127.0.0.1:5001/analyze';
   }
   // For Android emulator
-  return 'http://10.0.2.2:5000/analyze';
+  return 'http://10.0.2.2:5001/analyze';
 };
 
 export const SCORE_API_URL = getScoreApiUrl();

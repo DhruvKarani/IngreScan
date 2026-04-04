@@ -272,7 +272,6 @@ def calculate_unified_score(product_data: Dict[str, Any], user_profile: Dict[str
     }
 
 
-# For testing
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     

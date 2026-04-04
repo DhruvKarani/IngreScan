@@ -358,7 +358,10 @@ const ProductDetailsScreen = ({ route, navigation }) => {
   // Check if we have personalized score (final_score) or fall back to old scores
   const rawScore = analysis?.final_score ?? analysis?.Score ?? analysis?.score10 ?? analysis?.score ?? product.healthScore ?? 0;
   // Keep 0-100 scale, only convert old 0-10 scores
-  const scoreValue = (rawScore <= 10 && rawScore > 0) ? Math.round(rawScore * 10) : Math.round(rawScore);
+  const scoreValue = analysis?.breakdown?.net_penalty != null
+    ? Math.round(100 - Number(analysis.breakdown.net_penalty || 0))
+    : ((rawScore <= 10 && rawScore > 0) ? Math.round(rawScore * 10) : Math.round(rawScore));
+  const scoreFillValue = Math.min(100, Math.max(0, scoreValue));
   // Normalize image, nutrition and ingredients for products coming from OFF or Firestore
   const imageUri = product.image || product.image_url || (product.raw && (product.raw.image_small_url || product.raw.image_url)) || null;
 
@@ -716,7 +719,7 @@ const ProductDetailsScreen = ({ route, navigation }) => {
                     left: 0,
                     top: 0,
                     bottom: 0,
-                    width: `${scoreValue}%`,
+                    width: `${scoreFillValue}%`,
                     backgroundColor: getHealthScoreColor(scoreValue),
                     borderRadius: 4
                   }} />
@@ -906,9 +909,20 @@ const ProductDetailsScreen = ({ route, navigation }) => {
                             </Text>
                             {analysis.breakdown.nutrition_penalties.map((item, idx) => (
                               <View key={`nutr-${idx}`} style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 2, paddingLeft: 8 }}>
-                                <Text style={{ fontSize: 12, color: COLORS.text, flex: 1 }}>
-                                  • {item.nutrient}: {item.value}g/100g
-                                </Text>
+                                {(() => {
+                                  const isMilliUnit = item.nutrient === 'sodium' || item.nutrient === 'cholesterol';
+                                  const displayValue = Number(item.value || 0);
+                                  const formattedValue = isMilliUnit
+                                    ? Math.round(displayValue * 1000)
+                                    : Math.round(displayValue * 100) / 100;
+                                  const displayUnit = isMilliUnit ? 'mg/100g' : 'g/100g';
+
+                                  return (
+                                    <Text style={{ fontSize: 12, color: COLORS.text, flex: 1 }}>
+                                      • {item.nutrient}: {formattedValue}{displayUnit}
+                                    </Text>
+                                  );
+                                })()}
                                 <Text style={{ fontSize: 12, color: COLORS.error, fontWeight: 'bold' }}>
                                   -{item.adjusted_penalty || item.penalty || 0}
                                 </Text>
