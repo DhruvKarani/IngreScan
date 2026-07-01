@@ -30,8 +30,19 @@ yarn-error.*
 .DS_Store
 *.pem
 
-# local env files (kept explicit by default)
+# local env files and secrets
+.env
+.env.*
+!.env.example
 .env*.local
+src/firebase.local.js
+src/secrets.local.js
+
+# Firebase and mobile app secrets
+google-services.json
+**/google-services.json
+GoogleService-Info.plist
+**/GoogleService-Info.plist
 
 # typescript
 *.tsbuildinfo
@@ -74,9 +85,6 @@ coverage/
 # Firebase credentials (NEVER commit these!)
 server/firebase-credentials.json
 **/firebase-credentials.json
-
-# NOTE: per your instruction, I did NOT add .env or other secret files to gitignore.
-# If you later want to ignore them, add .env, .env.* or src/secrets.local.js here.
 
 # Ignore sensitive and proprietary folders
 source_code_PATENT_REFINED/

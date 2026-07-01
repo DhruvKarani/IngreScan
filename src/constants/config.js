@@ -8,10 +8,10 @@
 // - Mac/Linux: Run "ifconfig" or "ip addr", look for inet address
 // - The IP starts with 192.168.x.x or 10.0.x.x
 //
-// Current setup: Server IP = 192.168.0.105 (update this if it changes!)
+// Current setup: Server IP = 10.61.183.202 (update this if it changes!)
 // ============================================================================
 
-export const SERVER_LAN_IP = '192.168.0.105'; // 👈 CHANGE THIS TO YOUR COMPUTER'S IP
+export const SERVER_LAN_IP = '10.61.183.202'; // 👈 CHANGE THIS TO YOUR COMPUTER'S IP
 
 // Auto-detect the appropriate API URL based on environment
 const getScoreApiUrl = () => {
